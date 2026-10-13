@@ -22,6 +22,18 @@ namespace PMS
     {
         DataBaseDataContext db = new DataBaseDataContext();
         public static int OutpatientID;
+        // EMR Lookup tab: shown only when sys_Parms has "EMR Lookup Tab" with Code "01" (same rule as OPD "OPD Discharge Check")
+        public bool ShowEmrLookupTab
+        {
+            get
+            {
+                using (DataBaseDataContext ctx = new DataBaseDataContext())
+                {
+                    return ctx.sys_Parms.Any(p => p.Name == "EMR Lookup Tab" && p.Code == "01");
+                }
+            }
+        }
+
         protected void Page_Load(object sender, EventArgs e)
         {
             txtDate.Text = DateTime.Now.Date.ToString(AppConfig.DateFormat);

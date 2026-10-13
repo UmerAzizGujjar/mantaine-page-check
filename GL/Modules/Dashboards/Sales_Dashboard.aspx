@@ -372,6 +372,13 @@
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+<div class="pf-page">
+<header class="pf-header">
+    <div>
+        <h1 class="pf-title">Sales Dashboard</h1>
+        <p class="pf-subtitle">Pharmacy sales, discounts and profit by week, month and year</p>
+    </div>
+</header>
 <div class="chart-bar-color" style="display:none;"></div>
 <div class="chart-prev-year-color" style="display:none;"></div>
 <div class="chart-curr-year-color" style="display:none;"></div>
@@ -484,7 +491,7 @@
     </div>
 </div>
 
-            <div class="col-lg-3 cl-md-6 col-sm-12">
+            <div class="col-lg-3 col-md-6 col-sm-12">
                 <div class="card2">
                     <div class="card-header">
                         Top 10 Sales Medicines (Last 30 Days)
@@ -526,7 +533,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-3 cl-md-6 col-sm-12">
+            <div class="col-lg-3 col-md-6 col-sm-12">
                 <div class="card2">
                     <div class="card-header">
                         Category Wise Medicines (Last 30 Days)
@@ -605,7 +612,6 @@
 </div>
 
     </div>
-
-
+</div>
 
 </asp:Content>

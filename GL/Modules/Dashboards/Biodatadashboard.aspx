@@ -232,6 +232,13 @@
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+    <div class="pf-page">
+    <header class="pf-header">
+        <div>
+            <h1 class="pf-title">Biodata Dashboard</h1>
+            <p class="pf-subtitle">Registered patients and symptom distribution, filtered by date, gender, area, city and symptom</p>
+        </div>
+    </header>
     <div class="row-dash">
         <div class="row" style="margin:0 0 12px 0;">
             <div class="col-lg-12" style="padding:0 8px;">
@@ -320,5 +327,6 @@
                 </div>
             </div>
         </div>
+    </div>
     </div>
 </asp:Content>

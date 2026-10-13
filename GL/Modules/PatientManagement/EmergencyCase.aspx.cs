@@ -24,6 +24,18 @@ namespace PMS
         DataBaseDataContext db;
         public static int InPatient_Case_id;
         public bool PatientDischargeStatus = false;
+        // EMR Lookup tab: shown only when sys_Parms has "EMR Lookup Tab" with Code "01" (same rule as OPD "OPD Discharge Check")
+        public bool ShowEmrLookupTab
+        {
+            get
+            {
+                using (DataBaseDataContext ctx = new DataBaseDataContext())
+                {
+                    return ctx.sys_Parms.Any(p => p.Name == "EMR Lookup Tab" && p.Code == "01");
+                }
+            }
+        }
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)

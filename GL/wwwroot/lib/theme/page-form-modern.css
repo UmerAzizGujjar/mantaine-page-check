@@ -1,0 +1,915 @@
+/* ==========================================================================
+   MODERN FORM / RECORD PAGES  -  shared look for the statistics forms and the EMR pages
+   Loaded by Site.Master on every page. Nothing applies until a page uses one of the
+   classes below (pf-*) or sits inside .emr-page, so other screens are untouched.
+
+   Form and statistics pages (DashPatientsCount, CONSULTANT_WISE_STATISTICS)
+     .pf-page .pf-header .pf-title .pf-subtitle .pf-actions
+     .pf-card .pf-card-head .pf-card-icon .pf-card-title
+     .pf-filters .pf-field .pf-field-label .pf-field--action
+     .pf-kpis .pf-kpi (+ .pf-kpi--new / --repeat / --total) .pf-kpi-head .pf-kpi-body .pf-metric
+
+   EMR pages (EMR, NewEMR)  -  wrap the page in .emr-page
+     profile, appointment, vitals, stats and test list.  All ids and the classes the
+     page scripts toggle (.ToBeHidden, .selected, .minimized, .header) are kept.
+
+   Colours come from the theme tokens (--theme-*) and from --dk-* in dark mode.
+   ========================================================================== */
+
+html {
+    --pf-surface: #ffffff;
+    --pf-surface-2: #f8fafc;
+    --pf-border: #e5e9f0;
+    --pf-text: var(--theme-ink, #1b2a41);
+    --pf-muted: #667085;
+    --pf-accent: var(--theme-accent, #438eb9);
+    --pf-accent-ink: var(--theme-accent-ink, #2b6a90);
+    --pf-accent-soft: var(--theme-accent-soft, #e5f1f8);
+    --pf-on-accent: var(--theme-on-accent, #ffffff);
+    --pf-ring: var(--theme-accent-ring, rgba(67, 142, 185, .25));
+    --pf-radius: 14px;
+    --pf-radius-sm: 9px;
+    --pf-shadow: 0 1px 2px rgba(16, 24, 40, .04), 0 1px 3px rgba(16, 24, 40, .05);
+    --pf-shadow-hover: 0 10px 28px rgba(16, 24, 40, .10);
+}
+
+html[data-theme="dark"] {
+    --pf-surface: var(--dk-surface, #151b25);
+    --pf-surface-2: var(--dk-surface-2, #1c2431);
+    --pf-border: var(--dk-border, #2a3547);
+    --pf-text: var(--dk-text, #e6ebf2);
+    --pf-muted: var(--dk-text-dim, #a9b4c4);
+    --pf-accent-ink: var(--dk-accent-text, #6ee0d2);
+    --pf-accent-soft: var(--theme-accent-soft, var(--dk-accent-soft, #123c3a));
+    --pf-shadow: 0 1px 2px rgba(0, 0, 0, .35);
+    --pf-shadow-hover: 0 10px 28px rgba(0, 0, 0, .45);
+}
+
+/* ==========================================================================
+   FORM / STATISTICS PAGES
+   ========================================================================== */
+
+.pf-page {
+    color: var(--pf-text);
+}
+
+.pf-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 4px 0 18px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--pf-border);
+}
+
+.pf-title {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -.01em;
+    color: var(--pf-text);
+}
+
+.pf-subtitle {
+    margin: 4px 0 0;
+    font-size: 13px;
+    color: var(--pf-muted);
+}
+
+.pf-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+
+/* ---------- card ---------- */
+.pf-card {
+    margin-bottom: 16px;
+    padding: 18px;
+    background: var(--pf-surface);
+    border: 1px solid var(--pf-border);
+    border-radius: var(--pf-radius);
+    box-shadow: var(--pf-shadow);
+    transition: box-shadow .2s ease;
+}
+
+.pf-card:hover {
+    box-shadow: var(--pf-shadow-hover);
+}
+
+.pf-card-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 14px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--pf-border);
+}
+
+.pf-card-icon {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: var(--pf-accent-soft);
+    color: var(--pf-accent-ink);
+}
+
+.pf-card-title {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--pf-text);
+}
+
+/* ---------- filter bar ---------- */
+.pf-filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 14px 16px;
+}
+
+.pf-field {
+    display: flex;
+    flex: 1 1 190px;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+    max-width: 280px;
+}
+
+.pf-field--wide {
+    flex-basis: 280px;
+}
+
+.pf-field--action {
+    flex: 0 0 auto;
+    max-width: none;
+}
+
+.pf-field-label {
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    color: var(--pf-muted);
+}
+
+.pf-field .form-control,
+.pf-field .form-select,
+.pf-field select,
+.pf-field input[type="text"] {
+    height: 38px;
+    padding: 0 12px;
+    border: 1px solid var(--pf-border);
+    border-radius: var(--pf-radius-sm);
+    background: var(--pf-surface);
+    color: var(--pf-text);
+    font-size: 13.5px;
+    box-shadow: none;
+}
+
+.pf-field .form-control:focus,
+.pf-field .form-select:focus,
+.pf-field input[type="text"]:focus {
+    border-color: var(--pf-accent);
+    box-shadow: 0 0 0 3px var(--pf-ring);
+    outline: 0;
+}
+
+.pf-page .btn-primry {
+    height: 38px;
+    padding: 0 20px;
+    border-radius: var(--pf-radius-sm);
+    font-size: 13.5px;
+    font-weight: 600;
+}
+
+/* ---------- doctor multi-select (CONSULTANT_WISE_STATISTICS) ---------- */
+.pf-doctor-dropdown {
+    position: relative;
+}
+
+.pf-dropdown-btn {
+    width: 100%;
+    text-align: left;
+}
+
+.pf-doctor-menu {
+    width: 100%;
+    min-width: 280px;
+    padding: 10px;
+    border: 1px solid var(--pf-border);
+    border-radius: var(--pf-radius-sm);
+    background: var(--pf-surface);
+    box-shadow: var(--pf-shadow-hover);
+}
+
+.pf-doctor-search {
+    margin-bottom: 8px;
+}
+
+.pf-doctor-search .form-control {
+    height: 36px;
+}
+
+.pf-doctor-list {
+    max-height: 260px;
+    margin: 0;
+    padding: 0;
+    overflow-y: auto;
+    list-style: none;
+}
+
+.pf-doctor-list li label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    padding: 7px 10px;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.pf-doctor-list li label:hover {
+    background: var(--pf-accent-soft);
+    color: var(--pf-accent-ink);
+}
+
+.pf-doctor-list li input[type="checkbox"] {
+    margin: 0;
+    accent-color: var(--pf-accent);
+}
+
+/* ---------- KPI cards (DashPatientsCount) ---------- */
+.pf-kpis {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.pf-kpi {
+    --pf-kpi-color: var(--pf-accent);
+    --pf-kpi-soft: var(--pf-accent-soft);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--pf-surface);
+    border: 1px solid var(--pf-border);
+    border-top: 3px solid var(--pf-kpi-color);
+    border-radius: var(--pf-radius);
+    box-shadow: var(--pf-shadow);
+    transition: box-shadow .2s ease;
+}
+
+.pf-kpi:hover {
+    box-shadow: var(--pf-shadow-hover);
+}
+
+.pf-kpi--new {
+    --pf-kpi-color: #0ea5a4;
+    --pf-kpi-soft: rgba(14, 165, 164, .12);
+}
+
+.pf-kpi--repeat {
+    --pf-kpi-color: #7c5cff;
+    --pf-kpi-soft: rgba(124, 92, 255, .12);
+}
+
+.pf-kpi--total {
+    --pf-kpi-color: var(--pf-accent);
+    --pf-kpi-soft: var(--pf-accent-soft);
+}
+
+.pf-kpi-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 14px 18px 0;
+}
+
+.pf-kpi-title {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: var(--pf-muted);
+}
+
+.pf-kpi-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: var(--pf-kpi-soft);
+    color: var(--pf-kpi-color);
+    font-size: 15px;
+}
+
+.pf-kpi-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding: 14px 18px 18px;
+}
+
+.pf-metric-label {
+    font-size: 12px;
+    color: var(--pf-muted);
+}
+
+.pf-metric-value {
+    margin-top: 4px;
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1.15;
+    font-variant-numeric: tabular-nums;
+    color: var(--pf-text);
+}
+
+/* ==========================================================================
+   EMR PAGES  (.emr-page)
+   ========================================================================== */
+
+.emr-page .card3,
+.emr-page .appointmentcard,
+.emr-page .statusCards,
+.emr-page .card2,
+.emr-page .cardcard {
+    padding: 18px;
+    background: var(--pf-surface);
+    border: 1px solid var(--pf-border);
+    border-radius: var(--pf-radius);
+    box-shadow: var(--pf-shadow);
+}
+
+.emr-page .card3 + .card3 {
+    margin-top: 0;
+}
+
+.emr-page .profile-info {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.emr-page .profile-img {
+    flex: 0 0 auto;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.emr-page .profile-details {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.emr-page .profile-name {
+    display: block;
+    margin-bottom: 12px;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--pf-text);
+}
+
+/* label / value pairs (profile, appointment) */
+.emr-page .emr-facts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px 16px;
+}
+
+.emr-page .emr-fact {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.emr-page .emr-fact.wide {
+    grid-column: 1 / -1;
+}
+
+.emr-page .emr-fact-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    color: var(--pf-muted);
+}
+
+.emr-page .emr-fact-value {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--pf-text);
+    overflow-wrap: anywhere;
+}
+
+/* appointment card */
+.emr-page .emr-section-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.emr-page .emr-section-title {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--pf-text);
+}
+
+.emr-page .emr-appt-date {
+    padding: 5px 10px;
+    border-radius: 999px;
+    background: var(--pf-accent-soft);
+    color: var(--pf-accent-ink);
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.emr-page .emr-appt-line {
+    margin: 0 0 14px;
+    font-size: 14px;
+    color: var(--pf-muted);
+}
+
+.emr-page .emr-appt-line strong {
+    color: var(--pf-text);
+}
+
+.emr-page .emr-info-btn {
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+}
+
+/* card titles that used to be an inline flex row with an <hr> */
+.emr-page .emr-card-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 14px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--pf-border);
+}
+
+.emr-page .emr-card-head img {
+    width: 28px;
+    height: 28px;
+}
+
+.emr-page .emr-card-title,
+.emr-page .emr-card-head h4,
+.emr-page h4.labelcolor {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--pf-text);
+}
+
+/* the old <hr> under each card title is replaced by the head's own border */
+.emr-page .emr-card-head + hr {
+    display: none;
+}
+
+.emr-page h4.labelcolor {
+    margin-bottom: 12px;
+}
+
+/* profile + appointment: equal halves, same top edge, same height */
+.emr-page .emr-top-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    margin-top: 14px;
+}
+
+.emr-page .emr-top-row > [class*="col-"] {
+    float: none;
+    display: flex;
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: 50%;
+}
+
+.emr-page .emr-top-row > [class*="col-"] > .card3,
+.emr-page .emr-top-row > [class*="col-"] > .appointmentcard {
+    flex: 1 1 auto;
+    width: 100%;
+    margin-bottom: 0;
+}
+
+.emr-page .card3,
+.emr-page .appointmentcard {
+    display: flex;
+    flex-direction: column;
+}
+
+/* appointment facts sit on the bottom edge, so both cards line up */
+.emr-page .appointmentcard .emr-facts {
+    margin-top: auto;
+}
+
+@media screen and (max-width: 991px) {
+    .emr-page .emr-top-row > [class*="col-"] {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+}
+
+/* digital stats strip (sits under the profile) */
+.emr-page .digital-stats-container {
+    display: block;
+    width: 100%;
+    margin: 14px 0;
+}
+
+.emr-page .digital-stats-row {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 10px;
+}
+
+.emr-page .digital-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    padding: 12px 14px;
+    background: var(--pf-surface-2);
+    border: 1px solid var(--pf-border);
+    border-radius: var(--pf-radius-sm);
+}
+
+.emr-page .digital-stat .stat-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    color: var(--pf-muted);
+}
+
+.emr-page .digital-number {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--pf-text);
+    font-variant-numeric: tabular-nums;
+}
+
+/* visits / counts boxes */
+.emr-page .visits-cards {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 14px 10px;
+    background: var(--pf-surface-2);
+    border: 1px solid var(--pf-border);
+    border-radius: var(--pf-radius-sm);
+    text-align: center;
+}
+
+.emr-page .visits-cards .number {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--pf-text);
+    font-variant-numeric: tabular-nums;
+}
+
+.emr-page .visits-cards .label {
+    font-size: 12px;
+    color: var(--pf-muted);
+}
+
+/* tables (vitals, test list, EMR tabs) */
+.emr-page .MyTable,
+.emr-page .MyTable2,
+.emr-page .modern-table {
+    width: 100%;
+    font-size: 13px;
+}
+
+.emr-page .MyTable thead th,
+.emr-page .MyTable2 thead th,
+.emr-page .modern-table thead th {
+    padding: 10px 12px;
+    background: var(--pf-surface-2);
+    border-bottom: 1px solid var(--pf-border);
+    color: var(--pf-muted);
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.emr-page .MyTable td,
+.emr-page .MyTable2 td,
+.emr-page .modern-table td {
+    padding: 9px 12px;
+    border-bottom: 1px solid var(--pf-border);
+    vertical-align: middle;
+}
+
+.emr-page .MyTable tbody tr:hover td,
+.emr-page .MyTable2 tbody tr:hover td,
+.emr-page .modern-table tbody tr:hover td {
+    background: var(--pf-accent-soft);
+}
+
+/* section navigation sidebar (NewEMR) */
+.emr-page .sidebarr {
+    padding: 8px;
+    background: var(--pf-surface);
+    border: 1px solid var(--pf-border);
+    border-radius: var(--pf-radius);
+    box-shadow: var(--pf-shadow);
+}
+
+.emr-page .menu-item {
+    border-radius: var(--pf-radius-sm);
+}
+
+.emr-page .menu-item:hover {
+    background: var(--pf-accent-soft);
+}
+
+.emr-page .menu-item.selected {
+    background: var(--pf-accent-soft);
+    box-shadow: inset 3px 0 0 var(--pf-accent);
+}
+
+.emr-page .menu-item.selected span {
+    color: var(--pf-accent-ink);
+    font-weight: 700;
+}
+
+/* ==========================================================================
+   DASHBOARD PAGES  (Sales, Inventory, Procurement, Biodata)  -  wrapped in .pf-page
+   Each page keeps its own ids, scripts and inline style; these rules only sit on top.
+   Equal-height cards come from flex rows (Bootstrap rows are plain blocks otherwise).
+   ========================================================================== */
+
+.pf-page .row {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.pf-page .row > [class*="col-"],
+.pf-page .row > [class*="cl-"] {
+    float: none;
+    display: flex;
+    flex-direction: column;
+}
+
+.pf-page .row > [class*="col-"] > .card,
+.pf-page .row > [class*="col-"] > .card2,
+.pf-page .row > [class*="col-"] > .card-dash,
+.pf-page .row > [class*="col-"] > .stat-card {
+    flex: 1 1 auto;
+    margin-bottom: 16px;
+}
+
+.pf-page .card,
+.pf-page .card2,
+.pf-page .card-dash,
+.pf-page .stat-card {
+    background: var(--pf-surface);
+    border: 1px solid var(--pf-border);
+    border-radius: var(--pf-radius);
+    box-shadow: var(--pf-shadow);
+    color: var(--pf-text);
+    transition: box-shadow .2s ease;
+}
+
+.pf-page .card:hover,
+.pf-page .card2:hover,
+.pf-page .card-dash:hover,
+.pf-page .stat-card:hover {
+    box-shadow: var(--pf-shadow-hover);
+}
+
+.pf-page .card-header:not([class*="bg-"]) {
+    padding: 12px 16px;
+    background: transparent;
+    border-bottom: 1px solid var(--pf-border);
+    border-radius: var(--pf-radius) var(--pf-radius) 0 0;
+    color: var(--pf-text);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.pf-page .card-body {
+    padding: 16px;
+}
+
+.pf-page .card-body h4,
+.pf-page .card-title {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--pf-text);
+}
+
+/* "Label: value" lines: label muted, value strong */
+.pf-page .card-body h6 {
+    margin: 4px 0;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.5;
+    color: var(--pf-muted);
+}
+
+.pf-page .card-body h6 b {
+    font-weight: 600;
+}
+
+.pf-page .card-body h6 span {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--pf-text);
+    font-variant-numeric: tabular-nums;
+}
+
+.pf-page table {
+    font-size: 13px;
+    color: var(--pf-text);
+}
+
+.pf-page table thead th {
+    padding: 9px 12px;
+    background: var(--pf-surface-2);
+    border-bottom: 1px solid var(--pf-border);
+    color: var(--pf-muted);
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.pf-page table td {
+    padding: 9px 12px;
+    border-top: 1px solid var(--pf-border);
+    vertical-align: middle;
+}
+
+.pf-page table tbody tr:hover td {
+    background: var(--pf-accent-soft);
+}
+
+.pf-page .card-grid {
+    gap: 16px;
+}
+
+.pf-page .stat-card {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.pf-page .stat-card .card-body {
+    flex: 1 1 auto;
+}
+
+.pf-page .stat-card .card-header {
+    border: 0;
+    border-radius: 0;
+}
+
+/* on phones every column takes the full row */
+@media screen and (max-width: 767px) {
+    .pf-page .row > [class*="col-"],
+    .pf-page .row > [class*="cl-"] {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+}
+
+/* ==========================================================================
+   EMERGENCY CASE PAGE  (.emergency-page)  -  compact and aligned
+   Same content and ids; tighter spacing, one line height for every control.
+   ========================================================================== */
+
+.emergency-page .card {
+    margin-bottom: 10px;
+}
+
+.emergency-page .card-body {
+    padding: 10px 12px;
+}
+
+.emergency-page .card-body .row {
+    align-items: center;
+    margin-bottom: 4px;
+}
+
+.emergency-page .card-body .row > [class*="col-"] {
+    min-height: 30px;
+    justify-content: center;
+}
+
+.emergency-page .card-body .row > [class*="col-"]:first-child {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--pf-muted);
+}
+
+.emergency-page .card-body .row > [class*="col-"]:last-child {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--pf-text);
+}
+
+.emergency-page .patient-image {
+    width: 64px;
+    height: 64px;
+}
+
+/* controls: one height everywhere */
+.emergency-page input[type="text"],
+.emergency-page select.form-select,
+.emergency-page .form-control {
+    height: 32px;
+    padding: 4px 8px;
+    font-size: 13px;
+}
+
+.emergency-page input[type="button"],
+.emergency-page .btn-primry {
+    height: 32px;
+    padding: 0 14px;
+    margin-bottom: 4px;
+    font-size: 13px;
+}
+
+/* tab strip: compact pill bar */
+.emergency-page #tabs {
+    margin-top: 10px;
+}
+
+.emergency-page #tabs > ul {
+    gap: 4px;
+    margin: 0 0 10px;
+    padding: 4px;
+}
+
+.emergency-page #tabs > ul > li > a {
+    padding: 5px 11px;
+    font-size: 12.5px;
+}
+
+.emergency-page #tabs h2,
+.emergency-page h2.Heading,
+.emergency-page h2.heading {
+    margin: 10px 0 8px;
+    padding-bottom: 6px;
+    font-size: 14px;
+}
+
+.emergency-page table th,
+.emergency-page table td {
+    padding: 5px 8px;
+}
+
+/* ---------- phones ---------- */
+@media screen and (max-width: 767px) {
+    .pf-title {
+        font-size: 19px;
+    }
+
+    .pf-kpi-body {
+        grid-template-columns: 1fr;
+    }
+
+    .pf-field,
+    .pf-field--wide {
+        flex-basis: 100%;
+        max-width: none;
+    }
+
+    .pf-field--action {
+        flex-basis: auto;
+    }
+
+    .emr-page .profile-info {
+        flex-direction: column;
+    }
+}

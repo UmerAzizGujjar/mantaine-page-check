@@ -489,7 +489,7 @@ namespace PMS
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlTableRow trOperationTheaterRoomNo;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl trOperationTheaterRoomNo;
 
         /// <summary>
         /// Label7 control.

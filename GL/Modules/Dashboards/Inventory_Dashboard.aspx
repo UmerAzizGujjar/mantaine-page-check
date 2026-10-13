@@ -545,13 +545,20 @@
 
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+<div class="pf-page">
+<header class="pf-header">
+    <div>
+        <h1 class="pf-title">Inventory Dashboard</h1>
+        <p class="pf-subtitle">Purchase orders, goods receipts and payments by week, month and year</p>
+    </div>
+</header>
   <div id="loader" style="display: none;position: fixed;top: 0; left: 0;width: 100%; height: 100%;background: rgba(255,255,255,0.8);z-index: 9999;
     display: flex;justify-content: center;align-items: center;">
     <div class="spinner"></div>
 </div>
     <div class="container">
         <div class="row">
-            <div class="col-lg-8 col-md-6 sm-12">
+            <div class="col-lg-8 col-md-6 col-sm-12">
                 <div class="card">
                     <div class="card-header">
                         Purchase Orders (Last 12 Months)
@@ -563,7 +570,7 @@
             </div>
 
 
-            <div class="col-lg-3 col-md-6 sm-12">
+            <div class="col-lg-3 col-md-6 col-sm-12">
                 <div class="card">
                     <div class="card-header">
                         Top 10 GRN Items (Last 90 Days)
@@ -583,7 +590,7 @@
 
         </div>
         <div class="row">
-            <div class="col-lg-8 col-md-6 sm-12">
+            <div class="col-lg-8 col-md-6 col-sm-12">
                 <div class="card">
                     <div class="card-header">
                         Purchase For (Last 12 Months)
@@ -735,4 +742,5 @@
 </div>
 
     </div>
+</div>
 </asp:Content>
