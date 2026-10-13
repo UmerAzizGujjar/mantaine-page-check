@@ -1063,6 +1063,20 @@ namespace PMS
                     return "VitalsRequired";
                 }
 
+                // Follow-up investigations are re-read from the DB and checked against the patient before any write.
+                // null = table not sent; saved rows are then left untouched.
+                List<FollowUpRow> followUpRows = null;
+                if (data.Investigations != null)
+                {
+                    List<int> selectedIds = data.Investigations.Select(i => i.Lab_Test_Detail_ID).ToList();
+                    using (DataBaseDataContext vdb = new DataBaseDataContext(DBClass.ConnectionString()))
+                    {
+                        followUpRows = GetFollowUpRows(vdb, data.Patient_ID, selectedIds);
+                    }
+                    if (followUpRows == null)
+                        return "InvestigationError|Some selected investigations are invalid or do not belong to this patient. Please re-add them and save again.";
+                }
+
                 var id = "";
                 using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
                 {
@@ -1558,6 +1572,28 @@ namespace PMS
                         {
                             orth.Transaction_ID = OPD.Out_Patient_ID;
                         }
+                        /***********Follow-up investigations saved to Lab_Resultrpt (Transaction_Type = FollowUp)****************/
+                        if (followUpRows != null)
+                        {
+                            List<Lab_Resultrpt> oldFollowUpRows = db.Lab_Resultrpts.Where(oldRow => oldRow.Out_Patient_ID == OPD.Out_Patient_ID && oldRow.Transaction_Type == "FollowUp").ToList();
+                            db.Lab_Resultrpts.DeleteAllOnSubmit(oldFollowUpRows);
+                            foreach (FollowUpRow followUpRow in followUpRows)
+                            {
+                                string testName = followUpRow.Test_Name ?? "";
+                                Lab_Resultrpt rpt = new Lab_Resultrpt();
+                                rpt.Lab_Resultrpt_ID = followUpRow.Lab_Test_Detail_ID.ToString();
+                                rpt.Out_Patient_ID = OPD.Out_Patient_ID;
+                                rpt.In_Patient_ID = null;
+                                rpt.Patient_ID = data.Patient_ID;
+                                rpt.Date = DateTime.Now;
+                                // Lab_Resultrpt_Name is VarChar(10); the full name and result are re-read from Lab_Tests on load.
+                                rpt.Lab_Resultrpt_Name = testName.Length > 10 ? testName.Substring(0, 10) : testName;
+                                rpt.ReslutDate = followUpRow.Result_Date;
+                                rpt.Transaction_Type = "OutPatient";
+                                db.Lab_Resultrpts.InsertOnSubmit(rpt);
+                            }
+                        }
+
                         db.SubmitChanges();
                          id = OPD.Out_Patient_ID.ToString();
                      }
@@ -1567,6 +1603,100 @@ namespace PMS
             catch (Exception ex)
             {
                 return ex.Message.ToString();
+            }
+        }
+
+        // Returns the selected lab results only if every id exists, belongs to this patient and is not rejected.
+        private static List<FollowUpRow> GetFollowUpRows(DataBaseDataContext db, int patientId, List<int> detailIds)
+        {
+            int? regPatId = (from p in db.Patients where p.Patient_ID == patientId select (int?)p.Reg_PatId).FirstOrDefault();
+            if (regPatId == null)
+                return null;
+
+            List<int> ids = detailIds.Distinct().ToList();
+            List<FollowUpRow> rows = (from td in db.Lab_Test_Details
+                                      join t in db.Lab_Tests on td.Test_ID equals t.Test_ID
+                                      where ids.Contains(td.Lab_Test_Detail_ID)
+                                            && td.Patient_ID == regPatId
+                                            && (td.IsRejected == null || td.IsRejected == false)
+                                            && t.Main_Department == "001" && td.Is_Result == true
+                                      select new FollowUpRow
+                                      {
+                                          Lab_Test_Detail_ID = td.Test_ID,
+                                          Test_Name = td.Test_Value,
+                                          Result_Date = td.Approved_Time ?? td.Date
+                                      }).ToList();
+
+            if (rows.Count != ids.Count)
+                return null;
+            return rows;
+        }
+
+        [WebMethod]
+        public static string LoadPatientInvestigations(int PatientID)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                int? regPatId = (from p in db.Patients where p.Patient_ID == PatientID select (int?)p.Reg_PatId).FirstOrDefault();
+                if (regPatId == null)
+                    return "[]";
+
+                var list = (from td in db.Lab_Test_Details
+                            join t in db.Lab_Tests on td.Test_ID equals t.Test_ID
+                            where td.Patient_ID == regPatId
+                                  && (td.IsRejected == null || td.IsRejected == false)
+                                  && (td.Is_Result == true )
+                                  && t.Main_Department == "001"
+                            orderby (td.Approved_Time ?? td.Date) descending
+                            select new { td.Lab_Test_Detail_ID, t.Test_Name, td.Test_Value, ResultDate = td.Approved_Time ?? td.Date }).ToList();
+
+                var result = list.Select(x => new
+                {
+                    x.Lab_Test_Detail_ID,
+                    x.Test_Name,
+                    Test_Result = string.IsNullOrWhiteSpace(x.Test_Value) ? "-" : x.Test_Value,
+                    Result_Date = x.ResultDate.HasValue ? x.ResultDate.Value.ToString(AppConfig.DateFormat) : "-"
+                }).ToList();
+                return (new JavaScriptSerializer()).Serialize(result);
+            }
+        }
+
+        [WebMethod]
+        public static string LoadFollowUpInvestigations(int OutPatientID)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                List<Lab_Resultrpt> saved = (from r in db.Lab_Resultrpts
+                                             where r.Out_Patient_ID == OutPatientID 
+                                             orderby r.Lab_Result_ID
+                                             select r).ToList();
+
+                var result = new List<object>();
+                foreach (Lab_Resultrpt r in saved)
+                {
+                    int detailId;
+                    if (!int.TryParse(r.Lab_Resultrpt_ID, out detailId))
+                        continue;
+
+                    // Prefer the live values from the lab tables; fall back to the stored copy if the lab row is gone.
+                    var td = (from d in db.Lab_Test_Details
+                              join t in db.Lab_Tests on d.Test_ID equals t.Test_ID
+                              where d.Lab_Test_Detail_ID == detailId
+                              select new { t.Test_Name, d.Result_Value, ResultDate = d.Approved_Time ?? d.Date }).FirstOrDefault();
+
+                    string name = td != null ? td.Test_Name : r.Lab_Resultrpt_Name;
+                    string testResult = td != null && !string.IsNullOrWhiteSpace(td.Result_Value) ? td.Result_Value : "-";
+                    DateTime? resultDate = td != null ? td.ResultDate : r.ReslutDate;
+
+                    result.Add(new
+                    {
+                        Lab_Test_Detail_ID = detailId,
+                        Test_Name = name,
+                        Test_Result = testResult,
+                        Result_Date = resultDate.HasValue ? resultDate.Value.ToString(AppConfig.DateFormat) : "-"
+                    });
+                }
+                return (new JavaScriptSerializer()).Serialize(result);
             }
         }
 
@@ -5597,6 +5727,16 @@ on d.Doctor_Id equals hr.Emp_ID
             public string RightEye;
             public string Status;
         }
+        public class FollowUpInvestigation
+        {
+            public int Lab_Test_Detail_ID { get; set; }
+        }
+        public class FollowUpRow
+        {
+            public int Lab_Test_Detail_ID { get; set; }
+            public string Test_Name { get; set; }
+            public DateTime? Result_Date { get; set; }
+        }
         public class PatientVisitData
         {
             public int Patient_ID { get; set; }
@@ -5829,6 +5969,7 @@ on d.Doctor_Id equals hr.Emp_ID
             public string DermaNose { get; set; }
             public string DermaLips { get; set; }
             public string Out_Patient_ID { get; set; }
+            public List<FollowUpInvestigation> Investigations { get; set; }
 
             public string Interior_Right { get; set; }
             public string Interior_Left { get; set; }

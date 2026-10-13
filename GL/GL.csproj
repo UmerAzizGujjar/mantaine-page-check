@@ -603,6 +603,7 @@
     <Content Include="Modules\GL\Voucher.aspx" />
     <Content Include="Modules\GL\BudgetView.aspx" />
     <Content Include="Modules\GL\AllVoucherList.aspx" />
+    <Content Include="Modules\GL\CancelledVoucherList.aspx" />
     <Content Include="Modules\GL\UnbalancedVoucherList.aspx" />
     <Content Include="Modules\GL\VoucherView.aspx" />
     <Content Include="Modules\Lab\GroupTestDefinition.aspx" />
@@ -5040,6 +5041,13 @@
     </Compile>
     <Compile Include="Modules\GL\AllVoucherList.aspx.designer.cs">
       <DependentUpon>AllVoucherList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\GL\CancelledVoucherList.aspx.cs">
+      <DependentUpon>CancelledVoucherList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\GL\CancelledVoucherList.aspx.designer.cs">
+      <DependentUpon>CancelledVoucherList.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\GL\UnbalancedVoucherList.aspx.cs">
       <DependentUpon>UnbalancedVoucherList.aspx</DependentUpon>

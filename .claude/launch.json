@@ -6,6 +6,12 @@
       "runtimeExecutable": "C:\\Program Files\\IIS Express\\iisexpress.exe",
       "runtimeArgs": ["/path:F:\\Latest Sources\\Standard_Hospital\\GL", "/port:28402"],
       "port": 28402
+    },
+    {
+      "name": "gl-iisexpress-e",
+      "runtimeExecutable": "C:\\Program Files\\IIS Express\\iisexpress.exe",
+      "runtimeArgs": ["/path:E:\\Wajahat\\LatestSources\\HMIS_GitSource\\Standard_Hospital\\GL", "/port:28403"],
+      "port": 28403
     }
   ]
 }

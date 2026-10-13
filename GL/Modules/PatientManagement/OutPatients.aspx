@@ -3576,6 +3576,7 @@
                 LoadHistory();
                 LoadServices_Procedures();
                 Load_Proto();
+                LoadFollowUpInvestigations();
 
                 setTimeout(function () {
                     var bp = $('#ctl00_MainContent_txtBP').val();
@@ -4153,6 +4154,126 @@
                 });
             }
         }
+        /* ---- Patient Investigations (Follow-up tab). Separate from the Protos functions above. ---- */
+        var followUpInvestigations = [];          // rows shown in #tblFollowUpInvestigations
+        var followUpInvestigationsReady = false;  // true once saved rows are loaded (or for a new visit)
+
+        function openPatientInvestigations() {
+            var patientID = $('#<%= hdfPatient_ID.ClientID %>').val();
+            if (!patientID || patientID === '(New)') {
+                Swal.fire({ icon: 'warning', title: 'Please select a patient first.' });
+                return;
+            }
+            $('#dvPatientInvestigationsEmpty').hide();
+            $('#dvPatientInvestigationsLoading').show();
+            $('#tblPatientInvestigations tbody').empty();
+            $('#modalPatientInvestigations').modal('show');
+
+            $.ajax({
+                type: "POST",
+                url: "OutPatients.aspx/LoadPatientInvestigations",
+                data: JSON.stringify({ PatientID: parseInt(patientID, 10) }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    $('#dvPatientInvestigationsLoading').hide();
+                    var list = JSON.parse(response.d || '[]');
+                    if (list.length === 0) {
+                        $('#dvPatientInvestigationsEmpty').text('No laboratory investigations are available for this patient.').show();
+                        return;
+                    }
+                    var tbody = $('#tblPatientInvestigations tbody');
+                    $.each(list, function (i, item) {
+                        var inv = { id: item.Lab_Test_Detail_ID, name: item.Test_Name, result: item.Test_Result, date: item.Result_Date };
+                        var alreadyAdded = followUpInvestigations.some(function (x) { return x.id === inv.id; });
+                        var chk = $('<input type="checkbox" class="chkPatientInvestigation">').val(inv.id).prop('checked', alreadyAdded).prop('disabled', alreadyAdded);
+                        tbody.append($('<tr>').data('inv', inv)
+                            .append($('<td>').append(chk))
+                            .append($('<td>').text(inv.name))
+                            .append($('<td>').text(inv.result))
+                            .append($('<td>').text(inv.date)));
+                    });
+                },
+                error: function () {
+                    $('#dvPatientInvestigationsLoading').hide();
+                    $('#dvPatientInvestigationsEmpty').text('Could not load investigations. Please try again.').show();
+                }
+            });
+        }
+
+        function selectAllPatientInvestigations(checked) {
+            $('#tblPatientInvestigations tbody input.chkPatientInvestigation:not(:disabled)').prop('checked', checked);
+        }
+
+        function addSelectedInvestigations() {
+            var selected = [];
+            $('#tblPatientInvestigations tbody input.chkPatientInvestigation:checked:not(:disabled)').each(function () {
+                selected.push($(this).closest('tr').data('inv'));
+            });
+            if (selected.length === 0) {
+                Swal.fire({ icon: 'warning', title: 'Please select at least one investigation.' });
+                return;
+            }
+            $.each(selected, function (i, inv) {
+                var exists = followUpInvestigations.some(function (x) { return x.id === inv.id; });
+                if (!exists) followUpInvestigations.push(inv);
+            });
+            renderFollowUpInvestigations();
+            $('#modalPatientInvestigations').modal('hide');
+        }
+
+        function renderFollowUpInvestigations() {
+            var tbody = $('#tblFollowUpInvestigations tbody').empty();
+            $.each(followUpInvestigations, function (i, inv) {
+                var removeLink = $('<a href="javascript:void(0)">Remove</a>').on('click', function () {
+                    removeFollowUpInvestigation(inv.id);
+                });
+                tbody.append($('<tr>')
+                    .append($('<td>').text(inv.name))
+                    .append($('<td>').text(inv.result))
+                    .append($('<td>').text(inv.date))
+                    .append($('<td style="text-align: left;">').append(removeLink)));
+            });
+        }
+
+        function removeFollowUpInvestigation(id) {
+            followUpInvestigations = followUpInvestigations.filter(function (x) { return x.id !== id; });
+            renderFollowUpInvestigations();
+        }
+
+        function LoadFollowUpInvestigations() {
+            var outPatID = $('#<%= txtOut_Patient_ID.ClientID %>').val();
+            if (outPatID === '(New)' || outPatID === '') {
+                followUpInvestigationsReady = true;
+                return;
+            }
+            $.ajax({
+                type: "POST",
+                url: "OutPatients.aspx/LoadFollowUpInvestigations",
+                data: JSON.stringify({ OutPatientID: parseInt(outPatID, 10) }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    followUpInvestigations = $.map(JSON.parse(response.d || '[]'), function (item) {
+                        return { id: item.Lab_Test_Detail_ID, name: item.Test_Name, result: item.Test_Result, date: item.Result_Date };
+                    });
+                    followUpInvestigationsReady = true;
+                    renderFollowUpInvestigations();
+                },
+                error: function () {
+                    Swal.fire({ icon: 'error', title: 'Could not load saved investigations. Reload the page before saving.' });
+                }
+            });
+        }
+
+        // null means "table not loaded yet": the server then leaves saved investigations untouched.
+        function getFollowUpInvestigationsPayload() {
+            var outPatID = $('#<%= txtOut_Patient_ID.ClientID %>').val();
+            var isNewVisit = (outPatID === '(New)' || outPatID === '');
+            if (!isNewVisit && !followUpInvestigationsReady) return null;
+            return $.map(followUpInvestigations, function (inv) { return { Lab_Test_Detail_ID: inv.id }; });
+        }
+
         function AddtestbyDep(anchor) {
             var row = $(anchor).closest('tr');
             var CategoryID = $('#ddlMainTestDepartment').val();
@@ -5145,6 +5266,7 @@
                 Peads_apgerScore1min: $('#ctl00_MainContent_ddlPeads_apgerScore1min').val() || "",
                 Peads_apgerScore5min: $('#ctl00_MainContent_ddlPeads_apgerScore5min').val() || "",
                 Verbal_Consent : $('#ctl00_MainContent_ddlverbal_consent').val(),
+                Investigations : getFollowUpInvestigationsPayload(),
             }
             
           
@@ -5157,6 +5279,16 @@
                 success: function (response) {
                     if (response && response.d === "VitalsRequired") {
                         showVitalsRequiredAlert();
+                        $('#btnSave').attr('disabled', false);
+                        return;
+                    }
+                    if (response && typeof response.d === 'string' && response.d.indexOf('InvestigationError|') === 0) {
+                        Swal.fire({ icon: 'error', title: 'Investigations not saved', text: response.d.substring('InvestigationError|'.length) });
+                        $('#btnSave').attr('disabled', false);
+                        return;
+                    }
+                    if (!/^\d+$/.test(response.d)) {
+                        Swal.fire({ icon: 'error', title: 'Save failed', text: String(response.d) });
                         $('#btnSave').attr('disabled', false);
                         return;
                     }
@@ -5185,6 +5317,8 @@
                 },
                 error: function (xhr, status, error) {
                     console.error("Error:", error);
+                    $('#btnSave').attr('disabled', false);
+                    Swal.fire({ icon: 'error', title: 'Save failed', text: 'The record could not be saved. Please try again.' });
                 }
             });
             
@@ -6870,6 +7004,23 @@
                  </table>
              </div>
                         </div>
+                        <div class="row">
+                            <div class="col-lg-8 col-md-6 col-sm-6">
+                                <button type="button" class="btn btn-primry" id="btnPatientInvestigations" onclick="openPatientInvestigations()" style="margin-bottom: 8px;">Investigations</button>
+                                <table class="table" style="height: auto; overflow: scroll;" id="tblFollowUpInvestigations">
+                                    <thead>
+                                        <tr>
+                                            <th style="text-align: left;">Test Name</th>
+                                            <th>Test Result</th>
+                                            <th>Result Date</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                         <div class="row mt-3">
                             <div class="col-lg-6">
                                 <label for="Final_Rec">Referral</label>
@@ -7679,6 +7830,44 @@
   </div>
 </div>
 
+
+    <div id="modalPatientInvestigations" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalPatientInvestigationsLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title" id="modalPatientInvestigationsLabel">Patient Investigations</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="dvPatientInvestigationsLoading" style="display: none;">
+                        <i class="fa fa-spinner fa-spin"></i> Loading investigations...
+                    </div>
+                    <div id="dvPatientInvestigationsEmpty" style="display: none;">No laboratory investigations are available for this patient.</div>
+                    <div class="mb-2">
+                        <button type="button" class="btn btn-gray" onclick="selectAllPatientInvestigations(true)">Select All</button>
+                        <button type="button" class="btn btn-gray" onclick="selectAllPatientInvestigations(false)">Deselect All</button>
+                    </div>
+                    <div class="table-responsive" style="max-height: 60vh; overflow-y: auto;">
+                        <table class="table" id="tblPatientInvestigations">
+                            <thead>
+                                <tr>
+                                    <th>Select</th>
+                                    <th>Test Name</th>
+                                    <th>Test Result</th>
+                                    <th>Result Date</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-gray" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primry" id="btnAddSelectedInvestigations" onclick="addSelectedInvestigations()">Add Investigations</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div id="PsychiatryModel" class="modal fade" role="dialog" style="overflow-y: overaly;">
         <div class="modal-dialog">

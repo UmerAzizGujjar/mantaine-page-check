@@ -1059,24 +1059,6 @@ namespace PMS
         protected global::System.Web.UI.WebControls.TextBox txtEngagement;
 
         /// <summary>
-        /// LblVitalsDate control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label LblVitalsDate;
-
-        /// <summary>
-        /// txtVitalsDate control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtVitalsDate;
-
-        /// <summary>
         /// LblPuls control.
         /// </summary>
         /// <remarks>
@@ -1255,6 +1237,24 @@ namespace PMS
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtRespiration;
+
+        /// <summary>
+        /// LblVitalsDate control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label LblVitalsDate;
+
+        /// <summary>
+        /// txtVitalsDate control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtVitalsDate;
 
         /// <summary>
         /// lblMUAC control.
