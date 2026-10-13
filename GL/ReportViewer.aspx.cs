@@ -7111,6 +7111,20 @@ namespace PMS
                 rd.SetParameterValue("@Vendor_ID", Convert.ToInt32(vendorID));
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                 rd.SetParameterValue("Title", Request.QueryString["ReportTitle"].ToString().Trim());
+
+                DateTime poStartDate, poEndDate;
+                if (DateTime.TryParse(Request.QueryString["startDate"], out poStartDate))
+                {
+                    SetOptionalParameter("@StartDate", poStartDate);
+                }
+                if (DateTime.TryParse(Request.QueryString["endDate"], out poEndDate))
+                {
+                    SetOptionalParameter("@EndDate", poEndDate);
+                }
+                if (!string.IsNullOrEmpty(Request.QueryString["Warehouse"]))
+                {
+                    SetOptionalParameter("@Warehouse", Request.QueryString["Warehouse"]);
+                }
             }
             else if (reportName == "VendorWiseIGPS")
             {
@@ -11029,6 +11043,20 @@ namespace PMS
         {
 
         }
+
+        // Sets a parameter only if the loaded .rpt declares it, so a report without the new filter fields still opens.
+        private void SetOptionalParameter(string ParameterName, object ParameterValue)
+        {
+            foreach (CrystalDecisions.CrystalReports.Engine.ParameterFieldDefinition field in rd.DataDefinition.ParameterFields)
+            {
+                if (field.Name == ParameterName)
+                {
+                    rd.SetParameterValue(ParameterName, ParameterValue);
+                    return;
+                }
+            }
+        }
+
         protected void CrystalReportViewer1_Unload(object sender, EventArgs e)
         {
 
