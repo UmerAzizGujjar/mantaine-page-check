@@ -270,6 +270,7 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
 
+    <div class="pf-page">
     <div class="dashboard-header">
         <h1><i class="fas fa-box-open me-2"></i> Inventory & Procurement Dashboard</h1>
         <p>Track purchase lifecycle from requisition to goods receipt</p>
@@ -380,6 +381,7 @@
             </div>
         </div>
 
+    </div>
     </div>
 
 </asp:Content>

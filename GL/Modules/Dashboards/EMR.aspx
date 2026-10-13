@@ -910,13 +910,14 @@
     <input type="hidden" id="hdfPatient_ID" />
     <input type="hidden" id="hdfReg_ID" />
     <input type="hidden" id="hdfoutPatID" />
+    <div class="emr-page">
     <div class="row">
         <div class="col-lg-2">
 
             <asp:TextBox ID="txtPatNO" runat="server" class="form-control" />
         </div>
     </div>
-    <div class="row">
+    <div class="row emr-top-row">
         <!-- Left Column: Profile Information -->
         <div class="col-lg-5 col-md-5 col-sm-5">
             <div class="card3">
@@ -924,10 +925,32 @@
                     <img src="~../../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/cake.png" alt="Profile Picture" class="profile-img">
                     <div class="profile-details">
                         <span class="profile-name" id="patname"></span>
-                        <p><strong class="">MR No:</strong> &nbsp; &nbsp; <span style="font-weight: 500 !important" id="mrno"></span>&nbsp; &nbsp; &nbsp; <strong class="">Age:</strong> &nbsp; &nbsp; <span style="font-weight: 500 !important" id="txtage"></span>&nbsp;&nbsp;&nbsp; <strong class="">Gender:</strong> &nbsp; &nbsp; <span style="font-weight: 500 !important" id="gender"></span></p>
-                        <p><strong class="">Phone Number:</strong> &nbsp; &nbsp;&nbsp; <span style="font-weight: 500 !important" id="phonenumber"></span></p>
-                        <p><strong class="">CNIC:</strong>&nbsp;&nbsp;&nbsp; <span style="font-weight: 500 !important" id="CNIC"></span></p>
-                        <p><strong class="">Address:</strong> &nbsp;&nbsp;&nbsp;<span style="font-weight: 500 !important" id="address"></span></p>
+                        <div class="emr-facts">
+                            <div class="emr-fact">
+                                <span class="emr-fact-label">MR No</span>
+                                <span class="emr-fact-value" id="mrno"></span>
+                            </div>
+                            <div class="emr-fact">
+                                <span class="emr-fact-label">Age</span>
+                                <span class="emr-fact-value" id="txtage"></span>
+                            </div>
+                            <div class="emr-fact">
+                                <span class="emr-fact-label">Gender</span>
+                                <span class="emr-fact-value" id="gender"></span>
+                            </div>
+                            <div class="emr-fact">
+                                <span class="emr-fact-label">Phone</span>
+                                <span class="emr-fact-value" id="phonenumber"></span>
+                            </div>
+                            <div class="emr-fact">
+                                <span class="emr-fact-label">CNIC</span>
+                                <span class="emr-fact-value" id="CNIC"></span>
+                            </div>
+                            <div class="emr-fact wide">
+                                <span class="emr-fact-label">Address</span>
+                                <span class="emr-fact-value" id="address"></span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -936,20 +959,24 @@
         <!-- Right Column: Appointment Information -->
         <div class="col-lg-6 col-md-6 col-sm-6">
             <div class="appointmentcard">
-                <div class="appointment-info">
-                    <h5 style="margin-right: 45px; font-size: 1.3em">
-                        <strong class="">Upcoming Appointment</strong>
-
-                    </h5>
-                    <span class="badge" style="cursor: pointer;"><span id="appdate">Appointment Date</span></span>
-                    <h5 style="margin-left: 45px"><strong class="">Consultation with &nbsp;<span id="doctorname"></span></strong></h5>
+                <div class="emr-section-head">
+                    <h4 class="emr-section-title">Upcoming Appointment</h4>
+                    <span class="emr-appt-date" id="appdate">Appointment Date</span>
                 </div>
+                <p class="emr-appt-line">Consultation with <strong id="doctorname"></strong></p>
 
-                <div class="appointment-details">
-                    <div class="row-details">
-                        <p><strong class="labelcolor">Last Visit:&nbsp;</strong><span id="prv_visit"></span></p>
-                        <p><strong class="labelcolor">Doctor Name:&nbsp;</strong><span id="prvDoctor"></span></p>
-                        <p><strong class="labelcolor">Department:&nbsp;</strong><span id="Department"></span></p>
+                <div class="emr-facts">
+                    <div class="emr-fact">
+                        <span class="emr-fact-label">Last visit</span>
+                        <span class="emr-fact-value" id="prv_visit"></span>
+                    </div>
+                    <div class="emr-fact">
+                        <span class="emr-fact-label">Doctor name</span>
+                        <span class="emr-fact-value" id="prvDoctor"></span>
+                    </div>
+                    <div class="emr-fact">
+                        <span class="emr-fact-label">Department</span>
+                        <span class="emr-fact-value" id="Department"></span>
                     </div>
                 </div>
 
@@ -965,8 +992,8 @@
     <div class="main-row ">
         <div class="row vitalsTable" id="opdvitals" style="margin-left: -2px;">
 
-            <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
-                <h4 style="height: 30px; background-color: #f0f1f3; width: 125px; padding: 5px 12px; border-radius: 8px; margin: 0;">Latest Vitals
+            <div class="emr-section-head">
+                <h4 class="emr-section-title">Latest Vitals
                 </h4>
                 <img class="img-fluid icons" onclick="ViewOutPatientData()" src="../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/infobutton.png" alt="blood" />
 
@@ -996,8 +1023,8 @@
 
         </div>
         <div class="roww vitalsTable" id="ipdvitals" style="margin-left: -2px;">
-            <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
-                <h4 style="height: 30px; background-color: #f0f1f3; width: 125px; padding: 5px 12px; border-radius: 8px; margin: 0;">Latest Vitals
+            <div class="emr-section-head">
+                <h4 class="emr-section-title">Latest Vitals
                 </h4>
                 <img class="img-fluid icons" onclick="ViewOutPatientData()" src="../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/infobutton.png" alt="blood" />
 
@@ -1019,8 +1046,8 @@
             </table>
         </div>
         <div class="roww vitalsTable" id="emergencyVital" style="margin-left: -2px;">
-            <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
-                <h4 style="height: 30px; background-color: #f0f1f3; width: 125px; padding: 5px 12px; border-radius: 8px; margin: 0;">Latest Vitals
+            <div class="emr-section-head">
+                <h4 class="emr-section-title">Latest Vitals
                 </h4>
                 <img class="img-fluid icons" onclick="ViewOutPatientData()" src="../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/infobutton.png" alt="blood" />
 
@@ -1045,7 +1072,7 @@
     <div class="row g-3">
         <div class="col-lg-4 col-md-4 col-sm-6">
             <div class="card statusCards">
-                <div style="display: flex; align-items: center; margin-top: -10px;">
+                <div class="emr-card-head">
                     <img class="img-fluid icons" src="../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/appointmentStats.png" alt="lab" />
                     <h4>Visits by Day</h4>
                 </div>
@@ -1079,7 +1106,7 @@
 
         <div class="col-lg-4 col-md-4 col-sm-4">
             <div class="card statusCards">
-                <div style="display: flex; align-items: center; margin-top: -10px;">
+                <div class="emr-card-head">
                     <img class="img-fluid icons" src="../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/statistics.png" alt="lab" />
                     <h4>OPD Patient Stats</h4>
                 </div>
@@ -1090,7 +1117,7 @@
 
         <div class="col-lg-4 col-md-4 col-sm-4">
             <div class="card statusCards">
-                <div style="display: flex; align-items: center; margin-top: -10px;">
+                <div class="emr-card-head">
                     <img class="img-fluid icons" src="../../../wwwroot/SOURCE_IMAGES/DASHBOARD_ICONS/statistics.png" alt="lab" />
                     <h4>IPD Patient Stats</h4>
                 </div>
@@ -1130,5 +1157,6 @@
                 </div>
             </div>
         </div>
+    </div>
     </div>
 </asp:Content>

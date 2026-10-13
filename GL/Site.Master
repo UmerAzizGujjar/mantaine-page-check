@@ -1095,6 +1095,8 @@
     <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/form-modern.css") %>?v=<%= Ver("~/wwwroot/lib/theme/form-modern.css") %>" rel="stylesheet" type="text/css" />
     <%-- Modern file / attachment fields (every input type="file"; CSS only) --%>
     <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/file-modern.css") %>?v=<%= Ver("~/wwwroot/lib/theme/file-modern.css") %>" rel="stylesheet" type="text/css" />
+    <%-- Modern form / record pages (pf-* classes and .emr-page); nothing applies until a page uses them --%>
+    <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/page-form-modern.css") %>?v=<%= Ver("~/wwwroot/lib/theme/page-form-modern.css") %>" rel="stylesheet" type="text/css" />
 </head>
 <body class="no-skin" onload="releasemenu()">
     <form runat="server" id="MasterPageForm1">

@@ -1,124 +1,13 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="DashPatientsCount.aspx.cs" Inherits="PMS.Modules.Dashboards.DashPatientsCount" %>
+<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="DashPatientsCount.aspx.cs" Inherits="PMS.Modules.Dashboards.DashPatientsCount" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-        <script src="../../wwwroot/THEME_TIBBIT/Scripts/jquery.canvasjs.min.js"></script>
+    <script src="../../wwwroot/THEME_TIBBIT/Scripts/jquery.canvasjs.min.js"></script>
     <script src="../../wwwroot/lib/apexcharts/apexchart.js"></script>
-
-    <style type="text/css">
-        /* ===== CARD METRICS ===== */
-        .metric-card {
-            border-radius: 14px;
-            box-shadow: 0 6px 18px rgba(0,0,0,0.08);
-            transition: all 0.3s ease;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-        }
-        .metric-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-        }
-
-        .metric-header {
-            padding: 1rem 1.25rem;
-            color: #fff;
-            font-weight: 600;
-            font-size: 1.1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .metric-header i {
-            font-size: 1.4rem;
-            opacity: 0.9;
-        }
-
-        .metric-body {
-            padding: 1.25rem;
-            text-align: center;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        .metric-title {
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: #6c757d;
-            margin-bottom: 0.3rem;
-        }
-        .metric-value {
-            font-size: 2.2rem;
-            font-weight: 700;
-            color: #212529;
-        }
-
-        /* Header colors */
-        .card-walkin .metric-header { background: Black ; }
-        .card-repeated .metric-header { background: Black; }
-        .card-total .metric-header { background: Black; }
-
-        /* ===== FILTER BAR ===== */
-        .filter-bar {
-            background: #f8f9fa;
-            border-radius: 12px;
-            padding: 1.25rem;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
-            margin-top: 1.5rem;
-        }
-        .filter-bar .form-label {
-            font-weight: 600;
-            font-size: 0.9rem;
-            margin-bottom: 0.4rem;
-            color: #495057;
-        }
-        .filter-bar .form-control,
-        .filter-bar .form-select {
-            border-radius: 8px !important;
-            padding: 0.6rem 1rem;
-            border: 1px solid #dee2e6;
-        }
-     
-
-        /* ===== CHART CONTAINER ===== */
-        .chart-container {
-            background: #fff;
-            border-radius: 14px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.06);
-            margin-top: 1.5rem;
-        }
-        .chart-title {
-            font-size: 1.3rem;
-            font-weight: 600;
-            margin-bottom: 1.25rem;
-            color: #212529;
-            display: flex;
-            align-items: center;
-        }
-        .chart-title i {
-            margin-right: 0.5rem;
-            color: #4361ee;
-        }
-
-        /* Responsive Fixes */
-        @media (max-width: 991px) {
-            .metric-card { margin-bottom: 1.25rem; }
-        }
-        @media (max-width: 767px) {
-            .filter-bar .row > [class*="col-"] {
-                margin-bottom: 1rem;
-            }
-            .filter-bar .row > [class*="col-"]:last-child {
-                margin-bottom: 0;
-            }
-        }
-    </style>
 
     <script type="text/javascript">
         $(document).ready(function () {
             LoadDepartmenr();
-            var date = '<%= DateTime.Now.ToString("MMMM d, yyyy") %>'; // Safer server-side formatting
+            var date = '<%= DateTime.Now.ToString("MMMM d, yyyy") %>';
 
             $("#StartDate, #EndDate").datepicker({
                 dateFormat: 'MM d, yy',
@@ -129,7 +18,6 @@
             $("#StartDate").val(date);
             $("#EndDate").val(date);
 
-            // Initialize Select2 after loading options
             $('#ddlDepartemt').select2({ placeholder: "Select Department", allowClear: true });
 
             LoadDashboard(date, date);
@@ -147,7 +35,7 @@
             var dt = $('#StartDate').val();
             var dts = $('#EndDate').val();
             if (!dt || !dts) {
-                alert("Please select valid date range.");
+                Swal.fire('Missing date', 'Please select a valid date range.', 'warning');
                 return;
             }
             LoadDashboard(dt, dts);
@@ -255,88 +143,98 @@
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="container-fluid py-3">
-        
-        <!-- METRICS CARDS -->
-        <div class="row g-4 mb-4">
-            <!-- New Patients -->
-            <div class="col-lg-4 col-md-6">
-                <div class="card metric-card card-walkin">
-                    <div class="metric-header">
-                        <span>New Patients</span>
-                        <i class="fas fa-user-plus"></i>
-                    </div>
-                    <div class="metric-body">
-                        <div class="metric-title">Total Patients</div>
-                        <div class="metric-value" id="txtWalkinPatientCount">0</div>
-                        <div class="metric-title mt-3">Total Amount (PKR)</div>
-                        <div class="metric-value" id="txtWIPAmount">0</div>
-                    </div>
-                </div>
-            </div>
+    <div class="pf-page">
 
-            <!-- Repeated Patients -->
-            <div class="col-lg-4 col-md-6">
-                <div class="card metric-card card-repeated">
-                    <div class="metric-header">
-                        <span>Repeated Patients</span>
-                        <i class="fas fa-redo-alt"></i>
-                    </div>
-                    <div class="metric-body">
-                        <div class="metric-title">Total Patients</div>
-                        <div class="metric-value" id="txtRepeatedPatientCount">0</div>
-                        <div class="metric-title mt-3">Total Amount (PKR)</div>
-                        <div class="metric-value" id="txtRPAmount">0</div>
-                    </div>
-                </div>
+        <header class="pf-header">
+            <div>
+                <h1 class="pf-title">Patient Count</h1>
+                <p class="pf-subtitle">New, repeated and total patients with receipt amounts, by department</p>
             </div>
+        </header>
 
-            <!-- Total Patients -->
-            <div class="col-lg-4 col-md-6">
-                <div class="card metric-card card-total">
-                    <div class="metric-header">
-                        <span>Total Patients</span>
-                        <i class="fas fa-users"></i>
-                    </div>
-                    <div class="metric-body">
-                        <div class="metric-title">Total Patients</div>
-                        <div class="metric-value" id="txtTotalPatientCount">0</div>
-                        <div class="metric-title mt-3">Total Amount (PKR)</div>
-                        <div class="metric-value" id="txtTPAmount">0</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- FILTER BAR -->
-        <div class="filter-bar">
-            <div class="row align-items-end g-3">
-                <div class="col-md-2">
-                    <label class="form-label">Department</label>
+        <!-- FILTERS -->
+        <section class="pf-card">
+            <div class="pf-filters">
+                <div class="pf-field pf-field--wide">
+                    <label class="pf-field-label" for="ddlDepartemt">Department</label>
                     <select id="ddlDepartemt" class="form-select"></select>
                 </div>
-                <div class="col-md-2">
-                    <label class="form-label">From Date</label>
+                <div class="pf-field">
+                    <label class="pf-field-label" for="StartDate">From date</label>
                     <input type="text" id="StartDate" class="form-control" />
                 </div>
-                <div class="col-md-2">
-                    <label class="form-label">To Date</label>
+                <div class="pf-field">
+                    <label class="pf-field-label" for="EndDate">To date</label>
                     <input type="text" id="EndDate" class="form-control" />
                 </div>
-                <div class="col-md-2">
-                    <input type="button" class="btn btn-primry" value="Search" style="margin-top:17px !important;" onclick="SearchDate()" />
-                      
-                   
+                <div class="pf-field pf-field--action">
+                    <input type="button" class="btn btn-primry" value="Search" onclick="SearchDate()" />
                 </div>
             </div>
+        </section>
+
+        <!-- KPI CARDS -->
+        <div class="pf-kpis">
+            <article class="pf-kpi pf-kpi--new">
+                <div class="pf-kpi-head">
+                    <span class="pf-kpi-title">New patients</span>
+                    <span class="pf-kpi-icon"><i class="fas fa-user-plus"></i></span>
+                </div>
+                <div class="pf-kpi-body">
+                    <div>
+                        <div class="pf-metric-label">Patients</div>
+                        <div class="pf-metric-value" id="txtWalkinPatientCount">0</div>
+                    </div>
+                    <div>
+                        <div class="pf-metric-label">Amount (PKR)</div>
+                        <div class="pf-metric-value" id="txtWIPAmount">0</div>
+                    </div>
+                </div>
+            </article>
+
+            <article class="pf-kpi pf-kpi--repeat">
+                <div class="pf-kpi-head">
+                    <span class="pf-kpi-title">Repeated patients</span>
+                    <span class="pf-kpi-icon"><i class="fas fa-redo-alt"></i></span>
+                </div>
+                <div class="pf-kpi-body">
+                    <div>
+                        <div class="pf-metric-label">Patients</div>
+                        <div class="pf-metric-value" id="txtRepeatedPatientCount">0</div>
+                    </div>
+                    <div>
+                        <div class="pf-metric-label">Amount (PKR)</div>
+                        <div class="pf-metric-value" id="txtRPAmount">0</div>
+                    </div>
+                </div>
+            </article>
+
+            <article class="pf-kpi pf-kpi--total">
+                <div class="pf-kpi-head">
+                    <span class="pf-kpi-title">Total patients</span>
+                    <span class="pf-kpi-icon"><i class="fas fa-users"></i></span>
+                </div>
+                <div class="pf-kpi-body">
+                    <div>
+                        <div class="pf-metric-label">Patients</div>
+                        <div class="pf-metric-value" id="txtTotalPatientCount">0</div>
+                    </div>
+                    <div>
+                        <div class="pf-metric-label">Amount (PKR)</div>
+                        <div class="pf-metric-value" id="txtTPAmount">0</div>
+                    </div>
+                </div>
+            </article>
         </div>
 
-        <!-- CHART SECTION -->
-        <div class="chart-container mt-4">
-            <div class="chart-title">
-                <i class="fas fa-chart-bar"></i> Patient Distribution by Department
+        <!-- CHART -->
+        <section class="pf-card">
+            <div class="pf-card-head">
+                <span class="pf-card-icon"><i class="fas fa-chart-bar"></i></span>
+                <h2 class="pf-card-title">Patient distribution by department</h2>
             </div>
             <div id="chartDepartmentStatistics" style="height: 450px;"></div>
-        </div>
+        </section>
+
     </div>
 </asp:Content>
