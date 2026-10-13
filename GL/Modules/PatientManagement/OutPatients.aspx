@@ -5204,6 +5204,241 @@
     <style type="text/css">   
     </style>
 
+    <script type="text/javascript">
+        // ---- EMR Lookup tab (client Oracle EMR, read-only). Uses the web methods of EMRLookup.aspx ----
+        var emrLookupUrl = '../Administrator/EMRLookup.aspx/';
+        var emrLastPatient = null;
+        var emrLastServices = [];
+
+        function emrEsc(v) {
+            if (v === null || v === undefined) { return ''; }
+            return String(v)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function emrMsg(icon, title, text) {
+            Swal.fire({ icon: icon, title: title, text: text, showConfirmButton: false, timer: 2500 });
+        }
+
+        function emrLoader(title, text) {
+            Swal.fire({
+                title: title,
+                text: text,
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                showConfirmButton: false,
+                didOpen: function () { Swal.showLoading(); }
+            });
+        }
+
+        $(document).on('keypress', '#emrTxtKey', function (e) {
+            if (e.which === 13) {
+                e.preventDefault();
+                emrSearch();
+            }
+        });
+
+        function emrSearch() {
+            var key = $('#emrTxtKey').val().trim();
+            if (key === '') {
+                emrMsg('warning', 'Required', 'Please enter the patient number.');
+                return;
+            }
+
+            $('#emrBtnSearch').prop('disabled', true).val('Searching...');
+            emrLoader('Searching...', 'Fetching patient information, please wait.');
+
+            $.ajax({
+                type: 'POST',
+                url: emrLookupUrl + 'GetPatientLookup',
+                data: JSON.stringify({ key: key }),
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function (response) {
+                    Swal.close();
+
+                    var res = response.d || {};
+                    var rows = res.Patient || [];
+
+                    emrLastPatient = rows.length ? rows[0] : null;
+                    emrLastServices = res.Services || [];
+                    $('#emrBtnPrint').prop('disabled', !(emrLastPatient || emrLastServices.length));
+
+                    emrRenderHeader(emrLastPatient);
+                    emrRenderServices(res.Services || []);
+
+                    if (rows.length === 0) {
+                        emrMsg('info', 'Not Found', 'No patient found for: ' + key);
+                    }
+                    if (res.ServicesError) {
+                        emrMsg('error', 'Services Error', res.ServicesError);
+                    }
+                },
+                error: function () {
+                    Swal.close();
+                    emrMsg('error', 'Error!', 'Failed to fetch patient information from the client database.');
+                },
+                complete: function () {
+                    $('#emrBtnSearch').prop('disabled', false).val('Search');
+                }
+            });
+        }
+
+        function emrTestConnection() {
+            $('#emrBtnTest').prop('disabled', true).val('Testing...');
+            emrLoader('Testing...', 'Checking client Oracle database connection.');
+
+            $.ajax({
+                type: 'POST',
+                url: emrLookupUrl + 'TestConnection',
+                data: '{}',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function (response) {
+                    Swal.close();
+                    var res = response.d;
+                    if (res === 'success') {
+                        emrMsg('success', 'Connected', 'Client Oracle database connection successful.');
+                    } else {
+                        Swal.fire({ icon: 'error', title: 'Connection Failed', text: res, showConfirmButton: true });
+                    }
+                },
+                error: function () {
+                    Swal.close();
+                    emrMsg('error', 'Error!', 'Connection test request failed.');
+                },
+                complete: function () {
+                    $('#emrBtnTest').prop('disabled', false).val('Test Connection');
+                }
+            });
+        }
+
+        function emrRenderHeader(row) {
+            var $g = $('#emrHeader');
+            if (!row) {
+                $g.html('<span class="emr-kv-empty">No patient loaded.</span>');
+                $('#emrHeaderCount').text('');
+                return;
+            }
+
+            // one small card per field, laid out in a grid
+            var keys = Object.keys(row);
+            var html = '';
+            $.each(keys, function (i, k) {
+                var v = row[k] === null || row[k] === undefined || row[k] === '' ? '-' : row[k];
+                html += '<div class="emr-kv-item" title="' + emrEsc(v) + '">' +
+                        '<span class="emr-kv-k">' + emrEsc(String(k).replace(/_/g, ' ')) + '</span>' +
+                        '<span class="emr-kv-v">' + emrEsc(v) + '</span>' +
+                        '</div>';
+            });
+            $g.html(html);
+            $('#emrHeaderCount').text('(' + keys.length + ' fields)');
+        }
+
+        function emrRenderServices(rows) {
+            var $t = $('#emrTblServices');
+
+            if ($.fn.DataTable.isDataTable('#emrTblServices')) {
+                $t.DataTable().destroy();
+            }
+            $t.empty();
+
+            if (!rows || rows.length === 0) {
+                $t.html('<tbody><tr><td>No record found</td></tr></tbody>');
+                return;
+            }
+
+            var cols = [];
+            $.each(rows[0], function (k) { cols.push(k); });
+
+            var thead = '<thead><tr>';
+            $.each(cols, function (i, c) { thead += '<th>' + emrEsc(c) + '</th>'; });
+            thead += '</tr></thead>';
+
+            var tbody = '<tbody>';
+            $.each(rows, function (i, r) {
+                tbody += '<tr>';
+                $.each(cols, function (j, c) { tbody += '<td>' + emrEsc(r[c]) + '</td>'; });
+                tbody += '</tr>';
+            });
+            tbody += '</tbody>';
+
+            $t.html(thead + tbody);
+            $t.DataTable({
+                paging: true,
+                pageLength: 10,
+                lengthMenu: [10, 25, 50, 100],
+                searching: true,
+                ordering: true,
+                info: true,
+                order: []
+            });
+        }
+
+        function emrPrint() {
+            if (!emrLastPatient && emrLastServices.length === 0) {
+                emrMsg('warning', 'Nothing to Print', 'Search a patient first.');
+                return;
+            }
+
+            var w = window.open('', '_blank');
+            if (!w) {
+                emrMsg('error', 'Popup Blocked', 'Please allow pop-ups to print the report.');
+                return;
+            }
+
+            var css = '<style>' +
+                '@page { size: A4 landscape; margin: 8mm; }' +
+                'body { font-family: Arial, sans-serif; font-size: 11px; color: #222; }' +
+                'h1 { font-size: 15px; margin: 0 0 2px; }' +
+                '.sub { color: #666; font-size: 10px; margin-bottom: 8px; }' +
+                'h2 { font-size: 12px; margin: 10px 0 5px; border-bottom: 1px solid #999; padding-bottom: 2px; }' +
+                'table { width: 100%; border-collapse: collapse; }' +
+                'th, td { border: 1px solid #bbb; padding: 2px 4px; text-align: left; vertical-align: top; white-space: nowrap; font-size: 10px; }' +
+                'th { background: #f0f0f0; font-size: 9px; text-transform: uppercase; }' +
+                '</style>';
+
+            var html = '<html><head><meta charset="utf-8" /><title>EMR Patient Report</title>' + css + '</head><body>';
+            html += '<h1>Client EMR Patient Report</h1>';
+            html += '<div class="sub">Printed: ' + emrEsc(new Date().toLocaleString()) + '</div>';
+
+            if (emrLastPatient) {
+                html += '<h2>Patient Information</h2><table><tbody>';
+                $.each(emrLastPatient, function (k, v) {
+                    html += '<tr><th style="width: 30%;">' + emrEsc(String(k).replace(/_/g, ' ')) + '</th><td>' + emrEsc(v) + '</td></tr>';
+                });
+                html += '</tbody></table>';
+            }
+
+            html += '<h2>Patient Services (' + emrLastServices.length + ')</h2>';
+            if (emrLastServices.length === 0) {
+                html += '<p>No record found.</p>';
+            } else {
+                var cols = [];
+                $.each(emrLastServices[0], function (k) { cols.push(k); });
+                html += '<table><thead><tr>';
+                $.each(cols, function (i, c) { html += '<th>' + emrEsc(String(c).replace(/_/g, ' ')) + '</th>'; });
+                html += '</tr></thead><tbody>';
+                $.each(emrLastServices, function (i, r) {
+                    html += '<tr>';
+                    $.each(cols, function (j, c) { html += '<td>' + emrEsc(r[c]) + '</td>'; });
+                    html += '</tr>';
+                });
+                html += '</tbody></table>';
+            }
+
+            html += '<script>window.onload = function () { window.print(); };</' + 'script>';
+            html += '</body></html>';
+
+            w.document.open();
+            w.document.write(html);
+            w.document.close();
+        }
+    </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div class="preloader" style="display: none;"><h1>Loading Page.....</h1></div>
@@ -5443,8 +5678,73 @@
                 <li><a href="#Tab-5">Medication</a></li>
                 <li><a href="#Tab-7">Follow Up / Verified</a></li>
                 <li><a href="#Tab-8">Test Result</a></li>
+                <% if (ShowEmrLookupTab) { %>
+                <li><a href="#Tab-10">EMR Lookup</a></li>
+                <% } %>
                 
             </ul>
+            <% if (ShowEmrLookupTab) { %>
+            <div id="Tab-10">
+                <h3 style="font-weight:bold;margin-top: 32px;">Client EMR Patient Lookup</h3>
+                <p>Read-only lookup of patient information from the client's Oracle EMR database.</p>
+                <div class="row" style="margin-bottom: 4px;">
+                    <div class="col-lg-3 col-md-4 col-sm-12" style="margin-bottom: 6px;">
+                        <label for="emrTxtKey" style="margin-bottom: 2px; font-size: 12px;">Patient Number</label>
+                        <input type="text" id="emrTxtKey" class="form-control" autocomplete="off" placeholder="e.g. 001000071011" style="height: 32px;" />
+                    </div>
+                    <div class="col-lg-6 col-md-8 col-sm-12" style="padding-top: 22px; margin-bottom: 6px;">
+                        <input type="button" id="emrBtnSearch" class="btn-primry" value="Search" onclick="emrSearch()" style="display: inline-block; width: auto !important; height: 32px; margin: 0 6px 0 0; padding: 0 16px;" />
+                        <input type="button" id="emrBtnTest" class="btn-primry" value="Test Connection" onclick="emrTestConnection()" style="display: inline-block; width: auto !important; height: 32px; margin: 0 6px 0 0; padding: 0 16px;" />
+                        <input type="button" id="emrBtnPrint" class="btn-primry" value="Print" onclick="emrPrint()" disabled="disabled" style="display: inline-block; width: auto !important; height: 32px; margin: 0; padding: 0 16px;" />
+                    </div>
+                </div>
+
+                <h4 style="font-weight:bold; margin: 12px 0 6px; font-size: 14px;">Patient Information <span id="emrHeaderCount" style="font-weight: normal; color: #888; font-size: 12px;"></span></h4>
+                <style type="text/css">
+                    #Tab-10 .emr-kv-grid {
+                        display: grid;
+                        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+                        gap: 6px;
+                    }
+                    #Tab-10 .emr-kv-item {
+                        min-width: 0;
+                        padding: 5px 8px;
+                        background: #fff;
+                        border: 1px solid #e3e3e3;
+                        border-radius: 6px;
+                    }
+                    #Tab-10 .emr-kv-k {
+                        display: block;
+                        font-size: 10px;
+                        font-weight: 600;
+                        letter-spacing: .3px;
+                        text-transform: uppercase;
+                        color: #888;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                    }
+                    #Tab-10 .emr-kv-v {
+                        display: block;
+                        font-size: 12.5px;
+                        font-weight: 600;
+                        color: #222;
+                        overflow-wrap: anywhere;
+                    }
+                    #Tab-10 .emr-kv-empty {
+                        font-size: 12px;
+                        color: #888;
+                    }
+                </style>
+                <div id="emrHeader" class="emr-kv-grid">
+                    <span class="emr-kv-empty">No patient loaded. Search a patient number to load information.</span>
+                </div>
+
+                <h4 style="font-weight:bold; margin: 12px 0 6px; font-size: 14px;">Patient Services</h4>
+                <table id="emrTblServices" class="table table-bordered table-striped table-condensed table-sm" style="width: 100%; font-size: 12px;"></table>
+            </div>
+
+            <% } %>
             <div id="Tab-1">
                 <h3 style="font-weight:bold;margin-top: 32px;">Presenting Complaints : </h3>
                 <div id="Patientdetail" style="width: 100%">

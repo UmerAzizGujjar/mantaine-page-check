@@ -61,7 +61,7 @@
         }
     </style>
 
-    <link href="wwwroot/THEME_TIBBIT/CustomCSS/LoginModern.css?v=20261007" rel="stylesheet" />
+    <link href="wwwroot/THEME_TIBBIT/CustomCSS/LoginModern.css?v=20261014" rel="stylesheet" />
    
 </asp:Content>
 <asp:Content ID="BodyContent" runat="server" ContentPlaceHolderID="MainContent">

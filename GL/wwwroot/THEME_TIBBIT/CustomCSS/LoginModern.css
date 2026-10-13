@@ -268,9 +268,10 @@ html body#contbod .wrapper .center a { color: #2b6cb0 !important; }
     flex: 0 0 auto;
     width: clamp(190px, 15vw, 320px);
     padding-top: calc(clamp(190px, 15vw, 320px) * 9 / 16);
-    background: #ffffff;
-    border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(20, 32, 60, 0.12), 0 1px 3px rgba(20, 32, 60, 0.08);
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
 }
 
 .brand-logo-plate img.brand-logo {
@@ -281,6 +282,8 @@ html body#contbod .wrapper .center a { color: #2b6cb0 !important; }
     margin: 0;
     object-fit: contain;
     display: block;
+    /* logo.png has an opaque white background: multiply lets the page show through it */
+    mix-blend-mode: multiply;
 }
 
 .brand-company {
@@ -422,7 +425,7 @@ html body#contbod .wrapper .brand-title br { display: inline; }
     }
 
     .brand-top { flex-direction: column; gap: 10px; text-align: center; }
-    .brand-logo-plate { width: 220px; padding-top: 123.75px; box-shadow: 0 4px 14px rgba(20, 32, 60, 0.10); }
+    .brand-logo-plate { width: 220px; padding-top: 123.75px; box-shadow: none; }
     .brand-company { text-align: center; }
     .brand-hero, .brand-points, .brand-art, .brand-credit { display: none; }
 
