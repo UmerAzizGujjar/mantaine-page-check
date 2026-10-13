@@ -3080,12 +3080,14 @@ namespace PMS
                     string endDate = Request.QueryString["endDate"].ToString();
                     string vendorType = Request.QueryString["VendorType"];
                     string VendorID = Request.QueryString["VendorId"];
+                    string Warehouse = Request.QueryString["Warehouse"] ?? "0";
 
                     rd.SetParameterValue("@VendorType", vendorType);
 
                     rd.SetParameterValue("@StartDate", stDate);
                     rd.SetParameterValue("@EndDate", endDate);
                     rd.SetParameterValue("@VendorId", VendorID);
+                    rd.SetParameterValue("@Warehouse", Warehouse);
                     rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                     rd.SetParameterValue("CompanyLogo", logoPath);
                     // rd.SetParameterValue("Address", companyAddress);
@@ -7155,7 +7157,7 @@ namespace PMS
                 rd.SetParameterValue("@Vendor_ID", vendorID);
                 rd.SetParameterValue("@Warehouse", warehouseID);
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
-                rd.SetParameterValue("CompanyLogo", logoPath);
+                SetOptionalParameter("CompanyLogo", DBClass.getField("SELECT dbo.GetCompanyLogo()"));
                 rd.SetParameterValue("Title", Request.QueryString["ReportTitle"].ToString().Trim());
             }
             else if (reportName == "VendorDetailsGRNS")
