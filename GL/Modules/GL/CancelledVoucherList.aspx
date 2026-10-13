@@ -50,10 +50,27 @@
                         "data": "Cancelled_Time", "name": "Cancelled_Time",
                         "render": function (d) { return d ? moment(d).format('D-MMM-YYYY h:mm A') : 'N/A'; }
                     },
-                    { "data": "Voucher_Status", "name": "Voucher_Status" }
+                    { "data": "Voucher_Status", "name": "Voucher_Status" },
+                    {
+                        "data": null, "orderable": false, "searchable": false,
+                        "render": function () {
+                            return '<a href="#" class="btn-edit-voucher" title="Edit Voucher" style="border-radius:4px;background:#007bff;color:white;padding:5px 8px;"><i class="fa fa-edit"></i></a>';
+                        }
+                    }
                 ],
                 "order": [[0, "desc"]]
             });
+
+            // Row data carries Voucher_ID and Voucher_Type, so no values are embedded in the HTML.
+            $('#example tbody').off('click.edit').on('click.edit', '.btn-edit-voucher', function (e) {
+                e.preventDefault();
+                var row = table.row($(this).closest('tr')).data();
+                OpenVoucher(row.Voucher_ID, row.Voucher_Type);
+            });
+        }
+
+        function OpenVoucher(id, type) {
+            window.location.href = "Voucher.aspx?VoucherType=" + encodeURIComponent(type) + "&VID=" + encodeURIComponent(id);
         }
     </script>
 </asp:Content>
@@ -71,6 +88,7 @@
                     <th>Cancelled By</th>
                     <th>Cancelled Time</th>
                     <th>Status</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody></tbody>
