@@ -44,7 +44,7 @@ namespace PMS
                         vendorTypeDiv.Visible = false;
                         accountDiv.Visible = false;
                         stockDiv.Visible = false;
-                        DateDiv.Visible = false;
+                        DateDiv.Visible = true;
                         tr_Export.Visible = true;
                         string sqlUni = "Select 0 as Vendor_ID, 'All' as Vendor_Name union all ";
                         System.Data.DataTable dtVen = DBClass.getDataTable(sqlUni + " Select Vendor_ID, (convert(Varchar,Vendor_ID) + ' - ' + Vendor_Name) as Vendor_Name from AP_Vendors");
@@ -52,6 +52,16 @@ namespace PMS
                         ddlVendor.DataTextField = "Vendor_Name";
                         ddlVendor.DataValueField = "Vendor_ID";
                         ddlVendor.DataBind();
+
+                        warehouseDiv.Visible = true;
+                        ddlWarehouse.DataSource = GetUserWarehouses();
+                        ddlWarehouse.DataTextField = "Text";
+                        ddlWarehouse.DataValueField = "Value";
+                        ddlWarehouse.DataBind();
+                        ddlWarehouse.Items.Insert(0, new ListItem("All", "0"));
+
+                        txtStart_Date.Text = DateTime.Now.ToString("dd MMM yyyy");
+                        txtEnd_Date.Text = DateTime.Now.ToString("dd MMM yyyy");
                         break;
                     case "VWPS":
 
@@ -294,7 +304,7 @@ namespace PMS
                 //    query = "ReportName=ItemWosePOSummary&ReportTitle=Item Wise PO Summary from " + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&Vendor_ID=" + ddlVendor.SelectedValue + "&Item_ID=" + ddlLevels.SelectedValue + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "";
                 //    break;
                 case "VWPOS":
-                    query = "ReportName=VendorWisePOSummary&ReportTitle=Vendor Wise PO Summary&Vendor_ID=" + ddlVendor.SelectedValue + "&ExportPDF=" + chkExportPDF.Checked;
+                    query = "ReportName=VendorWisePOSummary&ReportTitle=Vendor Wise PO Summary from " + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&Vendor_ID=" + ddlVendor.SelectedValue + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&Warehouse=" + ddlWarehouse.SelectedValue + "&ExportPDF=" + chkExportPDF.Checked;
                     break;
                 case "VWPS":
                     query = "ReportName=VendorWisePurchaseSummary&ReportTitle=Vendor Wise Purchase Summary from " + txtStart_Date.Text + " to " + txtEnd_Date.Text + "&startDate=" + txtStart_Date.Text + "&endDate=" + txtEnd_Date.Text + "&VendorType=" + ddlVendorType.SelectedValue + "&VendorId=" + ddlVendor.SelectedValue + "&ExportPDF=" + chkExportPDF.Checked;
