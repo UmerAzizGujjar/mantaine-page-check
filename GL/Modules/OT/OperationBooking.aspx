@@ -1,10 +1,154 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="OperationBooking.aspx.cs" Inherits="PMS.OperationBooking" EnableEventValidation="false" %>
+<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="OperationBooking.aspx.cs" Inherits="PMS.OperationBooking" EnableEventValidation="false" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
    <%-- <script type="../../text/javascript" src="Scripts/upload.js"></script>--%>
     <script src="../../wwwroot/lib/timepicki/timepicki.js"></script>
       <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/timepicki.css" rel="stylesheet" />
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/OT.css" rel="stylesheet" />
+    <style type="text/css">
+        /* =====================================================================
+           Operation Booking - compact layout. Colours follow the active theme
+           (--theme-accent ... from the theme's theme-colors.css); fallbacks are a safety net.
+           ===================================================================== */
+
+        /* ---------- top: patient / patient details / operation time ---------- */
+        .ob-top { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr) auto; gap: 12px; margin: 0 0 12px; align-items: stretch; }
+        @media (max-width: 1000px) { .ob-top { grid-template-columns: minmax(0, 1fr); } }
+        .ob-card {
+            display: flex; gap: 12px; align-items: flex-start; min-width: 0; padding: 10px 14px;
+            background: #fff; border: 1px solid #e3e8ee; border-top: 3px solid var(--theme-accent, #EFA63E); border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(16, 24, 40, .05);
+        }
+        .ob-card.ob-contact { flex-direction: column; gap: 8px; }
+        .ob-avatar {
+            flex: 0 0 auto; display: flex; align-items: center; justify-content: center; width: 64px; height: 64px; overflow: hidden;
+            background: var(--theme-accent-soft, #fff1d6); border: 2px solid var(--theme-accent, #EFA63E); border-radius: 50%;
+        }
+        .ob-avatar .patient-image { width: 56px; height: 56px; border-radius: 50%; object-fit: cover; }
+        .ob-patient-body { flex: 1 1 auto; min-width: 0; }
+        .ob-mr { display: flex; align-items: center; gap: 8px; margin: 0 0 6px; }
+        .ob-mr > span { font-size: 11.5px; font-weight: 700; color: #4a5568; white-space: nowrap; }
+        .ob-mr-input { position: relative; flex: 1 1 auto; min-width: 0; }
+        .ob-mr-input span[id*="rfv"] { position: absolute; right: 8px; top: 6px; line-height: 1; }
+        .ob-mr-input ul.token-input-list { width: 100% !important; min-height: 30px; margin: 0 !important; padding: 0 4px; border: 1px solid #cfd6e0 !important; border-radius: 6px !important; box-shadow: none !important; }
+        .ob-mr-input ul.token-input-list li input { height: 26px !important; margin: 0 !important; }
+
+        .ob-info { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 3px 14px; margin: 0; }
+        .ob-info.ob-info-stack { grid-template-columns: minmax(0, 1fr); }
+        .ob-info > div { display: flex; align-items: baseline; gap: 6px; min-width: 0; }
+        .ob-info dt { flex: 0 0 auto; min-width: 82px; margin: 0; font-size: 11px; font-weight: 700; letter-spacing: .03em; text-transform: uppercase; color: #8a94a6; }
+        .ob-info dt span, .ob-info dd span { font: inherit; color: inherit; letter-spacing: inherit; text-transform: inherit; }
+        .ob-info dd { min-width: 0; margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; font-weight: 700; color: var(--theme-ink, #1b2a41); }
+        .ob-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+        .ob-optime {
+            display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 130px; padding: 8px 14px; text-align: center;
+            background: var(--theme-accent-soft, #fff1d6); border: 1px solid var(--theme-accent, #EFA63E); border-radius: 10px;
+        }
+        .ob-optime label { margin: 0; font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--theme-accent-ink, #8a4b00); }
+        .ob-optime #TotalTimehr { min-height: 24px; font-size: 20px; font-weight: 800; line-height: 1.2; color: var(--theme-ink, #1b2a41); text-transform: none; letter-spacing: 0; }
+
+        /* ---------- tabs ---------- */
+        #tabs.ui-tabs { padding: 0 !important; overflow: hidden; background: #fff; border: 1px solid #e3e8ee !important; border-radius: 10px !important; box-shadow: 0 2px 10px rgba(16, 24, 40, .05); }
+        #tabs > ul.ui-tabs-nav { display: flex; flex-wrap: wrap; gap: 2px; margin: 0 !important; padding: 6px 8px 0 !important; overflow: visible; background: #f6f7f9 !important; border: 0 !important; border-bottom: 1px solid #e3e8ee !important; border-radius: 0 !important; }
+        #tabs > ul.ui-tabs-nav li { float: none; margin: 0 !important; padding: 0 !important; background: transparent !important; border: 0 !important; border-radius: 8px 8px 0 0 !important; top: 0; }
+        #tabs > ul.ui-tabs-nav li a { display: block; padding: 8px 14px !important; font-size: 12.5px; font-weight: 700; text-decoration: none; color: #4a5568 !important; background: transparent !important; border: 0 !important; border-radius: 8px 8px 0 0; }
+        #tabs > ul.ui-tabs-nav li a:hover { color: var(--theme-ink, #1b2a41) !important; background: rgba(0, 0, 0, .04) !important; }
+        #tabs > ul.ui-tabs-nav li.ui-tabs-active { position: relative; top: 1px; background: #fff !important; box-shadow: inset 0 3px 0 var(--theme-accent, #EFA63E); }
+        #tabs > ul.ui-tabs-nav li.ui-tabs-active a { color: var(--theme-accent-ink, #8a4b00) !important; }
+        #tabs > .ui-tabs-panel { padding: 12px 16px 14px !important; background: #fff; }
+        #tabs > .ui-tabs-panel > div { width: 100% !important; }
+
+        /* section titles */
+        #tabs h2 { margin: 0 0 10px !important; padding: 2px 0 2px 10px; font-size: 13px !important; font-weight: 800 !important; line-height: 1.3 !important; letter-spacing: .05em; text-align: left !important; text-transform: uppercase; color: var(--theme-ink, #1b2a41) !important; border-left: 3px solid var(--theme-accent, #EFA63E); }
+        #tabs .row:has(> div > h2), #tabs .row:has(> h2) { display: block; margin: 0 !important; }
+        #tabs .row:has(> div > h2) > div { width: auto !important; float: none; padding: 0; }
+        #tabs h4 { margin: 10px 0 6px; font-size: 12px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: #4a5568; }
+        .ob-sub { margin: 2px 0 6px; font-size: 11px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #8a94a6; }
+
+        /* ---------- field grid (replaces the bootstrap columns and the old table layouts) ---------- */
+        #tabs .ob-grid, #tabs .row.ob-grid { display: grid !important; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px 14px; margin: 0 0 10px !important; }
+        #tabs .ob-grid::before, #tabs .ob-grid::after { display: none !important; }
+        #tabs .ob-grid.ob-grid-1 { grid-template-columns: minmax(0, 1fr); }
+        #tabs .ob-grid > div { position: relative; display: flex; flex-direction: column; gap: 3px; width: auto !important; max-width: none !important; min-width: 0; float: none !important; padding: 0 !important; }
+        #tabs .ob-grid > .ob-wide2 { grid-column: span 2; }
+        #tabs .ob-grid > div:has(textarea) { grid-column: span 2; }
+        #tabs .ob-grid > div > span:first-child, #tabs .ob-grid > div > label:first-child { margin: 0; font-size: 11.5px; font-weight: 700; line-height: 1.3; color: #4a5568; }
+        #tabs .ob-grid > div > label:empty { display: none; }
+        #tabs .ob-grid > div:has(> label:empty) { justify-content: flex-end; }
+        /* validator stars sit inside the field instead of reserving a blank line under it */
+        #tabs .ob-grid > div > span[id*="rfv"], #tabs .ob-grid > div > span[id*="Validator"], #tabs .ob-grid > div > span[id*="Range"] { position: absolute; right: 24px; bottom: 6px; line-height: 1; font-weight: 800; }
+
+        #tabs input[type="text"], #tabs input[type="password"], #tabs select, #tabs textarea {
+            display: block; width: 100%; height: 30px; margin: 0 !important; padding: 4px 8px; font-size: 13px; color: var(--theme-ink, #1b2a41);
+            background-color: #fff; border: 1px solid #cfd6e0; border-radius: 6px; box-shadow: none;
+        }
+        #tabs textarea { height: auto !important; min-height: 60px; padding: 6px 8px; resize: vertical; }
+        #tabs input[type="text"]:focus, #tabs select:focus, #tabs textarea:focus { outline: none; border-color: var(--theme-accent, #EFA63E); box-shadow: 0 0 0 3px var(--theme-accent-ring, rgba(239, 166, 62, .25)); }
+        #tabs input[disabled], #tabs select[disabled], #tabs textarea[disabled], #tabs input[readonly] { background-color: #f3f5f8; cursor: default; }
+
+        /* ---------- button rows (only the spacing around the buttons; the buttons themselves keep their original design) ---------- */
+        .ob-actions-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 10px; }
+        .ob-fit { display: inline-block; margin: 4px 0 10px; }
+        .ob-messages { margin: 4px 0 0; font-size: 12.5px; }
+        .ob-messages table { margin: 0; }
+
+        /* ---------- tables ---------- */
+        #tabs table.table { width: 100% !important; margin: 0 0 8px; font-size: 12.5px; }
+        #tabs table.table th { padding: 7px 10px !important; font-size: 11.5px; letter-spacing: .03em; text-transform: uppercase; white-space: nowrap; color: var(--theme-on-accent, #1b2a41) !important; background: var(--theme-accent, #EFA63E) !important; border: 0 !important; }
+        #tabs table.table td { padding: 5px 10px !important; vertical-align: middle; border-color: #eef1f5; }
+        #tabs table.table tbody tr:hover td { background: var(--theme-accent-soft, #fff1d6); }
+        .ob-table-wrap { max-height: 280px; margin: 0 0 10px; overflow: auto; border: 1px solid #e3e8ee; border-radius: 8px; }
+        .ob-table-wrap table { margin: 0 !important; }
+
+        /* ---------- post-op orders ---------- */
+        #PostOfOrders .container { width: auto !important; max-width: none !important; padding: 0 !important; }
+        #PostOfOrders .row { margin: 0 0 8px !important; }
+        .ob-textrow { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 10px; align-items: start; margin: 0 0 8px; }
+        .ob-textrow > label { margin: 6px 0 0; font-size: 11.5px; font-weight: 700; color: #4a5568; }
+        #tabs .ob-textrow textarea { width: 100% !important; max-width: 760px; min-height: 64px; }
+        #PostOfOrders .oders-row { display: flex !important; flex-wrap: wrap; align-items: center; gap: 6px 12px; }
+        #PostOfOrders .oders-row > h4 { flex: 0 0 100%; margin: 0; }
+        #PostOfOrders .oders-row > div { width: auto !important; float: none; padding: 0 !important; }
+        #PostOfOrders .oders-row input[type="radio"] { width: auto; height: auto; margin: 0 10px 0 4px !important; accent-color: var(--theme-accent, #EFA63E); }
+        #PostOfOrders .oders-row label { margin: 0; font-size: 12.5px; font-weight: 700; }
+        .ob-checks { margin: 8px 0 0; }
+        .ob-check { display: flex; align-items: center; gap: 10px; max-width: 560px; margin: 0 0 6px; padding: 6px 10px; font-size: 12.5px; font-weight: 600; color: #2d3748; background: #f9fafb; border: 1px solid #e3e8ee; border-radius: 8px; cursor: pointer; }
+        .ob-check input[type="checkbox"] { flex: 0 0 auto; width: 16px !important; height: 16px; margin: 0 !important; accent-color: var(--theme-accent, #EFA63E); }
+
+        /* ---------- transfer tab ---------- */
+        .ob-transfer { display: grid; grid-template-columns: minmax(0, 1fr) 330px; gap: 16px; align-items: start; }
+        @media (max-width: 1100px) { .ob-transfer { grid-template-columns: minmax(0, 1fr); } }
+        .ob-transfer-note { min-height: 4px; margin: 0 0 6px; font-size: 12.5px; }
+        .ob-transfer-side { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .ob-mini { min-width: 0; border: 1px solid #e3e8ee; border-radius: 8px; overflow: hidden; }
+        .ob-mini-title { padding: 6px 10px; font-size: 11px; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; color: var(--theme-accent-ink, #8a4b00); background: var(--theme-accent-soft, #fff1d6); }
+        .ob-mini-scroll { max-height: 250px; overflow: auto; }
+        .ob-mini-scroll table { margin: 0 !important; }
+
+        /* ---------- pop-up windows (search patient, new patient, medicine) ---------- */
+        #SearchModel .modal-dialog, #PatientModel .modal-dialog { width: auto; max-width: 1000px; margin: 40px auto; }
+        #SearchModel .modal-content, #PatientModel .modal-content {
+            width: min(980px, 96vw) !important; height: auto !important; margin-left: 0 !important; margin-right: auto; padding: 12px 16px; border: 0; border-radius: 12px; box-shadow: 0 20px 50px rgba(16, 24, 40, .3);
+        }
+        #SearchModel .row { margin: 0 0 8px; }
+        #SearchModel .row > div { margin: 0 !important; padding: 0 !important; width: auto; float: none; }
+        #SearchModel label, #PatientModel label { margin: 0 6px 0 0; font-size: 11.5px; font-weight: 700; color: #4a5568; }
+        #SearchModel input[type="text"], #PatientModel input[type="text"], #PatientModel select, #MedicationModel select {
+            height: 30px; margin: 0; padding: 4px 8px; font-size: 13px; background-color: #fff; border: 1px solid #cfd6e0; border-radius: 6px; box-shadow: none;
+        }
+        #txtSearch { width: 300px; margin-left: 0 !important; }
+        #SearchModel > .modal-dialog > .modal-content > div[style*="overflow"] { max-height: 340px; overflow: auto !important; }
+        #SearchModel table.table { margin: 0; font-size: 12.5px; }
+        #SearchModel table.table th { padding: 7px 10px; color: var(--theme-on-accent, #1b2a41); background: var(--theme-accent, #EFA63E); border: 0; }
+        #SearchModel table.table td { padding: 5px 10px; vertical-align: middle; }
+        #PatientModel table.Add_new_test { width: 100% !important; border-collapse: separate; border-spacing: 0 6px; }
+        #PatientModel table.Add_new_test td { padding: 0 8px 0 0; vertical-align: middle; }
+        #PatientModel table.Add_new_test input[type="text"], #PatientModel table.Add_new_test select { width: 100%; }
+        #PatientModel .modal-footer, #SearchModel .modal-footer, #MedicationModel .modal-footer { display: flex; justify-content: flex-end; gap: 8px; padding: 10px 0 0; border: 0; }
+        #MedicationModel table#tblMedicines td { padding: 4px 6px; }
+        #MedicationModel fieldset { padding: 8px 12px 12px; border: 1px solid #e3e8ee; border-radius: 8px; }
+        #MedicationModel legend { width: auto; margin: 0; padding: 0 6px; font-size: 12px; font-weight: 800; text-transform: uppercase; color: var(--theme-accent-ink, #8a4b00); border: 0; }
+    </style>
     <script type="text/javascript">
 
 
@@ -1714,130 +1858,54 @@
             </div>
         </div>
     </div>
-    <div >
-            <div class="row flex">
-    <!-- Left Card -->
-    <div class="col-lg-5 col-md-5 col-sm-12">
-        <div class="card">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-lg-4 col-md-5 col-sm-6 text-center">
-                        <div class="image-container">
-                            <img src="~../../../../wwwroot/SOURCE_IMAGES/GENERAL_ICONS/ot.jpg" alt="Patient Image" class="img-fluid rounded-circle patient-image">
-                        </div>
-                    </div>
-                    <div class="col-lg-8 col-md-7 col-sm-6">
-                        <asp:TextBox ID="txtOut_Patient_ID" runat="server" ReadOnly="True" style="display:none;"></asp:TextBox>
-
-                        <div class="row mb-3">
-                    <div class="col-lg-4 formrgn">
-                       <asp:Label ID="lblPatien_ID" runat="server" Text="MR No : * "></asp:Label>
-                    </div>
-                    <div class="col-lg-8">
-                    <asp:TextBox ID="txtPatient_ID" runat="server"></asp:TextBox>
-                    <asp:HiddenField ID="hdfPatient_ID" runat="server" ClientIDMode="Static" />
-                    <asp:HiddenField ID="hdfPatoentNo" runat="server" ClientIDMode="Static" />
-                    <asp:HiddenField ID="hdnFullName" runat="server" ClientIDMode="Static" />
-                          <asp:RequiredFieldValidator ID="rfvPatient_ID" runat="server" ErrorMessage="Enter Patient ID" Text="*" ControlToValidate="txtPatient_ID" ForeColor="Red"></asp:RequiredFieldValidator>
-                    </div>
-                </div>
-
-                        <div class="row mb-3 mtt">
-                            <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                                 <asp:Label ID="LblGender" runat="server" Text="Gender : "></asp:Label>
-                            </div>
-                            <div class="col-lg-7 col-md-7 col-sm-6 top">
-                                       <asp:Label ID="vlblGender" runat="server"></asp:Label>
-                            </div>
-                        </div>
-
-                        <div class="row mb-3 mtt">
-                            <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                                    <asp:Label ID="LblAge_Years" runat="server" Text="Age (Yrs.) : "></asp:Label>
-                            </div>
-                            <div class="col-lg-7 col-md-7 col-sm-6 top">
-                                 <asp:Label ID="vlblAge_Year" runat="server" ReadOnly="True"></asp:Label>
-                            </div>
-                        </div>
-
-                        <div class="row mb-3 mtt">
-                            <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                                 <asp:Label ID="LblEntry_Date" runat="server" Text="Entry Date : "></asp:Label>
-                            </div>
-                            <div class="col-lg-7 col-md-7 col-sm-6 top">
-                                    <asp:Label ID="vlblEntry_Date" runat="server"></asp:Label>
-                            </div>
-                        </div>
-
-                        <div class="row mb-3 mtt">
-                            <div class="col-lg-5 col-md-5 col-sm-6 formrgn">
-                                <asp:Label ID="Label10" runat="server" Text="Category:"></asp:Label>
-                            </div>
-                            <div class="col-lg-7 col-md-7 col-sm-6 top">
-                                <asp:Label ID="lblPatient_Category" CssClass="md" runat="server"></asp:Label>
-                            </div>
-                        </div>
-
-                      
-                    </div>
-                </div>
+    <div class="ob-top">
+        <!-- Patient -->
+        <section class="ob-card ob-patient">
+            <div class="ob-avatar">
+                <img src="~../../../../wwwroot/SOURCE_IMAGES/GENERAL_ICONS/ot.jpg" alt="Patient Image" class="img-fluid rounded-circle patient-image">
             </div>
+            <div class="ob-patient-body">
+                <asp:TextBox ID="txtOut_Patient_ID" runat="server" ReadOnly="True" style="display:none;"></asp:TextBox>
+                <div class="ob-mr">
+                    <asp:Label ID="lblPatien_ID" runat="server" Text="MR No : * "></asp:Label>
+                    <div class="ob-mr-input">
+                        <asp:TextBox ID="txtPatient_ID" runat="server"></asp:TextBox>
+                        <asp:HiddenField ID="hdfPatient_ID" runat="server" ClientIDMode="Static" />
+                        <asp:HiddenField ID="hdfPatoentNo" runat="server" ClientIDMode="Static" />
+                        <asp:HiddenField ID="hdnFullName" runat="server" ClientIDMode="Static" />
+                        <asp:RequiredFieldValidator ID="rfvPatient_ID" runat="server" ErrorMessage="Enter Patient ID" Text="*" ControlToValidate="txtPatient_ID" ForeColor="Red"></asp:RequiredFieldValidator>
+                    </div>
+                </div>
+                <dl class="ob-info">
+                    <div><dt><asp:Label ID="LblGender" runat="server" Text="Gender : "></asp:Label></dt><dd><asp:Label ID="vlblGender" runat="server"></asp:Label></dd></div>
+                    <div><dt><asp:Label ID="LblAge_Years" runat="server" Text="Age (Yrs.) : "></asp:Label></dt><dd><asp:Label ID="vlblAge_Year" runat="server" ReadOnly="True"></asp:Label></dd></div>
+                    <div><dt><asp:Label ID="LblEntry_Date" runat="server" Text="Entry Date : "></asp:Label></dt><dd><asp:Label ID="vlblEntry_Date" runat="server"></asp:Label></dd></div>
+                    <div><dt><asp:Label ID="Label10" runat="server" Text="Category:"></asp:Label></dt><dd><asp:Label ID="lblPatient_Category" CssClass="md" runat="server"></asp:Label></dd></div>
+                </dl>
+            </div>
+        </section>
+
+        <!-- Patient details and actions -->
+        <section class="ob-card ob-contact">
+            <div class="ob-actions">
+                <input type="button" value="Add New Patient" id="btnAddPatient" name="btnAddPatient" onclick="AddNewPatient();" style="border-radius: 28em; width: 205px !important; height: 45px; font-size: 18px; left: 20px; top: -1px;" />
+                <input type="button" class="btn-primry" value="Search" id="btnSearchPatient" onclick="SearchPop()" />
+            </div>
+            <dl class="ob-info ob-info-stack">
+                <div><dt><asp:Label ID="LblPatient_Name" runat="server" Text="Patient Name : "></asp:Label></dt><dd><asp:Label ID="vlblPatient_Name" runat="server"></asp:Label></dd></div>
+                <div><dt><asp:Label ID="LblContact" runat="server" Text="Contact No : "></asp:Label></dt><dd><asp:Label ID="vlblContact" runat="server"></asp:Label></dd></div>
+                <div><dt><asp:Label ID="LblAddress" runat="server" Text="Address : "></asp:Label></dt><dd><asp:Label ID="vlblAdress" runat="server"></asp:Label></dd></div>
+            </dl>
+        </section>
+
+        <div class="ob-optime">
+            <label id="lblTotalhr">Operation Time :</label>
+            <label id="TotalTimehr"></label>
         </div>
-    </div>
-
-    <!-- Right Card -->
-    <div class="col-lg-5 col-md-5 col-sm-12">
-        <div class="card">
-            <div class="card-body">
-                <div class="row mb-3 mtt">
-                            <div class="col-lg-8 col-md-5 col-sm-6">
-                                  <input type="button" value="Add New Patient" id="btnAddPatient" name="btnAddPatient" onclick="AddNewPatient();" style="border-radius: 28em; width: 205px !important; height: 45px; font-size: 18px; left: 20px; top: -1px;" />
-                               
-                            </div>
-                            <div class="col-lg-4 col-md-7 col-sm-6 top">
-                                <input type="button" class="btn-primry" value="Search" id="btnSearchPatient" onclick="SearchPop()" />
-                            </div>
-                        </div>
-
-                <div class="row mb-3">
-                    <div class="col-lg-4 formrgn">
-                           <asp:Label ID="LblPatient_Name" runat="server" Text="Patient Name : "></asp:Label>
-                    </div>
-                    <div class="col-lg-8">
-                            <asp:Label ID="vlblPatient_Name" runat="server"></asp:Label>
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col-lg-4 formrgn">
-                   <asp:Label ID="LblContact" runat="server" Text="Contact No : "></asp:Label>
-                    </div>
-                    <div class="col-lg-8 detail">
-                       <asp:Label ID="vlblContact" runat="server"></asp:Label>
-                    </div>
-             
-            </div>  
-                <div class="row mb-3">
-                    <div class="col-lg-4 formrgn">
-                      <asp:Label ID="LblAddress" runat="server" Text="Address : "></asp:Label>
-                    </div>
-                    <div class="col-lg-8 detail">
-                      <asp:Label ID="vlblAdress" runat="server"></asp:Label>
-                    </div>
-             
-            </div>
-            </div>
-        </div>
-    </div>
-          <div class="col-lg-2 col-md-2 col-sm-2 cnter">
-               <label id="lblTotalhr">Operation Time :</label>
-        <label id="TotalTimehr"></label>
-          </div>
-
-</div>
     </div>
   
 
-    <div>
+    <div class="ob-main">
         <div id="tabs">
 
             <ul>
@@ -1860,7 +1928,7 @@
                         </div>
                     </div>
                   
-                    <div class="row">
+                    <div class="row ob-grid">
                         <div class="col-lg-2 col-md-4 col-sm-6">
                             <asp:Label ID="lblOperationDate" runat="server" Text="Operation Date"></asp:Label>
                             <asp:TextBox ID="txtOperationDate" runat="server"></asp:TextBox>
@@ -1894,7 +1962,7 @@
                         </div>
                     </div>
                     
-                    <div class="row">
+                    <div class="row ob-grid">
                     <div class="col-lg-2 col-md-4 col-sm-6">
                         <asp:Label ID="lblRelative_Approval" runat="server" Text="Relative Approval"></asp:Label>
                         <asp:DropDownList ID="ddlRelative_Approval" runat="server" AppendDataBoundItems="true"></asp:DropDownList>
@@ -1926,184 +1994,87 @@
 
 
 
-                    <table style="width: 100%">                                             
-                        <tr>                         
-                            <td style="width: 135px"></td>
-                            <td>
-                                <input type="button"  style="width: 165px; padding-left: 6px;" value="Print Consent Form OP" title="Print Consent Form Operation" id="btnPrintConsent" onclick="Print()" />
-                            </td>
-                            <td>
-                                <input type="button" style="width: 163px; margin-left: 11px; padding-left: 6px;" value="Print Consent Form AT" title="Print Consent Form Anesthesia" id="btnPrint" onclick="PrintVoucher()" />
-                            </td>
-                            <td style="padding-top: 25px;">                               
-                            </td>                          
-                        </tr>
-                    </table>
+                    <div class="ob-actions-row">
+                        <input type="button" style="width: 165px; padding-left: 6px;" value="Print Consent Form OP" title="Print Consent Form Operation" id="btnPrintConsent" onclick="Print()" />
+                        <input type="button" style="width: 163px; margin-left: 11px; padding-left: 6px;" value="Print Consent Form AT" title="Print Consent Form Anesthesia" id="btnPrint" onclick="PrintVoucher()" />
+                    </div>
                 </div>
             </div>
 
 
             <div id="Tab-1">
-                <div id="OperationDetails" style="width: 100%">
-                    <table id="tbl">
-                       <tr>                        
-                            <td style="width: 135px"></td>
-                            <td class="mg"></td>
-                            <td style="width: 203px"></td>
-                            <td></td>
-                        </tr>
+                <div id="OperationDetails">
+                    <h2>Operation Details : </h2>
+                    <div style="display: none;">
+                        <asp:Label ID="Label3" runat="server" Text="Operation Bk ID"></asp:Label>
+                        <asp:TextBox ID="txtOperation_Booking_ID" runat="server" ReadOnly="True"></asp:TextBox>
+                    </div>
 
-                        <tr style="display: none;">
-                            <td>
-                                <asp:Label ID="Label3" runat="server" Text="Operation Bk ID"></asp:Label>
-                            </td>
-                            <td>
-                                <asp:TextBox ID="txtOperation_Booking_ID" runat="server" ReadOnly="True"></asp:TextBox>
-                            </td>
-                            <td style="width: 135px"></td>
-                            <td class="mg"></td>
-                            <td style="width: 203px"></td>
-                            <td></td>
-                        </tr>
-                    </table>
+                    <div class="ob-sub">Procedure</div>
+                    <div class="ob-grid">
+                        <div class="ob-wide2">
+                            <asp:Label ID="Label2" runat="server" Text="Operation / Procedure Name" ToolTip="Operation Name / Procedure Name"></asp:Label>
+                            <asp:TextBox ID="txtProcedure" runat="server"></asp:TextBox>
+                        </div>
+                        <div>
+                            <asp:Label ID="lblDate_Operation" runat="server" Text="Operation Date"></asp:Label>
+                            <asp:TextBox ID="txtDate_Operation" runat="server"></asp:TextBox>
+                        </div>
+                        <div>
+                            <asp:Label ID="Label4" runat="server" Text="Time Of Start Operation"></asp:Label>
+                            <asp:TextBox ID="txtTimeOfStartOperation" runat="server"></asp:TextBox>
+                        </div>
+                        <div>
+                            <asp:Label ID="Label5" runat="server" Text="Time Of Finish Operation"></asp:Label>
+                            <asp:TextBox ID="txtTimeOfFinishOperation" runat="server"></asp:TextBox>
+                        </div>
+                        <div>
+                            <asp:Label ID="lblOperation_Theater_No" runat="server" Text="Operation Theater *"></asp:Label>
+                            <asp:DropDownList ID="ddlOperationTherter" runat="server" AppendDataBoundItems="true" OnSelectedIndexChanged="ddlOperationTherter_SelectedIndexChanged"></asp:DropDownList>
+                            <asp:RequiredFieldValidator ID="rfvOperation_Theater" runat="server" ErrorMessage="Enter Operation Theater" Text="*" ControlToValidate="ddlOperationTherter" ForeColor="Red"></asp:RequiredFieldValidator>
+                        </div>
+                        <div runat="server" id="trOperationTheaterRoomNo" visible="false">
+                            <asp:Label ID="Label7" runat="server" Text="Oprtn Thtr Rm No *"></asp:Label>
+                            <asp:DropDownList ID="ddlOperationTheaterRoomNo" runat="server" AppendDataBoundItems="true"></asp:DropDownList>
+                        </div>
+                        <div>
+                            <asp:Label ID="Label1" runat="server" Text="Department"></asp:Label>
+                            <asp:DropDownList ID="ddlDepartment" AppendDataBoundItems="true" runat="server"></asp:DropDownList>
+                        </div>
+                    </div>
 
-
-                    <table  id="tbl">
-                        <tr>
-                            <td>
-                                <h2>Operation Details : </h2>
-                            </td>
-                        </tr>
-                        <tr>
-                           
-                            <td>
-                                <asp:Label ID="Label2" runat="server" Text="Operation / Procedure Name" ToolTip="Operation Name / Procedure Name"></asp:Label>
-                            </td>
-                            <td>
-                                <asp:TextBox ID="txtProcedure" runat="server"></asp:TextBox>
-                            </td>
-                            <td style="width: 135px"></td>
-                            <td class="mg">
-                                <asp:Label ID="lblDate_Operation" runat="server" Text="Operation Date"></asp:Label>
-                            </td>
-                            <td style="width: 203px">
-                                <asp:TextBox ID="txtDate_Operation" runat="server"></asp:TextBox>
-                            </td>
-
-                            <td></td>
-                        </tr>
-                        <tr>
-                            
-                            <td class="mg">
-                                <asp:Label ID="Label4" runat="server" Text="Time Of Start Operation"></asp:Label>
-                            </td>
-                            <td style="width: 203px">
-                                <asp:TextBox ID="txtTimeOfStartOperation" runat="server"></asp:TextBox>
-                            </td>
-
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <asp:Label ID="lblOperation_Theater_No" runat="server" Text="Operation Theater *"></asp:Label>
-                            </td>
-                            <td style="width: 203px">
-                                <asp:DropDownList ID="ddlOperationTherter" runat="server" AppendDataBoundItems="true" OnSelectedIndexChanged="ddlOperationTherter_SelectedIndexChanged"></asp:DropDownList>
-                            </td>
-                            <td style="width: 135px">
-                                <asp:RequiredFieldValidator ID="rfvOperation_Theater" runat="server" ErrorMessage="Enter Operation Theater" Text="*" ControlToValidate="ddlOperationTherter" ForeColor="Red"></asp:RequiredFieldValidator>
-                            </td>
-                            <td class="mg">
-                                <asp:Label ID="Label5" runat="server" Text="Time Of Finish Operation"></asp:Label>
-                            </td>
-                            <td style="width: 203px">
-                                <asp:TextBox ID="txtTimeOfFinishOperation" runat="server"></asp:TextBox>
-                            </td>
-                            <td></td>
-                        </tr>
-
-                        <tr runat="server" id="trOperationTheaterRoomNo" visible="false">
-                            <td>
-                                <asp:Label ID="Label7" runat="server" Text="Oprtn Thtr Rm No *"></asp:Label>
-                            </td>
-                            <td style="width: 203px">
-                                <asp:DropDownList ID="ddlOperationTheaterRoomNo" runat="server" AppendDataBoundItems="true"></asp:DropDownList>
-                            </td>
-                            <td style="width: 135px">
-                               
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <asp:Label ID="Label1" runat="server" Text="Department"></asp:Label>
-                            </td>
-                            <td>
-                                <asp:DropDownList ID="ddlDepartment" AppendDataBoundItems="true" runat="server"></asp:DropDownList>
-                            </td>
-                            <td style="width: 135px"></td>
-                            <td class="mg">
-                                <asp:Label ID="lblAnesthetist" runat="server" Text="Anesthetist"></asp:Label>
-                            </td>
-                            <td style="width: 203px">
-                                <asp:TextBox ID="txtAnesthetist" runat="server"></asp:TextBox>
-                            </td>
-
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <asp:Label ID="lblSurgeon_Name" runat="server" Text="Surgeon Name *"></asp:Label>
-                            </td>
-                            <td style="width: 203px">
-                                <asp:DropDownList ID="ddlSurgeon_Name" runat="server" AppendDataBoundItems="false"></asp:DropDownList>
-                            </td>
-                            <td style="width: 135px">
-                                <asp:RequiredFieldValidator ID="rfvSurgeon_Name" SetFocusOnError="true" runat="server" InitialValue="0" ErrorMessage="Enter Surgeon Name" Text="*" ControlToValidate="ddlSurgeon_Name" ForeColor="Red"></asp:RequiredFieldValidator>
-                            </td>
-
-                            <td class="mg">
-                                <asp:Label ID="lblAssistantAnesthetist" runat="server" Text="Assistant Anesthetist"></asp:Label>
-                            </td>
-                            <td style="width: 203px">
-                                <asp:TextBox ID="txtAssistantAnesthetist" runat="server"></asp:TextBox>
-                            </td>
-
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <asp:Label ID="lblAssistant_Surgeon" runat="server" Text="First Assistant"></asp:Label>
-                            </td>
-                            <td style="width: 203px">
-                                <asp:TextBox ID="txtAssistant_Surgeon" runat="server"></asp:TextBox>
-                            </td>
-                            <td style="width: 135px"></td>
-                            <td class="mg">
-                                <asp:Label ID="lblScrubNurse" runat="server" Text="Scrub Nurse"></asp:Label>
-                            </td>
-                            <td style="width: 203px">
-                                <asp:TextBox ID="txtStaffNurse" runat="server"></asp:TextBox>
-                            </td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                           
-                            <td>
-                                <asp:Label ID="Label6" runat="server" Text="Second Assistant"></asp:Label>
-                            </td>
-                            <td style="width: 203px">
-                                <asp:TextBox ID="txtSecondAssistant" runat="server"></asp:TextBox>
-                            </td>
-                            <td></td>
-                            <td class="mg">
-                                <asp:Label ID="lbltxtJuniorAssistantStaff" runat="server" Text="Junior Assistant Staff"></asp:Label>
-                            </td>
-                            <td style="width: 203px">
-                                <asp:TextBox ID="txtJuniorAssistantStaff" runat="server"></asp:TextBox>
-                            </td>
-                            <td></td>
-                        </tr>
-                    </table>
+                    <div class="ob-sub">Surgical Team</div>
+                    <div class="ob-grid">
+                        <div>
+                            <asp:Label ID="lblSurgeon_Name" runat="server" Text="Surgeon Name *"></asp:Label>
+                            <asp:DropDownList ID="ddlSurgeon_Name" runat="server" AppendDataBoundItems="false"></asp:DropDownList>
+                            <asp:RequiredFieldValidator ID="rfvSurgeon_Name" SetFocusOnError="true" runat="server" InitialValue="0" ErrorMessage="Enter Surgeon Name" Text="*" ControlToValidate="ddlSurgeon_Name" ForeColor="Red"></asp:RequiredFieldValidator>
+                        </div>
+                        <div>
+                            <asp:Label ID="lblAssistant_Surgeon" runat="server" Text="First Assistant"></asp:Label>
+                            <asp:TextBox ID="txtAssistant_Surgeon" runat="server"></asp:TextBox>
+                        </div>
+                        <div>
+                            <asp:Label ID="Label6" runat="server" Text="Second Assistant"></asp:Label>
+                            <asp:TextBox ID="txtSecondAssistant" runat="server"></asp:TextBox>
+                        </div>
+                        <div>
+                            <asp:Label ID="lblAnesthetist" runat="server" Text="Anesthetist"></asp:Label>
+                            <asp:TextBox ID="txtAnesthetist" runat="server"></asp:TextBox>
+                        </div>
+                        <div>
+                            <asp:Label ID="lblAssistantAnesthetist" runat="server" Text="Assistant Anesthetist"></asp:Label>
+                            <asp:TextBox ID="txtAssistantAnesthetist" runat="server"></asp:TextBox>
+                        </div>
+                        <div>
+                            <asp:Label ID="lblScrubNurse" runat="server" Text="Scrub Nurse"></asp:Label>
+                            <asp:TextBox ID="txtStaffNurse" runat="server"></asp:TextBox>
+                        </div>
+                        <div>
+                            <asp:Label ID="lbltxtJuniorAssistantStaff" runat="server" Text="Junior Assistant Staff"></asp:Label>
+                            <asp:TextBox ID="txtJuniorAssistantStaff" runat="server"></asp:TextBox>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -2161,26 +2132,11 @@
                         <div class="row">
                             <h2>Post Of Order Details : </h2>
                         </div>
-                        <div class="row">
-                            <div class="col-md-2">
-                                <label>Findings:</label>
-                            </div>
-                            <div class="col-md-10">
-                               
-                                <asp:TextBox ID="txtFindings" runat="server" Columns="10" Rows="5" Style="width: 60%;" TextMode="MultiLine"></asp:TextBox>
-                            </div>
-                        </div>
+                        <div class="ob-textrow"><label>Findings:</label><asp:TextBox ID="txtFindings" runat="server" Columns="10" Rows="5" Style="width: 60%;" TextMode="MultiLine"></asp:TextBox></div>
 
-                        <div class="row">
-                            <div class="col-md-2">
-                                <label>Procedure:</label>
-                            </div>
-                            <div class="col-md-10">
-                                <asp:TextBox ID="txtProcedure_PO" runat="server" Columns="10" Rows="5" Style="width: 60%;" TextMode="MultiLine"></asp:TextBox>
-                            </div>
-                        </div>
+                        <div class="ob-textrow"><label>Procedure:</label><asp:TextBox ID="txtProcedure_PO" runat="server" Columns="10" Rows="5" Style="width: 60%;" TextMode="MultiLine"></asp:TextBox></div>
 
-                        <div class="row ddl_row" style="margin-top: 25px;">
+                        <div class="row ddl_row ob-grid" style="margin-top: 14px;">
                             <div class="col-lg-3 col-md-4 col-sm-6">
                                 <label>Drain</label>
                                 <asp:DropDownList ID="ddlDrain" runat="server" AppendDataBoundItems="true"></asp:DropDownList>
@@ -2205,7 +2161,7 @@
                             </div>
                         </div>
 
-                        <div class="row oders-row" style="margin-top: 25px;">
+                        <div class="row oders-row" style="margin-top: 12px;">
                             <h4>Post-op Orders:</h4>
                             <div class="col-md-1">
                                 <label>NPO</label>
@@ -2218,17 +2174,13 @@
                             </div>
                         </div>
 
-                        <table >
-                            <div class="row">
-                                <div class="col-lg-2 col-md-4 col-sm-6">
-                                    <input type="button" value="Add Medicine" class="btn btn-primry" id="btnAddMedicine" />
-                                </div>
+                        <div class="row">
+                            <div class="col-lg-2 col-md-4 col-sm-6">
+                                <input type="button" value="Add Medicine" class="btn btn-primry" id="btnAddMedicine" />
                             </div>
-                            <tr>
-                                <td>
-                                    
-                                    <div style="height: 280px;">
-                                        <table class="table table-bordered table-responsive" id="tblMedicinesList">
+                        </div>
+                        <div class="ob-table-wrap">
+                            <table class="table table-bordered table-responsive" id="tblMedicinesList">
                                             <thead>
                                                 <tr>
                                                     <th>Date</th>
@@ -2242,47 +2194,18 @@
                                             <tbody>
                                             </tbody>
                                         </table>
-
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
+                        </div>
 
                        
 
-                        <div class="row">
-                            <div class="col-md-2">
-                                <label>Special Instruction:</label>
-                            </div>
-                            <div class="col-md-10">
-                                <asp:TextBox ID="txtSpecialInstruction" runat="server" Columns="10" Rows="5" Style="width: 60%;" TextMode="MultiLine"></asp:TextBox>
-                            </div>
-                        </div>
+                        <div class="ob-textrow"><label>Special Instruction:</label><asp:TextBox ID="txtSpecialInstruction" runat="server" Columns="10" Rows="5" Style="width: 60%;" TextMode="MultiLine"></asp:TextBox></div>
 
-                        <div class="row row-fill" style="margin-top: 25px;display:inline;">
-                            <h4><u>Fill By Scrub Nurse:</u></h4>
-
-                            <div class="col-md-6">
-                                <p>a. Estimated Blood Loose</p>
-                                <p>b. Intra Operative IV Fluid / Blood Transfused </p>
-                                <p>c. Intra Operative Urine Output (If Catheterized)</p>
-                                <p>d. Whether Swab and Instrument Count was Complete </p>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="row">
-                                    <input type="checkbox" runat="server" id="chk_Bloodloose" name="Blood Loose" />
-                                </div>
-                                <div class="row">
-                                    <input type="checkbox" runat="server" id="chk_Bloodtrans" name="Blood Transfused" />
-                                </div>
-                                <div class="row">
-                                    <input type="checkbox" runat="server" id="chk_Urine" name="Operative Urine" />
-                                </div>
-                                <div class="row">
-                                    <input type="checkbox" runat="server" id="chk_Swab_Instrument" name="swab Instrument" />
-                                </div>
-                            </div>
+                        <div class="ob-checks">
+                            <h4>Fill By Scrub Nurse:</h4>
+                            <label class="ob-check"><input type="checkbox" runat="server" id="chk_Bloodloose" name="Blood Loose" /><span>Estimated Blood Loose</span></label>
+                            <label class="ob-check"><input type="checkbox" runat="server" id="chk_Bloodtrans" name="Blood Transfused" /><span>Intra Operative IV Fluid / Blood Transfused</span></label>
+                            <label class="ob-check"><input type="checkbox" runat="server" id="chk_Urine" name="Operative Urine" /><span>Intra Operative Urine Output (If Catheterized)</span></label>
+                            <label class="ob-check"><input type="checkbox" runat="server" id="chk_Swab_Instrument" name="swab Instrument" /><span>Whether Swab and Instrument Count was Complete</span></label>
                         </div>
                     </div>
                 </div>
@@ -2290,65 +2213,78 @@
 
 
             <div id="Tab-10">
-                <div id="Recovery" style="width: 100%">
-                    <table>
-                        <tr>
-                            <td colspan="6">
-                                <h2>Recovery Details : </h2>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Recovery Details</td>
-                            <td>
-                                <asp:TextBox ID="txtRecoveryDetails" Width="600px" runat="server" Columns="10" Rows="5" TextMode="MultiLine"></asp:TextBox>
-                            </td>
-                        </tr>
-                    </table>
+                <div id="Recovery">
+                    <h2>Recovery Details : </h2>
+                    <div class="ob-grid ob-grid-1">
+                        <div>
+                            <label>Recovery Details</label>
+                            <asp:TextBox ID="txtRecoveryDetails" Width="600px" runat="server" Columns="10" Rows="5" TextMode="MultiLine"></asp:TextBox>
+                        </div>
+                    </div>
                 </div>
             </div>
 
 
             <div id="Tab-11">
                 <div id="Transfer">
-                    <table style="width: 100% !important;">
-                        <tr>
-                            <td colspan="6">
-                                <h2>Transfer Details : </h2>
-                                
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label>Previous Dept.</label></td>
-                            <td>
-                                <input type="text" id="txtdprevDepart" disabled /></td>
-                            <td>
-                                <label>Previous Ward / Bed</label></td>
-                            <td>
-                                <input type="text" id="txtWardBed" style="width: 223px!important;" disabled /></td>
-                            <td>
-                                <label>Previous Room / Bed</label></td>
-                            <td>
-                                <input type="text" id="txtRoomBed" disabled /></td>
-                        </tr>
-                        <tr>
-                            <td style="width: 143px; padding-left: 45px;">
-                                <asp:Label ID="lblreferto" runat="server" Text="Transfer To *"></asp:Label>
-                            </td>
-                            <td style="width: 203px">
-                                <asp:UpdatePanel ID="UpdatePanel4" TabIndex="6" runat="server">
-                                    <ContentTemplate>
-                                        <asp:DropDownList ID="ddlReferTo" runat="server" AppendDataBoundItems="true" onChange="chkrefer_Of_Select();"></asp:DropDownList>
-                                    </ContentTemplate>
-                                </asp:UpdatePanel>
-                            </td>
+                    <h2>Transfer Details : </h2>
+                    <div class="ob-transfer">
+                        <div class="ob-transfer-form">
+                            <div class="ob-sub">Current Location</div>
+                            <div class="ob-grid">
+                                <div>
+                                    <label>Previous Dept.</label>
+                                    <input type="text" id="txtdprevDepart" disabled />
+                                </div>
+                                <div>
+                                    <label>Previous Ward / Bed</label>
+                                    <input type="text" id="txtWardBed" disabled />
+                                </div>
+                                <div>
+                                    <label>Previous Room / Bed</label>
+                                    <input type="text" id="txtRoomBed" disabled />
+                                </div>
+                            </div>
 
-                        </tr>
-                        <tr>
-                            <td>
-                                <asp:RequiredFieldValidator ID="RequiredFieldValidator1" ControlToValidate="ddlReferTo" InitialValue="0" runat="server" ErrorMessage="Select Refer To" Text="*"></asp:RequiredFieldValidator>
-                            </td>
-                            <td>
+                            <div class="ob-sub">Transfer To</div>
+                            <div class="ob-grid">
+                                <div>
+                                    <asp:Label ID="lblreferto" runat="server" Text="Transfer To *"></asp:Label>
+                                    <asp:UpdatePanel ID="UpdatePanel4" TabIndex="6" runat="server">
+                                        <ContentTemplate>
+                                            <asp:DropDownList ID="ddlReferTo" runat="server" AppendDataBoundItems="true" onChange="chkrefer_Of_Select();"></asp:DropDownList>
+                                        </ContentTemplate>
+                                    </asp:UpdatePanel>
+                                    <asp:RequiredFieldValidator ID="RequiredFieldValidator1" ControlToValidate="ddlReferTo" InitialValue="0" runat="server" ErrorMessage="Select Refer To" Text="*"></asp:RequiredFieldValidator>
+                                </div>
+                                <div>
+                                    <asp:Label ID="lblWards" runat="server" Text="Ward *"></asp:Label>
+                                    <asp:UpdatePanel ID="UpdatePanel15" TabIndex="7" runat="server" UpdateMode="Always">
+                                        <ContentTemplate>
+                                            <asp:DropDownList ID="ddlwards" runat="server" AppendDataBoundItems="true" OnChange="FillWardBedsRefer()" disabled="disabled"></asp:DropDownList>
+                                        </ContentTemplate>
+                                    </asp:UpdatePanel>
+                                </div>
+                                <div>
+                                    <asp:Label ID="lblBedno" runat="server" Text="Bed No"></asp:Label>
+                                    <asp:TextBox ID="txtBedno" TabIndex="8" runat="server" Enabled="true"></asp:TextBox>
+                                    <asp:RangeValidator ID="RangeValidator1" Type="Integer" runat="server" MinimumValue="0" MaximumValue="999999999" ControlToValidate="txtBedno" ErrorMessage="Only Enter Integer Values" Text="*"></asp:RangeValidator>
+                                </div>
+                                <div>
+                                    <asp:Label ID="lblRoom" runat="server" Text="Room_No *"></asp:Label>
+                                    <asp:DropDownList ID="ddlroom" TabIndex="9" runat="server" AppendDataBoundItems="true" AutoPostBack="true" disabled="disabled"></asp:DropDownList>
+                                </div>
+                                <div>
+                                    <asp:Label ID="lblroomtype" runat="server" Text="Room Type"></asp:Label>
+                                    <asp:UpdatePanel ID="UpdatePanel16" TabIndex="10" runat="server">
+                                        <ContentTemplate>
+                                            <asp:DropDownList ID="ddlRoomType" runat="server" AppendDataBoundItems="true" AutoPostBack="true" onChange="FillRoomsRefer()"></asp:DropDownList>
+                                        </ContentTemplate>
+                                    </asp:UpdatePanel>
+                                </div>
+                            </div>
+
+                            <div class="ob-transfer-note">
                                 <asp:UpdatePanel ID="UpdatePanel10" runat="server" UpdateMode="Always">
                                     <ContentTemplate>
                                         <asp:Label ID="Label43" runat="server" />
@@ -2356,87 +2292,49 @@
                                 </asp:UpdatePanel>
                                 <asp:UpdatePanel ID="UpdatePanel14" runat="server">
                                     <ContentTemplate>
-                                <asp:Button ID="btnAllocatedRoomwardCheckRefer" Style="display: none;" Text="Chk Allocated Room" runat="server" OnClick="btnAllocatedRoomwardCheckRefer_Click" CausesValidation="false" />
+                                        <asp:Button ID="btnAllocatedRoomwardCheckRefer" Style="display: none;" Text="Chk Allocated Room" runat="server" OnClick="btnAllocatedRoomwardCheckRefer_Click" CausesValidation="false" />
                                     </ContentTemplate>
                                 </asp:UpdatePanel>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="padding-left: 45px;">
-                                <asp:Label ID="lblWards" runat="server" Text="Ward *"></asp:Label>
-                            </td>
-                            <td>
-                                <asp:UpdatePanel ID="UpdatePanel15" TabIndex="7" runat="server" UpdateMode="Always">
-                                    <ContentTemplate>
-                                        <asp:DropDownList ID="ddlwards" runat="server" AppendDataBoundItems="true" OnChange="FillWardBedsRefer()" disabled="disabled"></asp:DropDownList>
-                                    </ContentTemplate>
-                                </asp:UpdatePanel>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="padding-left: 45px;">
-                                <asp:Label ID="lblBedno" runat="server" Text="Bed No"></asp:Label>
-                            </td>
-                            <td>
-                                <asp:TextBox ID="txtBedno" TabIndex="8" runat="server" Enabled="true"></asp:TextBox>
-                            </td>
+                            </div>
 
-                            <td>
-                     <asp:RangeValidator ID="RangeValidator1" Type="Integer" runat="server" MinimumValue="0" MaximumValue="999999999" ControlToValidate="txtBedno" ErrorMessage="Only Enter Integer Values" Text="*"></asp:RangeValidator>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="padding-left: 45px;">
-                                <asp:Label ID="lblRoom" runat="server" Text="Room_No *"></asp:Label>
-                            </td>
-                            <td>
-                                <asp:DropDownList ID="ddlroom" TabIndex="9" runat="server" AppendDataBoundItems="true" AutoPostBack="true" disabled="disabled"></asp:DropDownList>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="padding-left: 45px;">
-                                <asp:Label ID="lblroomtype" runat="server" Text="Room Type"></asp:Label>
-                            </td>
-                            <td>
-                                <asp:UpdatePanel ID="UpdatePanel16" TabIndex="10" runat="server">
-                                    <ContentTemplate>
-                                        <asp:DropDownList ID="ddlRoomType" runat="server" AppendDataBoundItems="true" AutoPostBack="true" onChange="FillRoomsRefer()"></asp:DropDownList>
-                                    </ContentTemplate>
-                                </asp:UpdatePanel>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="padding-left: 141px; padding-top: 20px;" colspan="2">
-                                <input type="button" class="btn btn-primry" id="btnTransfer" onclick="SaveTransferDetails();" value="Save Transfer"  />
-                            </td>
-                        </tr>
+                            <div class="ob-fit">
+                                <input type="button" class="btn btn-primry" id="btnTransfer" onclick="SaveTransferDetails();" value="Save Transfer" />
+                            </div>
+                        </div>
 
-                    </table>
-                    <div style="margin-left: 497px; margin-top: -240px; width: 20%; overflow: scroll; height: 250px; max-height: 400px !important;">
-                        <table id="tblBed" class="table" style="width: 100% !important;">
-                            <thead>
-                                <tr>
-                                    <th>MR No</th>
-                                    <th>Bed No</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
+                        <div class="ob-transfer-side">
+                            <div class="ob-mini">
+                                <div class="ob-mini-title">Beds</div>
+                                <div class="ob-mini-scroll">
+                                    <table id="tblBed" class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>MR No</th>
+                                                <th>Bed No</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="ob-mini">
+                                <div class="ob-mini-title">Rooms</div>
+                                <div class="ob-mini-scroll">
+                                    <table id="tblRoom" class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>MR No.</th>
+                                                <th>Room No</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div style="margin-left: 902px; margin-top: -250px;overflow: scroll; height: 250px; max-height: 400px !important;">
-                        <table id="tblRoom" class="table" style="width: 100% !important;">
-                            <thead>
-                                <tr>
-                                    <th>MR No.</th>
-                                    <th>Room No</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                    </div>
-
                 </div>
             </div>
         </div>
@@ -2511,39 +2409,24 @@
         </div>
        
          <div class="row" style="margin-top:1%">
-             <div class="col-lg-8">
-                 <div class="row">
-     <div class="col-lg-2 col-md-4 col-sm-6">
-         <asp:Button Text="View" CssClass="btn btn-gray" runat="server" ID="btnBack" CausesValidation="false" PostBackUrl="~/Modules/OT/OperationTheaterList.aspx" />
-     </div>
-     <div class="col-lg-2 col-md-4 col-sm-6">
-           <asp:Button ID="btnSave" CssClass="btn btn-primry"  runat="server" Text="Save" OnClientClick="SaveMedicines()" OnClick="btnSave_Click" CausesValidation="false" />
- </div>
-     <div class="col-lg-2 col-md-4 col-sm-6">
-       <asp:Button Text="New"  ID="btn3" CssClass="btn btn-yellow" runat="server" PostBackUrl="~/Modules/OT/OperationBooking.aspx" CausesValidation="false" />         
-     </div>
-
-    <%-- <div class="col-lg-2 col-md-4 col-sm-6">
-         <input type="button" name="btnPrint" class="btn btn-primry" id="btnPrints" onclick="PrintConsultant()" value="Consent Print" />
-     </div>--%>
-     </div>
-             </div>
+            <div class="col-lg-8">
+                <div class="row">
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <asp:Button Text="View" CssClass="btn btn-gray" runat="server" ID="btnBack" CausesValidation="false" PostBackUrl="~/Modules/OT/OperationTheaterList.aspx" />
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <asp:Button ID="btnSave" CssClass="btn btn-primry" runat="server" Text="Save" OnClientClick="SaveMedicines()" OnClick="btnSave_Click" CausesValidation="false" />
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <asp:Button Text="New" ID="btn3" CssClass="btn btn-yellow" runat="server" PostBackUrl="~/Modules/OT/OperationBooking.aspx" CausesValidation="false" />
+                    </div>
+                </div>
+            </div>
         </div>
-        <div style="padding-left: 70px; padding-top: 20px;">
-           
-            <table>
-                <tr>
-                    <td>
-                        <asp:ValidationSummary ID="ValidationSummary1" runat="server" ForeColor="Red" HeaderText="Page Errors"
-                            ShowSummary="true" DisplayMode="List" />
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <asp:Label ID="lblMessage" runat="server"></asp:Label>
-                    </td>
-                </tr>
-            </table>
+        <div class="ob-messages">
+            <asp:ValidationSummary ID="ValidationSummary1" runat="server" ForeColor="Red" HeaderText="Page Errors"
+                ShowSummary="true" DisplayMode="List" />
+            <asp:Label ID="lblMessage" runat="server"></asp:Label>
         </div>
     </div>
 
