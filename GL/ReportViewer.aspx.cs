@@ -78,6 +78,22 @@ namespace PMS
         }
 
 
+        // True when LoadReport replaced the report's data source with a DataTable from code.
+        private bool customDataSource;
+
+        // Sets a report parameter only when the report defines it.
+        private static void SetReportParameter(ReportDocument rd, string name, object value)
+        {
+            foreach (CrystalDecisions.Shared.ParameterField pf in rd.ParameterFields)
+            {
+                if (pf.Name == name)
+                {
+                    rd.SetParameterValue(name, value);
+                    return;
+                }
+            }
+        }
+
         public void LoadReport()
         {
             GC.Collect();
@@ -7111,6 +7127,20 @@ namespace PMS
                 rd.SetParameterValue("@Vendor_ID", Convert.ToInt32(vendorID));
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                 rd.SetParameterValue("Title", Request.QueryString["ReportTitle"].ToString().Trim());
+
+                DateTime poStartDate, poEndDate;
+                if (DateTime.TryParse(Request.QueryString["startDate"], out poStartDate))
+                {
+                    SetOptionalParameter("@StartDate", poStartDate);
+                }
+                if (DateTime.TryParse(Request.QueryString["endDate"], out poEndDate))
+                {
+                    SetOptionalParameter("@EndDate", poEndDate);
+                }
+                if (!string.IsNullOrEmpty(Request.QueryString["Warehouse"]))
+                {
+                    SetOptionalParameter("@Warehouse", Request.QueryString["Warehouse"]);
+                }
             }
             else if (reportName == "VendorWiseIGPS")
             {
@@ -7135,11 +7165,39 @@ namespace PMS
                 DateTime stDate = Convert.ToDateTime(Request.QueryString["startDate"]);
                 DateTime endDate = Convert.ToDateTime(Request.QueryString["endDate"]);
                 string vendorID = Request.QueryString["Vendor_ID"].ToString();
-                rd.SetParameterValue("@stDate", stDate);
-                rd.SetParameterValue("@endDate", endDate);
-                rd.SetParameterValue("@Vendor_ID", Convert.ToInt32(vendorID));
-                rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
-                rd.SetParameterValue("Title", Request.QueryString["ReportTitle"].ToString().Trim());
+                // Warehouse filter. sp_Vendor_Summary_GRN has no warehouse column, so keep only the rows whose GRN
+                // belongs to the chosen warehouse (GRN_Master.InvOrgId). "0" means All, and the report is left unchanged.
+                // The data source is set before the parameters, because replacing it clears the parameter values.
+                string warehouse = Request.QueryString["Warehouse"] ?? "0";
+                if (warehouse != "0")
+                {
+                    System.Data.DataTable grnRows = DBClass.getDataTable("EXEC dbo.sp_Vendor_Summary_GRN @stDate, @endDate, @Vendor_ID",
+                        DBClass.Param("@stDate", stDate),
+                        DBClass.Param("@endDate", endDate),
+                        DBClass.Param("@Vendor_ID", Convert.ToInt32(vendorID)));
+                    System.Data.DataTable whGrns = DBClass.getDataTable("SELECT GRN_ID FROM GRN_Master WHERE InvOrgId = @Warehouse",
+                        DBClass.Param("@Warehouse", warehouse));
+
+                    var grnIds = new System.Collections.Generic.HashSet<int>();
+                    foreach (System.Data.DataRow r in whGrns.Rows)
+                        grnIds.Add(Convert.ToInt32(r["GRN_ID"]));
+
+                    System.Data.DataTable filtered = grnRows.Clone();
+                    foreach (System.Data.DataRow r in grnRows.Rows)
+                    {
+                        if (grnIds.Contains(Convert.ToInt32(r["GRN_ID"])))
+                            filtered.ImportRow(r);
+                    }
+                    rd.SetDataSource(filtered);
+                    customDataSource = true;
+                }
+
+                // Replacing the data source can remove the procedure's parameter fields, so set only those the report still has.
+                SetReportParameter(rd, "@stDate", stDate);
+                SetReportParameter(rd, "@endDate", endDate);
+                SetReportParameter(rd, "@Vendor_ID", Convert.ToInt32(vendorID));
+                SetReportParameter(rd, "CompanyName", AppConfig.Company_Name);
+                SetReportParameter(rd, "Title", Request.QueryString["ReportTitle"].ToString().Trim());
             }
             else if (reportName == "GRN_and_Item_Wise_Report")
             {
@@ -10953,9 +11011,12 @@ namespace PMS
             #endregion
 
             #region "set report connection#
+            // A data source supplied by code (filtered GRN) needs no database logon; applying one fails with "Database logon failed".
+            if (!customDataSource)
+            {
             string UserID = SSB.UserID;
             string Password = SSB.Password;
-            string DBName = SSB.InitialCatalog; 
+            string DBName = SSB.InitialCatalog;
             string ServerName = SSB.DataSource;
 
             rd.SetDatabaseLogon(UserID, Password, ServerName, DBName);
@@ -10971,6 +11032,7 @@ namespace PMS
             connectionInfo.Password = Password;
             connectionInfo.UserID = UserID;
             rd.Database.Tables[0].ApplyLogOnInfo(logOnInfo);
+            }
             if (reportName == "ManufacturerWiseStockInHand" || reportName == "DailyCashCollectionSummary" || reportName == "Excessive_Amount_Billing_Report" || reportName == "Stock_Consumption_Details" || reportName == "Stock_In_Hand_Detail" || reportName == "Inward_Gate_Pass_Report" || reportName == "Stock_Transfer_Report" || reportName == "VendorDetailsGRNS" || reportName == "VendorWiseIGPS" || reportName == "SIH" || reportName == "VendorWisePurchaseSummary" || reportName == "VendorWisePurchase" || reportName == "VendorWisePOSummary" || reportName == "PARLR" || reportName == "BER" || reportName == "Pending_Payment_Request_Report" || reportName == "Payment_to_Supplier_Report" || reportName == "Purchase_Order_Report" || reportName == "Purchase_Register_Report" || reportName == "Inventory_Reconciliation_Report" || reportName == "Vendor_Wise_Payment_Summary" || reportName == "Vendor_Wise_Transaction_Detail" || reportName == "ActiveItems" || reportName == "GRN_and_Item_Wise_Report" || reportName == "MinimumStock" || reportName == "SIN_summary" || reportName == "MIR_summary" || reportName == "StockBalance" || reportName == "Bill_Ledger_Report" || reportName == "SaleSumaryItemWise" || reportName == "ItemWiseNetSaleConcise" || reportName == "ItemWiseNetSale" || reportName == "Emergency_Reg_Report" || reportName == "EmerDetailReport" || reportName == "Patient_Wise_Lab_Test_Summary" || reportName == "PharmacyStockDetail" || reportName == "FastSlow_Non_Moving_Stock" || reportName == "GRN_PO_Reconciliation_Report" || reportName == "GRN_Report" || reportName == "Pharmacy_Customer_Report" || reportName == "Category_Wise_Profitability_Report" || reportName == "PurchaseReturnReport" || reportName == "IPDDetailReport" || reportName == "LedgerForCostCenter" || reportName == "TrailForCostCenter" || reportName == "TrailBalanceByDateCodeSelection" || reportName == "TrailByDate" || reportName == "TrailBalanceAt" || reportName == "LedgerForCostCenter" || reportName == "Ledger" || reportName == "MultiLedger" || reportName == "Lab_Log_Report" || reportName == "Asset_Depreciation_Report" || reportName == "OPD_Department_Wise_Report" || reportName == "Operator_Wise_Billing_Report" || reportName == "Receipt_Operator_Wise_Report" || reportName == "HospitalServices" || reportName == "StockCategoryValuationReport" || reportName == "OPDDetailReport" || reportName == "DoctorShare_Report" || reportName == "Discharge_Detail" || reportName == "BloodBankCashCollection" || reportName == "Lab_Test_Investigation" || reportName == "TotalPatientRegsreport" || reportName == "DeptWisePatientsCardDetails" || reportName == "MER" || reportName == "AllCashReport" || reportName == "DoctorWisePatients" || reportName == "DeptWisePatients" || reportName == "PatientsTypesDetails" || reportName == "rptPatientInvestigationBilling" || reportName == "rptInPatientDetail" || reportName == "AllDoctorShareDetail" || reportName == "GOP_Details" || reportName == "GOP_Summary" || reportName == "BedAllocationReport" || reportName == "DepartmentwiseCashSummary" || reportName == "AdmissionDetail" || reportName == "Discharge Detail" || reportName == "DepartmentConversion" || reportName == "Procedure_Detail" || reportName == "Services_List" || reportName == "InsuranceCompanies" || reportName == "MainTestDepartments" || reportName == "GroupMainTestDepartments" || reportName == "SehatSahulatWise" || reportName == "SehatSahulatWiseExpensive" || reportName == "Patient_Transaction_Detail_Type" || reportName == "Patient_Transaction_Detail_SehatSahulatCard" || reportName == "OutPatientsINP" || reportName == "DeptWisePatients" || reportName == "PackageDetailReport" || reportName == "ProcedureDetail" || reportName == "PrivateAdmitionDetail" || reportName == "OPDPrivateDetail" || reportName == "AdvanceDetail" || reportName == "DailyRevenue" || reportName == "OutSourceTestDetail" || reportName == "ConsolidateMedicalSubsidy" || reportName == "PrivateProcedureDetail" || reportName == "TestResultStatus" || reportName == "LabTestDetailCollection" || reportName == "LabTestWiseSummary" || reportName == "Procedure_Service_List" || reportName == "ChargePolicyWiseSummary" || reportName == "LabCashReceivingCollection" || reportName == "BloodIssuance" || reportName == "WholeBloodStockLedger" || reportName == "ComponentBloodStockLedger" || reportName == "CBloodBankStockLedger" || reportName == "LabResultPending" || reportName == "BloodBankLabTest_Details" || reportName == "Blood_Bank_Cash_Collection_Details" || reportName == "NonCashBloodBankRevenue" || reportName == "ComponentBloodBankStockLedger" || reportName == "BloodBankStockLedger" || reportName == "BloodResultPending" || reportName == "OPDTimeLine" || reportName == "WardAllocationTimeLine" || reportName == "ProcedureTimeLine" || reportName == "ProcedureTimeLineDetail" || reportName == "BedOccupancy" || reportName == "AverageLengthOfStay" || reportName == "DepartmentWiseProcedureTimeLine" || reportName == "TestWiseMonthly" || reportName == "TestWiseMonthlyLabTestDepartment" || reportName == "Discharge Time Line Detail"
                 || reportName == "Daily_Sale_Summary" || reportName == "Executive_Sales_Summary" || reportName == "StockAdjustment" || reportName == "PharmacyStockBatchWise" || reportName == "Item_Wise_Gross_Profit" || reportName == "YearlyPharmacyOverallSummaryReport"                 || reportName == "PharmacySaleReport" || reportName == "Pharmacy_Profit_and_Loss_Report" || reportName == "Item_Wise_Purchase_Report" || reportName == "Item_Wise_Margin_Report" || reportName == "Sale_Report_Summary" || reportName == "Sale_Return_Report" || reportName == "OppeningReport" || reportName == "PO_Summarry" || reportName == "PharmacyStock" || reportName == "Bonus_Medicine_Detail_Report" || reportName == "StockCategoryValuationReport"
                 || reportName == "Student_Fee_Details_Report" || reportName == "Student_Fee_Details_Class_Report" || reportName == "Student_Fee_Details_Session_Report"
@@ -11032,6 +11094,20 @@ namespace PMS
         {
 
         }
+
+        // Sets a parameter only if the loaded .rpt declares it, so a report without the new filter fields still opens.
+        private void SetOptionalParameter(string ParameterName, object ParameterValue)
+        {
+            foreach (CrystalDecisions.CrystalReports.Engine.ParameterFieldDefinition field in rd.DataDefinition.ParameterFields)
+            {
+                if (field.Name == ParameterName)
+                {
+                    rd.SetParameterValue(ParameterName, ParameterValue);
+                    return;
+                }
+            }
+        }
+
         protected void CrystalReportViewer1_Unload(object sender, EventArgs e)
         {
 
