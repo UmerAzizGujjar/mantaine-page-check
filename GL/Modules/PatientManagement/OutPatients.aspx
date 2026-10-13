@@ -5513,6 +5513,64 @@
             });
         }
 
+        function emrSearchImaging() {
+            var orderNo = $('#emrTxtOrderNo').val().trim();
+            if (orderNo === '') {
+                emrMsg('warning', 'Required', 'Please enter the complete order number.');
+                return;
+            }
+
+            $('#emrBtnImaging').prop('disabled', true).val('Searching...');
+            emrLoader('Searching...', 'Fetching imaging result, please wait.');
+
+            $.ajax({
+                type: 'POST',
+                url: emrLookupUrl + 'GetImagingResult',
+                data: JSON.stringify({ orderNo: orderNo }),
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                success: function (response) {
+                    Swal.close();
+                    var rows = response.d || [];
+                    emrRenderImaging(rows);
+                    if (rows.length === 0) {
+                        emrMsg('info', 'Not Found', 'No imaging result for order: ' + orderNo);
+                    }
+                },
+                error: function () {
+                    Swal.close();
+                    emrMsg('error', 'Error!', 'Failed to fetch imaging result from the client database.');
+                },
+                complete: function () {
+                    $('#emrBtnImaging').prop('disabled', false).val('Search Result');
+                }
+            });
+        }
+
+        function emrRenderImaging(rows) {
+            var $box = $('#emrImaging');
+            if (!rows || rows.length === 0) {
+                $box.html('<span class="emr-kv-empty">No imaging result.</span>');
+                return;
+            }
+
+            // one block of cards per result row; long text spans the full width
+            var html = '';
+            $.each(rows, function (i, row) {
+                html += '<div class="emr-kv-grid" style="margin-bottom: 8px;">';
+                $.each(row, function (k, v) {
+                    var val = v === null || v === undefined || v === '' ? '-' : v;
+                    var wide = String(val).length > 60 ? ' style="grid-column: 1 / -1;"' : '';
+                    html += '<div class="emr-kv-item"' + wide + ' title="' + emrEsc(val) + '">' +
+                            '<span class="emr-kv-k">' + emrEsc(String(k).replace(/_/g, ' ')) + '</span>' +
+                            '<span class="emr-kv-v">' + emrEsc(val) + '</span>' +
+                            '</div>';
+                });
+                html += '</div>';
+            });
+            $box.html(html);
+        }
+
         function emrPrint() {
             if (!emrLastPatient && emrLastServices.length === 0) {
                 emrMsg('warning', 'Nothing to Print', 'Search a patient first.');
@@ -5876,6 +5934,18 @@
 
                 <h4 style="font-weight:bold; margin: 12px 0 6px; font-size: 14px;">Patient Services</h4>
                 <table id="emrTblServices" class="table table-bordered table-striped table-condensed table-sm" style="width: 100%; font-size: 12px;"></table>
+
+                <h4 style="font-weight:bold; margin: 12px 0 6px; font-size: 14px;">Imaging Result by Order No.</h4>
+                <div class="row" style="margin-bottom: 4px;">
+                    <div class="col-lg-3 col-md-4 col-sm-12" style="margin-bottom: 6px;">
+                        <label for="emrTxtOrderNo" style="margin-bottom: 2px; font-size: 12px;">Complete Order No.</label>
+                        <input type="text" id="emrTxtOrderNo" class="form-control" autocomplete="off" placeholder="e.g. 004001240334205" style="height: 32px;" />
+                    </div>
+                    <div class="col-lg-6 col-md-8 col-sm-12" style="padding-top: 22px; margin-bottom: 6px;">
+                        <input type="button" id="emrBtnImaging" class="btn-primry" value="Search Result" onclick="emrSearchImaging()" style="display: inline-block; width: auto !important; height: 32px; margin: 0; padding: 0 16px;" />
+                    </div>
+                </div>
+                <div id="emrImaging"></div>
             </div>
 
             <% } %>

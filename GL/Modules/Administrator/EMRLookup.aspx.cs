@@ -191,6 +191,34 @@ WHERE OD.PATIENT_ID IN (
       )
 ORDER BY IMS.INVOICE_DATE DESC";
 
+        // Imaging result for one complete order number (client query; order detail 1, bound as :orderno)
+        private const string ImagingSql = @"
+SELECT IR.RTH,IR.TEXT_RESULT,IR.STUDY_INTEGRATED,
+IR.IMAGING_NO, IR.PROCEDURE_INFORMATION,
+NVL(IR.CLINICAL_INFORMATION,' ') INFORMATION,
+NVL(IR.STUDY_PROTOCOL,' ') STUDY_PROTOCOL,
+USR.NAME VERIFY_BY, IR.DS,
+TO_CHAR(IR.RESULT_DATE,'DD-MON-YY') VERIFIED_DATE,
+NVL(IR.CONCLUSION, ' ') CONCLUSION
+FROM EMR.IMAGING_RESULTS IR,
+     EMR.USERS USR
+WHERE IR.COMPLETE_ORDER_NO = :orderno
+  AND IR.ORDER_DETAIL_ID = 1
+  AND NVL(IR.VERIFIED_BY, 'GENERAL') = USR.USER_NAME";
+
+        [WebMethod]
+        public static List<Dictionary<string, string>> GetImagingResult(string orderNo)
+        {
+            if (string.IsNullOrWhiteSpace(orderNo))
+            {
+                return new List<Dictionary<string, string>>();
+            }
+
+            DataTable dt = EMRDb.GetDataTable(ConnectionName, ImagingSql,
+                new EMRDb.DbParam("orderno", orderNo.Trim()));
+            return EMRDb.ToRows(dt);
+        }
+
         protected void Page_Load(object sender, EventArgs e)
         {
         }

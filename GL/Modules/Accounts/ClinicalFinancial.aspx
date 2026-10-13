@@ -377,7 +377,8 @@
                  discount: row.find('.discountPHARMACY').val(),
                  revenue: row.find('.revenuePHARMACY').val(),
                  cgs: row.find('.cgsPHARMACY').val(),
-                 balanceaccount: row.find('.balanceaccountPHARMACY').val()
+                 balanceaccount: row.find('.balanceaccountPHARMACY').val(),
+                itemaccount: row.find('.itemaccountPHARMACY').val()
              };
              if (editablePHARMACY && (rowDataPHARMACY.categoryname == 0 || rowDataPHARMACY.cashinhand == 0 || rowDataPHARMACY.discount == 0)) {
                  isEmptyFound = true;
@@ -1502,6 +1503,11 @@ function addNewRowAdvance() {
                                 </select>
                             </td>
                             <td>
+                                <select class="itemaccountPHARMACY select2select" style="background-color: white;" disabled>
+                                    ${setSelected(optionsVen, item.itemaccount)}
+                                </select>
+                            </td>
+                            <td>
                                 <a href="#" onclick="removeRow(this)">
                                     <i class="fa fa-trash fa-lg" style="color: black;"></i>
                                 </a>
@@ -2072,6 +2078,11 @@ function addNewRowAdvance() {
                     </select>
                 </td>
                 <td>
+                    <select class="itemaccountPHARMACY select2select" style="background-color: white;">
+                        ${optionsVen}
+                    </select>
+                </td>
+                <td>
                     <a href="#" onclick="removeRow(this)">
                         <i class="fa fa-trash fa-lg" style="color: black;"></i>
                     </a>
@@ -2476,12 +2487,13 @@ function addNewRowAdvance() {
                         <th style="display: none">Financial Department</th>
                         <th style="width: 10%;">Category Name</th>
                         <th style="width: 10%;">Cost Center</th>
-                        <th style="width: 16%;">Cash in Hand (C.I.H.)</th>
-                        <th style="width: 18%;">Discount</th>
-                        <th style="width: 18%;">Revenue</th>
-                        <th style="width: 18%;">CGS</th>
-                        <th style="width: 18%;">Balance Account</th>
-                        <th style="width: 9%;">Action</th>
+                        <th style="width: 14%;">Cash in Hand (C.I.H.)</th>
+                        <th style="width: 13%;">Discount</th>
+                        <th style="width: 13%;">Revenue</th>
+                        <th style="width: 12%;">CGS</th>
+                        <th style="width: 13%;">Balance Account</th>
+                        <th style="width: 14%;">Item Account</th>
+                        <th style="width: 1%;">Action</th>
                     </tr>
                 </thead>
                 <tbody id="tbodyPHARMACY">
