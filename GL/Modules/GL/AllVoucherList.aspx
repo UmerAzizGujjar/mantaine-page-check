@@ -4,11 +4,34 @@
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/tablestyle.css" rel="stylesheet" />
     <link href="../CssJs/select2.min.css" rel="stylesheet" />
     <script src="../CssJs/select2.min.js"></script>
+    <style>
+        /* buttons follow the active theme (theme-colors.css), not fixed colours */
+        .vch-print-btn {
+            display: inline-block;
+            padding: 5px 8px;
+            border-radius: 4px;
+            border: 1px solid var(--theme-accent, #EFA63E);
+            background: var(--theme-accent, #EFA63E);
+            color: var(--theme-on-accent, #1b2a41);
+            text-decoration: none;
+        }
+        .vch-print-btn:hover {
+            background: var(--theme-accent-light, #F4B653);
+            color: var(--theme-on-accent, #1b2a41);
+            text-decoration: none;
+        }
+    </style>
 
     <script type="text/javascript">
         $(document).ready(function () {
             LoadFilters();
             LoadPage();
+
+            // View button in the action column opens the approved voucher
+            $(document).on('click', '.vView', function (e) {
+                e.preventDefault();
+                ViewVoucher($(this).data('id'), $(this).data('no'));
+            });
         });
 
         function LoadFilters() {
@@ -35,6 +58,8 @@
                 "processing": true,
                 "serverSide": true,
                 "destroy": true,
+                "searchDelay": 500,
+                "deferRender": true,
                 "dom": 'lBfrtip',
                 buttons: ['copy', 'excel', 'pdf', 'colvis'],
                 "ajax": function (data, callback, settings) {
@@ -76,11 +101,20 @@
                     },
                     {
                         "render": function(d, type, full) {
-                            return '<a href="#" onclick="PrintReport(\'' + full.Voucher_ID + '\',\'' + full.Voucher_Type + '\')" style="border-radius:4px;background:#007bff;color:white;padding:5px 8px;"><i class="fa fa-print"></i></a>';
+                            return '<a href="#" class="vch-print-btn vView" data-id="' + full.Voucher_ID + '" data-no="' + full.Voucher_No + '" title="View voucher"><i class="fa fa-eye"></i></a> ' +
+                                   '<a href="#" onclick="PrintReport(\'' + full.Voucher_ID + '\',\'' + full.Voucher_Type + '\')" class="vch-print-btn"><i class="fa fa-print"></i></a>';
                         },
                         "orderable": false
                     }
                 ],
+                "createdRow": function (row, data) {
+                    // click anywhere on the row (not on a button) to open the voucher
+                    $(row).css('cursor', 'pointer');
+                    $(row).off('click.vview').on('click.vview', function (e) {
+                        if ($(e.target).closest('a, button, input').length) { return; }
+                        ViewVoucher(data.Voucher_ID, data.Voucher_No);
+                    });
+                },
                 "order": [[0, "desc"]]
             });
 
@@ -88,6 +122,72 @@
                 table.ajax.reload();
             });
 }
+// GL lines and bills of one approved voucher, shown in a popup (same view as Pharmacy Pending Bills)
+function vEsc(v) {
+    if (v === null || v === undefined) { return ''; }
+    return String(v)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+function vMoney(v) {
+    return Number(v || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function ViewVoucher(id, no) {
+    $.ajax({
+        type: 'POST',
+        url: 'AllVoucherList.aspx/GetVoucherDetail',
+        data: JSON.stringify({ voucherId: String(id) }),
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        success: function (response) {
+            var d = JSON.parse(response.d);
+            if (d.status !== 'Approved') {
+                Swal.fire({ icon: 'info', title: 'Voucher No ' + no, text: 'Only approved vouchers can be viewed. Status: ' + (d.status || 'unknown') });
+                return;
+            }
+
+            var billRows = (d.bills || []).map(function (b) {
+                return '<tr><td>' + vEsc(b.Seq_InvoiceNo) + '</td><td>' + vEsc(b.Customer_Name) + '</td>' +
+                       '<td style="text-align:right;">' + vMoney(b.Total_Amount) + '</td>' +
+                       '<td style="text-align:right;">' + vMoney(b.Discount_Amount) + '</td>' +
+                       '<td style="text-align:right;">' + vMoney(b.Received_Amount) + '</td>' +
+                       '<td style="text-align:right;">' + vMoney(b.Balance_Amount) + '</td></tr>';
+            }).join('');
+
+            var lineRows = (d.lines || []).map(function (l) {
+                return '<tr><td>' + vEsc(l.Account_Code) + '</td><td>' + vEsc(l.Account_Name) + '</td>' +
+                       '<td>' + vEsc(l.Narration) + '</td>' +
+                       '<td style="text-align:right;">' + vMoney(l.DR) + '</td>' +
+                       '<td style="text-align:right;">' + vMoney(l.CR) + '</td></tr>';
+            }).join('');
+
+            var billPart = billRows
+                ? '<table class="table table-bordered table-condensed"><thead><tr><th>Bill No</th><th>Customer</th>' +
+                  '<th style="text-align:right;">Total</th><th style="text-align:right;">Discount</th>' +
+                  '<th style="text-align:right;">Received</th><th style="text-align:right;">Balance</th></tr></thead>' +
+                  '<tbody>' + billRows + '</tbody></table>'
+                : '<p class="text-muted">No bills are linked to this voucher.</p>';
+
+            var html =
+                '<h4 style="text-align:left;">Bills in this voucher</h4>' + billPart +
+                '<h4 style="text-align:left;">GL lines</h4>' +
+                '<table class="table table-bordered table-condensed"><thead><tr><th>Account Code</th><th>Account</th>' +
+                '<th>Narration</th><th style="text-align:right;">DR</th><th style="text-align:right;">CR</th></tr></thead>' +
+                '<tbody>' + lineRows + '</tbody></table>';
+
+            Swal.fire({ title: 'Voucher No ' + no, html: html, width: 960, confirmButtonText: 'Close' });
+        },
+        error: function () {
+            Swal.fire('Error', 'Failed to load the voucher.', 'error');
+        }
+    });
+}
+
 function PrintReport(ID, Voucher_Type ) {
     var getype = Voucher_Type
     var locationInfo = window.location;

@@ -353,6 +353,10 @@ function ViewVoucher(id, no) {
         dataType: 'json',
         success: function (response) {
             var d = JSON.parse(response.d);
+            if (d.status !== 'Approved') {
+                Swal.fire({ icon: 'info', title: 'Voucher No ' + no, text: 'Only approved vouchers can be viewed. Status: ' + (d.status || 'unknown') });
+                return;
+            }
 
             var billRows = (d.bills || []).map(function (b) {
                 return '<tr><td>' + vEsc(b.Seq_InvoiceNo) + '</td><td>' + vEsc(b.Customer_Name) + '</td>' +

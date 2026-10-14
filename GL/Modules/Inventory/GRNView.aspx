@@ -595,7 +595,9 @@
                             var logBtn = '<a class="logListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="openGRNLogs(' + full.GRN_ID + ',\'' + full.GRN_Num + '\');return false;" title="View Change History"><i class="fa fa-history"></i></a>';
 
                             var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="Print(' + full.GRN_ID + ')" id="btnprint"><i class="fa fa-print"></i></a>';
-                            var result = res + logBtn + print;
+                            var voucherBtn = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: var(--theme-on-accent, #fff);background-color: var(--theme-accent, #EFA63E);padding: 5px 8px 5px 8px;" href="#" onclick="event.stopPropagation(); openGRNVoucher(' + full.GRN_ID + ',\'' + full.GRN_Num + '\');return false;" title="View Voucher"><i class="fa fa-book"></i></a>';
+
+                            var result = res + logBtn + print + voucherBtn;
                             return result;
                         }, "orderable": false
                     }
@@ -758,6 +760,47 @@
                 }
             });
         }
+        // GL voucher posted for this GRN, shown in a modal
+        function openGRNVoucher(grnId, grnNo) {
+            var $body = $('#grnVoucherBody');
+            $body.html('<div class="bl-loading"><i class="fa fa-spinner fa-spin"></i>Loading voucher&hellip;</div>');
+            $('#grnVoucherTitle').text('GRN Voucher' + (grnNo ? ' - GRN ' + grnNo : ''));
+            $('#grnVoucherModal').modal({ backdrop: 'static' });
+
+            $.ajax({
+                type: "POST",
+                url: "GRNView.aspx/GetGRNVoucherDetail",
+                data: JSON.stringify({ grnId: grnId }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    var d = JSON.parse(response.d);
+                    if (!d.lines || d.lines.length === 0) {
+                        $body.html('<div class="bl-empty"><i class="fa fa-book bl-empty-ico"></i><span class="bl-empty-title">No voucher posted for this GRN</span></div>');
+                        return;
+                    }
+
+                    var lineRows = d.lines.map(function (l) {
+                        return '<tr><td>' + escHtml(l.Account_Code) + '</td><td>' + escHtml(l.Account_Name) + '</td>' +
+                               '<td>' + escHtml(l.Narration) + '</td>' +
+                               '<td style="text-align:right;">' + fmtMoney(l.DR) + '</td>' +
+                               '<td style="text-align:right;">' + fmtMoney(l.CR) + '</td></tr>';
+                    }).join('');
+
+                    $body.html(
+                        '<div class="bl-card">' +
+                        '<div class="bl-card-head"><span class="ap-badge ' + (d.status === 'Approved' ? 'ap-badge-app' : 'ap-badge-pend') + '">' + escHtml(d.status || 'Unknown') + '</span></div>' +
+                        '<table class="bl-table"><thead><tr><th>Account Code</th><th>Account</th><th>Narration</th>' +
+                        '<th style="text-align:right;">DR</th><th style="text-align:right;">CR</th></tr></thead>' +
+                        '<tbody>' + lineRows + '</tbody></table>' +
+                        '</div>');
+                },
+                error: function () {
+                    $body.html('<div class="bl-empty"><i class="fa fa-exclamation-triangle bl-empty-ico" style="color:#d8a25a;"></i><span class="bl-empty-title">Unable to load voucher</span></div>');
+                }
+            });
+        }
+
         function ViewPage(id, type) {
             var ID = id
             if (type == 'GRN') {
@@ -1192,6 +1235,37 @@
 
                 <div class="custom-modal-footer">
                     <span class="custom-modal-count">Change history is recorded automatically on every save. Newest update shown first.</span>
+                    <button type="button" class="custom-modal-btn-close" data-dismiss="modal">
+                        <i class="fa fa-times-circle"></i> Close
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="grnVoucherModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog custom-modal-dialog custom-modal-dialog-xl" role="document">
+            <div class="modal-content custom-modal-content">
+
+                <div class="modal-header custom-modal-header">
+                    <div class="custom-modal-title-wrap">
+                        <span class="custom-modal-icon"><i class="fa fa-book"></i></span>
+                        <h4 class="modal-title custom-modal-title" id="grnVoucherTitle">GRN Voucher</h4>
+                    </div>
+                    <button type="button" class="custom-modal-close" data-dismiss="modal" aria-label="Close">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </div>
+
+                <div class="modal-body custom-modal-body grn-log-body">
+                    <div class="bl-scroll">
+                        <div id="grnVoucherBody"></div>
+                    </div>
+                </div>
+
+                <div class="custom-modal-footer">
+                    <span class="custom-modal-count">GL entries posted for this GRN.</span>
                     <button type="button" class="custom-modal-btn-close" data-dismiss="modal">
                         <i class="fa fa-times-circle"></i> Close
                     </button>

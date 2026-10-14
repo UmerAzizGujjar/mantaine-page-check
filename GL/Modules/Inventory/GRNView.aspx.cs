@@ -382,6 +382,21 @@ namespace PMS.Inventory
             }
         }
 
+        // GL voucher posted for this GRN (GRN_Master.Voucher_ID): status and GL lines, for the voucher modal
+        [WebMethod]
+        public static string GetGRNVoucherDetail(int grnId)
+        {
+            var head = DBClass.getDataTable("SELECT Voucher_ID FROM GRN_Master WHERE GRN_ID = @GRN_ID",
+                DBClass.Param("@GRN_ID", grnId));
+
+            if (head.Rows.Count == 0 || head.Rows[0]["Voucher_ID"] == DBNull.Value)
+            {
+                return new JavaScriptSerializer().Serialize(new { status = "", lines = new object[0], bills = new object[0] });
+            }
+
+            return VoucherDetail.GetJson(Convert.ToString(head.Rows[0]["Voucher_ID"]));
+        }
+
         [WebMethod]
         public static string GetUserColumnPreferences()
         {

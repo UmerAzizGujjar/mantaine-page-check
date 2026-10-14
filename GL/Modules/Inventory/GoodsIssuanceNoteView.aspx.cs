@@ -19,6 +19,13 @@ namespace PMS
         {
         }
 
+        // GL voucher posted for this goods issue (Store_Issue.Voucher_ID): status and GL lines, for the voucher modal
+        [WebMethod]
+        public static string GetGINVoucherDetail(int recordId)
+        {
+            return VoucherDetail.GetJsonForRecord("SELECT Voucher_ID FROM Store_Issue WHERE Store_Issue_Id = @Id", recordId);
+        }
+
         [WebMethod]
         public static object GetMasterAndDetail(int invoiceId)
         {
