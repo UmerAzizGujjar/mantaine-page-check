@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ClinicalFinancial.aspx.cs" Inherits="PMS.Modules.Accounts.ClinicalFinancial" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ClinicalFinancial.aspx.cs" Inherits="PMS.Modules.Accounts.ClinicalFinancial" EnableSessionState="ReadOnly" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/ClinicalFinancial.css" rel="stylesheet" />
@@ -37,6 +37,9 @@
             accounts: '',
             costCenters: ''
         };
+        // Account dropdowns start with only "Please Select" (plus the saved value); the full
+        // account list is filled in the first time the dropdown is opened (see select2:opening).
+        var LAZY_ACCOUNT_OPTIONS = '<option value="0" data-lazy="1">Please Select</option>';
         var dropdownCacheLoaded = false;
         var dropdownCacheLoading = false;
         var pendingDropdownCallbacks = [];
@@ -64,6 +67,15 @@
             return options;
         }
 
+        // account code/name by id, used to show the saved account without the full list
+        function buildAccountText(data) {
+            var text = {};
+            $.each(data, function (key, value) {
+                text[String(value.Account_ID)] = value.Account_Code + ' - ' + value.Account_Name;
+            });
+            return text;
+        }
+
         function loadCommonDropdowns(callback) {
             if (dropdownCacheLoaded) {
                 if (callback) callback();
@@ -79,7 +91,10 @@
                 fetchDropdown('PatientType').then(function (d) { dropdownCache.patientTypes = buildOptions(d, false); }),
                 fetchDropdown('MainTestDepartments').then(function (d) { dropdownCache.mainTestDepts = buildOptions(d, false); }),
                 fetchDropdown('SpecialServices').then(function (d) { dropdownCache.specialServices = buildOptions(d, false); }),
-                fetchDropdown('filldropdowns').then(function (d) { dropdownCache.accounts = buildOptions(d, true); }),
+                fetchDropdown('filldropdowns').then(function (d) {
+                    dropdownCache.accounts = buildOptions(d, true);
+                    dropdownCache.accountText = buildAccountText(d);
+                }),
                 fetchDropdown('CostCenterDropdown').then(function (d) { dropdownCache.costCenters = buildOptions(d, false); })
             ).done(function () {
                 dropdownCacheLoaded = true;
@@ -99,6 +114,20 @@
                 (pendingDropdownCallbacks.shift())();
             }
         }
+
+        // First time an account dropdown is opened, fill in the full account list and keep the saved value.
+        $(document).on('select2:opening', 'select', function () {
+            var $s = $(this);
+            if (!$s.children('option[data-lazy]').length || !dropdownCache.accounts) { return; }
+
+            var cur = $s.val();
+            $s.html(dropdownCache.accounts);
+            if (cur && cur !== '0' && $s.children('option').filter(function () { return this.value === cur; }).length === 0) {
+                var label = (dropdownCache.accountText && dropdownCache.accountText[cur]) || cur;
+                $s.append($('<option></option>').attr('value', cur).text(label));
+            }
+            if (cur) { $s.val(cur); }
+        });
 
         // Initialize select2 only on elements not already done, so repeated calls
         // after each table load / add-row never rebuild existing widgets.
@@ -1541,6 +1570,14 @@ function addNewRowAdvance() {
         var parsedOptionsCache = {};
 
         function setSelected(optionsHtml, selectedValue) {
+            // account dropdown: only the placeholder and the saved account (the full list loads on open)
+            if (optionsHtml === LAZY_ACCOUNT_OPTIONS) {
+                var v = selectedValue === null || selectedValue === undefined ? '' : String(selectedValue);
+                if (v === '' || v === '0' || v === 'null') { return LAZY_ACCOUNT_OPTIONS; }
+                var label = String((dropdownCache.accountText && dropdownCache.accountText[v]) || v)
+                    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+                return LAZY_ACCOUNT_OPTIONS + '<option value="' + v + '" selected>' + label + '</option>';
+            }
             let select = parsedOptionsCache[optionsHtml];
             if (!select) {
                 let doc = new DOMParser().parseFromString('<select>' + optionsHtml + '</select>', 'text/html');
@@ -2117,9 +2154,9 @@ function addNewRowAdvance() {
             });
         }
         function getAccounts(callback) {
-            if (dropdownCache.accounts) { callback(dropdownCache.accounts); return; }
+            if (dropdownCache.accounts) { callback(LAZY_ACCOUNT_OPTIONS); return; }
             loadCommonDropdowns(function () {
-                callback(dropdownCache.accounts || '<option value="0">Please Select</option>');
+                callback(LAZY_ACCOUNT_OPTIONS);
             });
         }
         function getCostCenters(callback) {

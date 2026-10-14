@@ -234,7 +234,10 @@ $(document).ready(function () {
 
                     var getquerytype = '<%= Request.QueryString["VoucherType"]%>';
 
-                    var actionButtons = '';
+                    var actionButtons = `
+<a href="#" class="viewListBtn" onclick="ViewVoucher(${full.Voucher_ID}, '${full.Voucher_No}')" style="border-radius: 4px; background-color: var(--theme-accent, #EFA63E); color: var(--theme-on-accent, #fff); padding: 5px 8px;">
+    <i class="fa fa-eye"></i>
+</a>`;
                     if (getquerytype !== 'DPV') {
                         actionButtons += `
 <a href="#" class="editListBtn" onclick="Edit(${full.Voucher_ID})" style="border-radius: 4px; background-color: #007bff; color: white; padding: 5px 8px;">
@@ -259,6 +262,14 @@ $(document).ready(function () {
                 width: "30%"
             }
         ],
+        "createdRow": function (row, data) {
+            // click anywhere on the row (not on a button) to open the voucher
+            $(row).css('cursor', 'pointer');
+            $(row).off('click.vview').on('click.vview', function (e) {
+                if ($(e.target).closest('a, button, input').length) { return; }
+                ViewVoucher(data.Voucher_ID, data.Voucher_No);
+            });
+        },
         "rowCallback": function (row, data, index) {
             const status = (data.Voucher_Status || '').trim();
             if (status === 'Cancalled') {
@@ -318,7 +329,69 @@ function LoadPageByYear() {
     LoadPage();
 }
 
- function PrintReport(ID) {
+ // GL lines and bills of one voucher, shown in a popup (same view as Pharmacy Pending Bills)
+function vEsc(v) {
+    if (v === null || v === undefined) { return ''; }
+    return String(v)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+function vMoney(v) {
+    return Number(v || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function ViewVoucher(id, no) {
+    $.ajax({
+        type: 'POST',
+        url: 'VoucherView.aspx/GetVoucherDetail',
+        data: JSON.stringify({ voucherId: String(id) }),
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        success: function (response) {
+            var d = JSON.parse(response.d);
+
+            var billRows = (d.bills || []).map(function (b) {
+                return '<tr><td>' + vEsc(b.Seq_InvoiceNo) + '</td><td>' + vEsc(b.Customer_Name) + '</td>' +
+                       '<td style="text-align:right;">' + vMoney(b.Total_Amount) + '</td>' +
+                       '<td style="text-align:right;">' + vMoney(b.Discount_Amount) + '</td>' +
+                       '<td style="text-align:right;">' + vMoney(b.Received_Amount) + '</td>' +
+                       '<td style="text-align:right;">' + vMoney(b.Balance_Amount) + '</td></tr>';
+            }).join('');
+
+            var lineRows = (d.lines || []).map(function (l) {
+                return '<tr><td>' + vEsc(l.Account_Code) + '</td><td>' + vEsc(l.Account_Name) + '</td>' +
+                       '<td>' + vEsc(l.Narration) + '</td>' +
+                       '<td style="text-align:right;">' + vMoney(l.DR) + '</td>' +
+                       '<td style="text-align:right;">' + vMoney(l.CR) + '</td></tr>';
+            }).join('');
+
+            var billPart = billRows
+                ? '<table class="table table-bordered table-condensed"><thead><tr><th>Bill No</th><th>Customer</th>' +
+                  '<th style="text-align:right;">Total</th><th style="text-align:right;">Discount</th>' +
+                  '<th style="text-align:right;">Received</th><th style="text-align:right;">Balance</th></tr></thead>' +
+                  '<tbody>' + billRows + '</tbody></table>'
+                : '<p class="text-muted">No bills are linked to this voucher.</p>';
+
+            var html =
+                '<h4 style="text-align:left;">Bills in this voucher</h4>' + billPart +
+                '<h4 style="text-align:left;">GL lines</h4>' +
+                '<table class="table table-bordered table-condensed"><thead><tr><th>Account Code</th><th>Account</th>' +
+                '<th>Narration</th><th style="text-align:right;">DR</th><th style="text-align:right;">CR</th></tr></thead>' +
+                '<tbody>' + lineRows + '</tbody></table>';
+
+            Swal.fire({ title: 'Voucher No ' + no, html: html, width: 960, confirmButtonText: 'Close' });
+        },
+        error: function () {
+            Swal.fire('Error', 'Failed to load the voucher.', 'error');
+        }
+    });
+}
+
+function PrintReport(ID) {
     var getype = '<%= Request.QueryString["VoucherType"]%>'
     var locationInfo = window.location;
     var user_name = '<% =AppConfig.Company_Name %>';

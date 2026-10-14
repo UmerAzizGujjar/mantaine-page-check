@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
@@ -18,6 +19,49 @@ namespace PMS
         {
 
         }
+        // GL lines and linked bills of one voucher, for the View popup on the voucher list.
+        [WebMethod]
+        public static string GetVoucherDetail(string voucherId)
+        {
+            long id = Convert.ToInt64(voucherId);
+
+            var lines = DBClass.getDataTable(
+                @"SELECT va.Narration, ga.Account_Code, ga.Account_Name, va.DR, va.CR
+                  FROM GL_Voucher_Accounts va
+                  JOIN GL_Accounts ga ON ga.Account_ID = va.Account_ID
+                  WHERE va.Voucher_ID = @Voucher_ID
+                  ORDER BY va.Voucher_account_ID",
+                DBClass.Param("@Voucher_ID", id));
+
+            var bills = DBClass.getDataTable(
+                @"SELECT ab.Seq_InvoiceNo, ab.Customer_Name, ab.Total_Amount, ab.Discount_Amount, ab.Received_Amount, ab.Balance_Amount
+                  FROM Ar_Billings ab
+                  WHERE ab.Voucher_ID = @Voucher_ID
+                  ORDER BY ab.Bill_ID",
+                DBClass.Param("@Voucher_ID", id));
+
+            return new JavaScriptSerializer().Serialize(new Dictionary<string, object>
+            {
+                { "lines", ToRows(lines) },
+                { "bills", ToRows(bills) }
+            });
+        }
+
+        private static List<Dictionary<string, object>> ToRows(DataTable dt)
+        {
+            var rows = new List<Dictionary<string, object>>();
+            foreach (DataRow r in dt.Rows)
+            {
+                var row = new Dictionary<string, object>();
+                foreach (DataColumn c in dt.Columns)
+                {
+                    row[c.ColumnName] = r[c] == DBNull.Value ? null : r[c];
+                }
+                rows.Add(row);
+            }
+            return rows;
+        }
+
         [WebMethod]
         public static object VoucherViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue, string vouchertype, string voucheryear, string vouchermonth, string fromDate, string toDate)
         {

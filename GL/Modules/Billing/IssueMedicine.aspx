@@ -2491,6 +2491,9 @@ function CalculateReceivedAmount() {
             var finalAmount = TotalAmount - TotalDiscountAmount - flatdisc - masterDisc;
             if (finalAmount < 0) finalAmount = 0;
 
+            // keep Total Discount in step with the line discount (it was left at the old value after a qty change)
+            sumdiscount();
+
             if (blnceCondition == 'true') {
                 var AmtReceived = parseFloat($('#txtAmountReceived').val()) || 0;
                 if (AmtReceived <= 0) {

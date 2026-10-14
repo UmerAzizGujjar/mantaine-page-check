@@ -4453,7 +4453,7 @@
                                  <input type="button" id="btnSaveMedicines" class="btn btn-primry" name="btnSaveMedicines" value="Save" tabindex="7" />
                              </td>                                                            
                               <td>                                
-                                 <input type="button" id="Addmedicine" class="btn btn-primry" value="Add Unlisted Medicine"  style="margin-left: 110px;width:60% !important" onclick="NewMedicine()" />
+                                 <input type="button" id="Addmedicine" class="btn btn-primry" value="Add Unlisted Medicine"  style="display: none; margin-left: 110px;width:60% !important" onclick="NewMedicine()" />
                                      </td>
                              <td></td>
                          </tr>

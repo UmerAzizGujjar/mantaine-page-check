@@ -512,6 +512,8 @@ function LoadGRNDetailDir(GRN_ID) {
     $('#btnSave').val('Update');
         }
 
+        var savedIgpId = null;   // IGP of the GRN being edited, selected once the IGP list is filled
+
         function LoadGRNData(GRN_ID) {
             updateLoaderProgress(5, 'Loading GRN header...');
             PageMethods.LoadGRNHeaderDetail(GRN_ID, function (resp) {
@@ -547,6 +549,7 @@ function LoadGRNDetailDir(GRN_ID) {
                 if (savedBranch) {
                     $('#ddlBranch').val(savedBranch).trigger('change');
                 }
+                savedIgpId = data.IGP_Id || null;
                 setTimeout(function () {
                     getIGPNumByVendor(data.VendorId);
                 }, 3000);
@@ -726,6 +729,11 @@ function LoadGRNDetailDir(GRN_ID) {
                 })
                 $("#ddlIgpNo option").remove();
                 $('#ddlIgpNo').html(optionsIgp);
+
+                // editing a saved GRN: show its IGP in the dropdown (change.select2 does not fire PerformIGPSearch)
+                if (savedIgpId && $('#ddlIgpNo option[value="' + savedIgpId + '"]').length > 0) {
+                    $('#ddlIgpNo').val(String(savedIgpId)).trigger('change.select2');
+                }
             });
         }
 
