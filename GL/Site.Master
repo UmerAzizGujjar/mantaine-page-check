@@ -270,62 +270,87 @@
             });
         });
 </script>
-<%--<script type="text/javascript">
-  
+<script type="text/javascript">
     (function () {
-        
-        if (typeof window.skipDevToolsCheck !== 'undefined' && window.skipDevToolsCheck === true) {
-            console.log("DevTools detection skipped on this page.");
-            return; 
-        }
+        // Pages can opt out by setting window.skipDevToolsCheck = true before the master loads
+        if (window.skipDevToolsCheck === true) { return; }
 
-        var devtoolsOpen = false;
+        var loginUrl = '<%= ResolveUrl("~/Login.aspx") %>';
+        var acted = false;
 
-        
-        var loginUrl = "../../../Login.aspx";
+        // DevTools found: hide the page so there is nothing to read, show the notice, then end the session
+        function forceLogout() {
+            if (acted) { return; }
+            acted = true;
 
-        function checkDevTools() {
-      
-            var threshold = 160;
-            var widthDiff = window.outerWidth - window.innerWidth;
-            var heightDiff = window.outerHeight - window.innerHeight;
+            var form = document.forms[0];
+            if (form) { form.style.display = 'none'; }
 
-            if (widthDiff > threshold || heightDiff > threshold) {
-                if (!devtoolsOpen) {
-                    devtoolsOpen = true;
-                    alert("⚠️ Developer Tools detected! You will be logged out.");
-                    window.location.href = loginUrl;
+            // Login.aspx clears the server session when it loads, so redirecting there logs the user out
+            var goLogout = function () {
+                window.location.href = loginUrl;
+            };
+            if (typeof Swal === 'undefined') {
+                alert('Developer Tools detected! You will be logged out.');
+                goLogout();
+                return;
+            }
+
+            // Count down 5 seconds; OK logs out now, and the timer logs out when it reaches 0
+            var secondsLeft = 5;
+            var countdown = null;
+            Swal.fire({
+                icon: 'warning',
+                title: 'Developer Tools detected',
+                html: 'You will be logged out in <b id="dtSeconds">5</b> seconds.',
+                timer: 5000,
+                timerProgressBar: true,
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                confirmButtonText: 'OK',
+                didOpen: function () {
+                    countdown = setInterval(function () {
+                        secondsLeft--;
+                        var b = document.getElementById('dtSeconds');
+                        if (b) { b.textContent = Math.max(secondsLeft, 0); }
+                        if (secondsLeft <= 0) { clearInterval(countdown); }
+                    }, 1000);
+                },
+                willClose: function () {
+                    clearInterval(countdown);
                 }
-            }
+            }).then(goLogout);
         }
 
-     
-        setInterval(checkDevTools, 1000);
+        // Console probe: the getter runs only when the console serializes the object.
+        // Recent Chrome versions do not always run it, so it is a second check only.
+        var probe = new Image();
+        Object.defineProperty(probe, 'id', {
+            get: function () { forceLogout(); }
+        });
 
-     
-        document.addEventListener("contextmenu", function (e) {
-            e.preventDefault();
-        }, false);
+        // Debugger timing: "debugger" pauses only while DevTools is open, so a long pause means DevTools is open.
+        function devtoolsOpenByTiming() {
+            var started = performance.now();
+            debugger;
+            return performance.now() - started > 100;
+        }
 
-       
-        document.addEventListener("keydown", function (e) {
-         
-            if (e.keyCode === 123) {
-                e.preventDefault();
-            }
-           
-            if (e.ctrlKey && e.shiftKey && e.keyCode === 73) {
-                e.preventDefault();
-            }
-          
-            if (e.ctrlKey && e.keyCode === 85) {
-                e.preventDefault();
-            }
-        }, false);
+        setInterval(function () {
+            console.log(probe);
+            if (devtoolsOpenByTiming()) { forceLogout(); }
+        }, 1000);
 
-        console.log("DevTools protection is ACTIVE on this page.");
-    })();
-</script>--%>
+        // Keep Ctrl+U (view source) blocked; it does not log anyone out
+        // Block view source (Ctrl+U) before the page or any input can see it; no logout for this key
+        document.addEventListener('keydown', function (e) {
+            var isU = e.keyCode === 85 || e.key === 'u' || e.key === 'U';
+            if (e.ctrlKey && isU) {
+                e.preventDefault();
+                e.stopImmediatePropagation();
+            }
+        }, true);    })();
+</script>
     <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server"></asp:ContentPlaceHolder>
 
     <style type="text/css">
