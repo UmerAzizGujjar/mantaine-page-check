@@ -164,10 +164,10 @@ SELECT
    +(SELECT COUNT(*) FROM Emergency ep WHERE ep.Created_time>=@s2 AND ep.Created_time<=@e2)
    +(SELECT COUNT(*) FROM In_Patient ipd WHERE ipd.Created_time>=@s2 AND ipd.Created_time<=@e2) AS TotalVisitedY,
     (SELECT COUNT(*) FROM Patients pt JOIN Reg_patient rp ON pt.Reg_PatId=rp.pat_id WHERE rp.Created_time>=@s1 AND rp.Created_time<=@e1)
-   +(SELECT COUNT(*) FROM Emergency ep JOIN Reg_patient rp ON ep.Patient_ID=rp.pat_id WHERE rp.Created_time>=@s1 AND rp.Created_time<=@e1)
+   +(SELECT COUNT(*) FROM Emergency ep JOIN Reg_patient rp ON ep.Reg_PatId=rp.pat_id WHERE rp.Created_time>=@s1 AND rp.Created_time<=@e1)
    +(SELECT COUNT(*) FROM In_Patient ip JOIN Reg_patient rp ON ip.Patient_ID=rp.pat_id WHERE rp.Created_time>=@s1 AND rp.Created_time<=@e1) AS WalkIn,
       (SELECT COUNT(*) FROM Patients pt JOIN Reg_patient rp ON pt.Reg_PatId=rp.pat_id WHERE rp.Created_time>=@s2 AND rp.Created_time<=@e2)
-   +(SELECT COUNT(*) FROM Emergency ep JOIN Reg_patient rp ON ep.Patient_ID=rp.pat_id WHERE rp.Created_time>=@s2 AND rp.Created_time<=@e2)
+   +(SELECT COUNT(*) FROM Emergency ep JOIN Reg_patient rp ON ep.Reg_PatId=rp.pat_id WHERE rp.Created_time>=@s2 AND rp.Created_time<=@e2)
    +(SELECT COUNT(*) FROM In_Patient ip JOIN Reg_patient rp ON ip.Patient_ID=rp.pat_id WHERE rp.Created_time>=@s2 AND rp.Created_time<=@e2) AS WalkInY,
   (SELECT COUNT(*) FROM Appointment_Form WHERE App_Date>=@s1 AND App_Date<@a1) AS Appts,
   (SELECT COUNT(*) FROM Appointment_Form WHERE App_Date>=@s2 AND App_Date<@a2) AS ApptsY,

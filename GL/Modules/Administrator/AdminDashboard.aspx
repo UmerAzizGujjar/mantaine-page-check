@@ -6,14 +6,14 @@
         var chartInstances = {};
 
         $(document).ready(function () {
-            var yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
-            var yStr = $.datepicker.formatDate('dd/mm/yy', yesterday);
+            var today = new Date();
+            var tStr = $.datepicker.formatDate('dd/mm/yy', today);
             $(".datepicker").datepicker({
                 changeMonth: true, changeYear: true,
                 dateFormat: "dd/mm/yy", yearRange: "-100:+0"
             });
-            $("#txtStartDate").datepicker("setDate", yStr);
-            $("#txtEndDate").datepicker("setDate", yStr);
+            $("#txtStartDate").datepicker("setDate", tStr);
+            $("#txtEndDate").datepicker("setDate", tStr);
             $("#ddlDepartment").select2({ placeholder: "Select Department", allowClear: true, width: '100%' });
             $("#ddlDoctor").select2({ placeholder: "Select Doctor", allowClear: true, width: '100%' });
             $("#btnApplyFilters").click(function () { applyFilters(); });
