@@ -28,6 +28,7 @@ namespace PMS.Modules.Billing
             using (SqlCommand cmd = new SqlCommand("dbo.sp_Load_HospitalShare_Receivable", con))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@Company_ID", AppConfig.Company_ID);
                 con.Open();
 
                 var rows = new List<Dictionary<string, object>>();

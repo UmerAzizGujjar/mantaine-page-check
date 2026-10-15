@@ -22,15 +22,23 @@ namespace PMS.Modules.Billing
         public static string ViewList(string rtype, string startDate, string endDate)
         {
             var rows = new List<Dictionary<string, object>>();
+            bool isPharmacy = rtype == "PH";
 
             using (DataBaseDataContext db = new DataBaseDataContext())
             using (SqlConnection con = new SqlConnection(db.Connection.ConnectionString))
-            using (SqlCommand cmd = new SqlCommand("dbo.sp_Load_HospitalShare_Receivable_Detail", con))
+            using (SqlCommand cmd = new SqlCommand(isPharmacy ? "dbo.sp_Load_Pharmacy_Receivable_Detail" : "dbo.sp_Load_HospitalShare_Receivable_Detail", con))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@Type", rtype ?? "");
-                cmd.Parameters.AddWithValue("@startDate", startDate ?? "");
-                cmd.Parameters.AddWithValue("@endDate", endDate ?? "");
+                if (isPharmacy)
+                {
+                    cmd.Parameters.AddWithValue("@Company_ID", AppConfig.Company_ID);
+                }
+                else
+                {
+                    cmd.Parameters.AddWithValue("@Type", rtype ?? "");
+                    cmd.Parameters.AddWithValue("@startDate", startDate ?? "");
+                    cmd.Parameters.AddWithValue("@endDate", endDate ?? "");
+                }
                 con.Open();
 
                 using (SqlDataReader reader = cmd.ExecuteReader())
@@ -86,17 +94,27 @@ namespace PMS.Modules.Billing
             try
             {
                 var rows = new List<Dictionary<string, object>>();
+                bool isPharmacy = rtype == "PH";
 
                 using (DataBaseDataContext db = new DataBaseDataContext())
                 using (SqlConnection con = new SqlConnection(db.Connection.ConnectionString))
-                using (SqlCommand cmd = new SqlCommand("dbo.SpTransfer_HospitalShare_Receivable", con))
+                using (SqlCommand cmd = new SqlCommand(isPharmacy ? "dbo.SpTransfer_Pharmacy_Receivable" : "dbo.SpTransfer_HospitalShare_Receivable", con))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@Type", rtype ?? "");
-                    cmd.Parameters.AddWithValue("@startDate", startDate ?? "");
-                    cmd.Parameters.AddWithValue("@endDate", endDate ?? "");
-                    cmd.Parameters.AddWithValue("@RecvAccount", accountID);
-                    cmd.Parameters.AddWithValue("@user_id", AppConfig.UserID);
+                    if (isPharmacy)
+                    {
+                        cmd.Parameters.AddWithValue("@RecvAccount", accountID);
+                        cmd.Parameters.AddWithValue("@Company_ID", AppConfig.Company_ID);
+                        cmd.Parameters.AddWithValue("@user_id", AppConfig.UserID);
+                    }
+                    else
+                    {
+                        cmd.Parameters.AddWithValue("@Type", rtype ?? "");
+                        cmd.Parameters.AddWithValue("@startDate", startDate ?? "");
+                        cmd.Parameters.AddWithValue("@endDate", endDate ?? "");
+                        cmd.Parameters.AddWithValue("@RecvAccount", accountID);
+                        cmd.Parameters.AddWithValue("@user_id", AppConfig.UserID);
+                    }
                     con.Open();
 
                     using (SqlDataReader reader = cmd.ExecuteReader())

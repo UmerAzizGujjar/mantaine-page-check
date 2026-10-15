@@ -179926,6 +179926,8 @@ namespace PMS
 
         private string _Referred_By_value;
 
+        private System.Nullable<bool> _isrcvable_Acc;
+
         private string _Sale_Return;
 
         private System.Nullable<int> _UserID;
@@ -180112,6 +180114,9 @@ namespace PMS
         partial void OnDisc_AdjustmentChanged();
         partial void OnReferred_By_valueChanging(string value);
         partial void OnReferred_By_valueChanged();
+
+        partial void Onisrcvable_AccChanging(System.Nullable<bool> value);
+        partial void Onisrcvable_AccChanged();
         partial void OnSale_ReturnChanging(string value);
         partial void OnSale_ReturnChanged();
         partial void OnUserIDChanging(System.Nullable<int> value);
@@ -180798,6 +180803,26 @@ namespace PMS
                     this._Referred_By_value = value;
                     this.SendPropertyChanged("Referred_By_value");
                     this.OnReferred_By_valueChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_isrcvable_Acc", DbType = "Bit")]
+        public System.Nullable<bool> isrcvable_Acc
+        {
+            get
+            {
+                return this._isrcvable_Acc;
+            }
+            set
+            {
+                if ((this._isrcvable_Acc != value))
+                {
+                    this.Onisrcvable_AccChanging(value);
+                    this.SendPropertyChanging();
+                    this._isrcvable_Acc = value;
+                    this.SendPropertyChanged("isrcvable_Acc");
+                    this.Onisrcvable_AccChanged();
                 }
             }
         }

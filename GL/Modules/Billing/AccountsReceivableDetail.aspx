@@ -200,7 +200,15 @@
             }
         }
 
+        function applyPharmacyLabels() {
+            if (_type !== 'PH') return;
+            var labels = ['Sr No', 'Bill No', 'Date', 'Customer', '', 'Type', 'Warehouse', 'Cash Received', 'Bill Total'];
+            $('#detailHead th').each(function (i) { $(this).text(labels[i] || ''); });
+            $('#lbl_TotalCaption').text('Total Cash Received');
+        }
+
         function LoadPage() {
+            applyPharmacyLabels();
             var stDate = $('#txt_datefrom').val();
             var endDate = $('#txt_dateto').val();
 
@@ -246,7 +254,7 @@
                 var idx = _rowsData.length;
                 _rowsData.push(value);
 
-                var share = parseFloat(value.Hospital_Share) || 0;
+                var share = parseFloat(value.Transfer_Amount !== undefined ? value.Transfer_Amount : value.Hospital_Share) || 0;
                 totalShare += share;
 
                 htmlRows.push(
@@ -426,7 +434,7 @@
     <div class="row" style="margin-bottom: 10px;">
         <div class="col-lg-12" style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
             <span class="sum-label" style="background:#cecccc; color:#333;">Rows: <span id="lbl_RowCount">0</span></span>
-            <span class="sum-label">Total Hospital Share: <span id="lbl_TotalAmount">0</span></span>
+            <span class="sum-label"><span id="lbl_TotalCaption">Total Hospital Share</span>: <span id="lbl_TotalAmount">0</span></span>
         </div>
     </div>
 
@@ -437,7 +445,7 @@
             <div class="scroll-body">
                 <table class="table" id="tbl">
                     <thead>
-                        <tr>
+                        <tr id="detailHead">
                             <th>Sr No</th>
                             <th>OPD No</th>
                             <th>Date</th>

@@ -8097,6 +8097,7 @@
       <Column Name="AccountId" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="IsHospital_Pharmacy" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="Referred_By" Type="System.String" DbType="NVarChar(250)" CanBeNull="true" />
+      <Column Name="isrcvable_Acc" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="pharmacy_Department" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
       <Column Name="Casher" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
       <Column Name="Opd_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
