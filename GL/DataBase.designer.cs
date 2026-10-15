@@ -148960,6 +148960,8 @@ namespace PMS
 
         private System.Nullable<int> _BalanceAccount;
 
+        private System.Nullable<int> _ItemAccount;
+
         private string _CostCenter;
 
         #region Extensibility Method Definitions
@@ -149326,6 +149328,30 @@ namespace PMS
                 }
             }
         }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_ItemAccount", DbType = "Int")]
+        public System.Nullable<int> ItemAccount
+        {
+            get
+            {
+                return this._ItemAccount;
+            }
+            set
+            {
+                if ((this._ItemAccount != value))
+                {
+                    this.OnItemAccountChanging(value);
+                    this.SendPropertyChanging();
+                    this._ItemAccount = value;
+                    this.SendPropertyChanged("ItemAccount");
+                    this.OnItemAccountChanged();
+                }
+            }
+        }
+
+        partial void OnItemAccountChanging(System.Nullable<int> value);
+
+        partial void OnItemAccountChanged();
 
         [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CostCenter", DbType = "NVarChar(50)")]
         public string CostCenter

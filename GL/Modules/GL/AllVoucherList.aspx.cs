@@ -14,7 +14,8 @@ namespace PMS.Modules.GL
         {
             try
             {
-                System.Data.DataTable dt = DBClass.getDataTable("EXEC dbo.spGL_AllVoucherList @Start,@Length,@SortColumn,@SortDir,@Search,@VoucherType,@VoucherName",
+                System.Data.DataTable dt = DBClass.getDataTable("EXEC dbo.spGL_AllVoucherList @CompanyID,@Start,@Length,@SortColumn,@SortDir,@Search,@VoucherType,@VoucherName",
+                    DBClass.Param("@CompanyID", AppConfig.Company_ID),
                     DBClass.Param("@Start", start < 0 ? 0 : start),
                     DBClass.Param("@Length", length <= 0 ? int.MaxValue : length),
                     DBClass.Param("@SortColumn", sortColumn ?? ""),
@@ -46,6 +47,13 @@ namespace PMS.Modules.GL
             {
                 throw new Exception("Error fetching voucher list: " + ex.Message, ex);
             }
+        }
+
+        // Status, GL lines and linked bills of one voucher, for the View popup (shared helper).
+        [WebMethod]
+        public static string GetVoucherDetail(string voucherId)
+        {
+            return VoucherDetail.GetJson(voucherId);
         }
 
         [WebMethod]

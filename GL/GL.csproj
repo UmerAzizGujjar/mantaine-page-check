@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -659,6 +659,7 @@
     <Content Include="Modules\PatientManagement\In_PatientsStatus.aspx" />
     <Content Include="Modules\Billing\IssueMedicine.aspx" />
     <Content Include="Modules\Billing\IssueMedicineList.aspx" />
+    <Content Include="Modules\Billing\PharmacyPendingApprovals.aspx" />
     <Content Include="Modules\Billing\IssueMedicineView.aspx" />
     <Content Include="Modules\Others\IssueToLaundary.aspx" />
     <Content Include="Modules\Others\IssueToLaundaryView.aspx" />
@@ -4120,6 +4121,7 @@
     <Compile Include="App_Themes\App_Data\CommonMethods.cs" />
     <Compile Include="App_Themes\App_Data\CompanyLogo.cs" />
     <Compile Include="App_Themes\App_Data\DBClass.cs" />
+    <Compile Include="App_Themes\App_Data\VoucherDetail.cs" />
     <Compile Include="App_Themes\App_Data\EMRDb.cs" />
     <Compile Include="App_Themes\App_Data\Employee.cs" />
     <Compile Include="App_Themes\App_Data\EmployeeData.cs" />
@@ -5441,6 +5443,13 @@
     </Compile>
     <Compile Include="Modules\Billing\IssueMedicine.aspx.designer.cs">
       <DependentUpon>IssueMedicine.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Billing\PharmacyPendingApprovals.aspx.cs">
+      <DependentUpon>PharmacyPendingApprovals.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Billing\PharmacyPendingApprovals.aspx.designer.cs">
+      <DependentUpon>PharmacyPendingApprovals.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\Billing\IssueMedicineList.aspx.cs">
       <DependentUpon>IssueMedicineList.aspx</DependentUpon>

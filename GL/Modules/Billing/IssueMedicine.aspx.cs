@@ -1736,6 +1736,7 @@ ORDER BY i.Item_Code, i.Item_ID";
             if (Rbtn == "rbtnHospital")
                 newBill.Received_Amount = 0; // panel bills are settled with the panel, nothing received at the counter
             newBill.Pharma_trans_Type = data.TransType;
+            newBill.Main_Department = GetPharmacyMainDepartment(data.TransType);
 
             var Inpat = "";
             if (data.Patient_ID != "")
@@ -1983,6 +1984,17 @@ ORDER BY i.Item_Code, i.Item_ID";
                 cmd.ExecuteNonQuery();
             }
         }
+        // Patient category saved in Ar_Billings.Main_Department: OPD = 01, Emergency = 02, IPD = 03.
+        // Walk-in sales (no IPD/OPD/Emergency transaction type) stay empty.
+        public static string GetPharmacyMainDepartment(string transType)
+        {
+            if (string.IsNullOrEmpty(transType)) return null;
+            if (transType.StartsWith("IPD")) return "03";
+            if (transType == "OPD Patient") return "01";
+            if (transType == "EMR Patient") return "02";
+            return null;
+        }
+
         [WebMethod]
         public static string ApprovePhramcy(string billid)
         {

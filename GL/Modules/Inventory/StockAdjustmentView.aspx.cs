@@ -15,6 +15,13 @@ namespace PMS.Inventory
         protected void Page_Load(object sender, EventArgs e)
         {
         }
+        // GL voucher posted for this stock adjustment (INV_Stock_Adjustment.Voucher_ID): status and GL lines, for the voucher modal
+        [WebMethod]
+        public static string GetADJVoucherDetail(int recordId)
+        {
+            return VoucherDetail.GetJsonForRecord("SELECT Voucher_ID FROM INV_Stock_Adjustment WHERE Adjustment_ID = @Id", recordId);
+        }
+
         [WebMethod]
         public static object ViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue)
         {

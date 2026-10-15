@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
@@ -18,6 +19,13 @@ namespace PMS
         {
 
         }
+        // GL lines, linked bills and status of one voucher, for the View popup on the voucher list (shared helper).
+        [WebMethod]
+        public static string GetVoucherDetail(string voucherId)
+        {
+            return VoucherDetail.GetJson(voucherId);
+        }
+
         [WebMethod]
         public static object VoucherViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue, string vouchertype, string voucheryear, string vouchermonth, string fromDate, string toDate)
         {

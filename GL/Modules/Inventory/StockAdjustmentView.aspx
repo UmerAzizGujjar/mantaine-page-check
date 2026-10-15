@@ -2,6 +2,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">    
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/tablestyle.css" rel="stylesheet" />
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/custom-modals.css" rel="stylesheet" />
+    <script src="../../wwwroot/lib/voucher/voucher-modal.js"></script>
     <style>
         .logListBtn {
             background-color: #455a64 !important;
@@ -553,7 +554,8 @@
                                 var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintVoucher(' + full.Adjustment_Id + ')" id="btnprint"><i class="fa fa-print"></i></a>';
                                 var print1 = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color: white;padding: 5px 8px 5px 8px;" href="#" onclick="PrintStockAdjustment(' + full.Adjustment_Id + ')" id="btnprint1"><i class="fa fa-print"></i></a>';
                                 var result;
-                                result = res + logBtn + print + print1;
+                                var voucherBtn = '<a class="printListBtn" style="border-radius:4px;margin-left:4px;color:var(--theme-on-accent, #fff);background-color:var(--theme-accent, #EFA63E);padding:5px 8px;" href="#" onclick="event.stopPropagation(); showRecordVoucher(\'StockAdjustmentView.aspx/GetADJVoucherDetail\', ' + full.Adjustment_Id + ', \'' + full.Adjustment_No + '\', \'saVoucherModal\', \'saVoucherBody\', \'saVoucherTitle\'); return false;" title="View Voucher"><i class="fa fa-book"></i></a>';
+                                result = res + logBtn + print + print1 + voucherBtn;
                                 return result;
                             }, "orderable": false, "width": "13%", "className": "action-col"
                         }
@@ -1036,4 +1038,34 @@
         </div>
     </div>
   
-</asp:Content>
+
+    <div class="modal fade" id="saVoucherModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog custom-modal-dialog custom-modal-dialog-xl" role="document">
+            <div class="modal-content custom-modal-content">
+
+                <div class="modal-header custom-modal-header">
+                    <div class="custom-modal-title-wrap">
+                        <span class="custom-modal-icon"><i class="fa fa-book"></i></span>
+                        <h4 class="modal-title custom-modal-title" id="saVoucherTitle">Voucher</h4>
+                    </div>
+                    <button type="button" class="custom-modal-close" data-dismiss="modal" aria-label="Close">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </div>
+
+                <div class="modal-body custom-modal-body">
+                    <div style="max-height: calc(100vh - 240px); overflow-y: auto; padding: 14px 16px;">
+                        <div id="saVoucherBody"></div>
+                    </div>
+                </div>
+
+                <div class="custom-modal-footer">
+                    <span class="custom-modal-count">GL entries posted for this record.</span>
+                    <button type="button" class="custom-modal-btn-close" data-dismiss="modal">
+                        <i class="fa fa-times-circle"></i> Close
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div></asp:Content>

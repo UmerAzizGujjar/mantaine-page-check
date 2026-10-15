@@ -3080,12 +3080,14 @@ namespace PMS
                     string endDate = Request.QueryString["endDate"].ToString();
                     string vendorType = Request.QueryString["VendorType"];
                     string VendorID = Request.QueryString["VendorId"];
+                    string Warehouse = Request.QueryString["Warehouse"] ?? "0";
 
                     rd.SetParameterValue("@VendorType", vendorType);
 
                     rd.SetParameterValue("@StartDate", stDate);
                     rd.SetParameterValue("@EndDate", endDate);
                     rd.SetParameterValue("@VendorId", VendorID);
+                    rd.SetParameterValue("@Warehouse", Warehouse);
                     rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
                     rd.SetParameterValue("CompanyLogo", logoPath);
                     // rd.SetParameterValue("Address", companyAddress);
@@ -7144,15 +7146,18 @@ namespace PMS
             }
             else if (reportName == "VendorWiseIGPS")
             {
-                reportPath += "Inventory/rptIGP_Summary.rpt";
+                reportPath += "Inventory/rptIGP_Summary_WH.rpt";
                 rd.Load(reportPath);
                 DateTime stDate = Convert.ToDateTime(Request.QueryString["startDate"]);
                 DateTime endDate = Convert.ToDateTime(Request.QueryString["endDate"]);
                 string vendorID = Request.QueryString["Vendor_ID"].ToString();
+                string warehouseID = Request.QueryString["Warehouse"] ?? "0";
                 rd.SetParameterValue("@stDate", stDate);
                 rd.SetParameterValue("@endDate", endDate);
                 rd.SetParameterValue("@Vendor_ID", vendorID);
+                rd.SetParameterValue("@Warehouse", warehouseID);
                 rd.SetParameterValue("CompanyName", AppConfig.Company_Name);
+                SetOptionalParameter("CompanyLogo", DBClass.getField("SELECT dbo.GetCompanyLogo()"));
                 rd.SetParameterValue("Title", Request.QueryString["ReportTitle"].ToString().Trim());
             }
             else if (reportName == "VendorDetailsGRNS")

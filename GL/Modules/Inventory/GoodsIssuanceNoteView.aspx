@@ -3,6 +3,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/tablestyle.css" rel="stylesheet" />
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/custom-modals.css" rel="stylesheet" />
+    <script src="../../wwwroot/lib/voucher/voucher-modal.js"></script>
     <style>
         .logListBtn {
             background-color: #455a64 !important;
@@ -554,7 +555,8 @@
                             var logBtn = '<a class="logListBtn" style="border-radius:4px;margin-left:4px;color:white;padding:5px 8px;" href="#" onclick="openGINLogs(' + full.Store_Issue_Id + ',\'' + full.Store_Issue_No + '\');return false;" title="View Change History"><i class="fa fa-history"></i></a>';
                             var printBtn = '<a href="#" class="printListBtn" onclick="PrintReport(' + full.Store_Issue_Id + ')" style="border-radius:4px;margin-left:4px;color:white;padding:5px 8px;"><i class="fa fa-print"></i></a>';
                             var printBtn2 = '<a href="#" class="printListBtn2" onclick="PrintReport2(' + full.Store_Issue_Id + ')" style="border-radius:4px;margin-left:4px;color:white;padding:5px 8px;"><i class="fa fa-print"></i></a>';
-                            return editBtn + logBtn + printBtn + printBtn2;
+                            var voucherBtn = '<a class="printListBtn" style="border-radius:4px;margin-left:4px;color:var(--theme-on-accent, #fff);background-color:var(--theme-accent, #EFA63E);padding:5px 8px;" href="#" onclick="event.stopPropagation(); showRecordVoucher(\'GoodsIssuanceNoteView.aspx/GetGINVoucherDetail\', ' + full.Store_Issue_Id + ', \'' + full.Store_Issue_No + '\', \'ginVoucherModal\', \'ginVoucherBody\', \'ginVoucherTitle\'); return false;" title="View Voucher"><i class="fa fa-book"></i></a>';
+                            return editBtn + logBtn + printBtn + printBtn2 + voucherBtn;
                         },
                         "orderable": false,
                         "width": "12%"
@@ -1103,4 +1105,34 @@
             </div>
         </div>
     </div>
-</asp:Content>
+
+    <div class="modal fade" id="ginVoucherModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog custom-modal-dialog custom-modal-dialog-xl" role="document">
+            <div class="modal-content custom-modal-content">
+
+                <div class="modal-header custom-modal-header">
+                    <div class="custom-modal-title-wrap">
+                        <span class="custom-modal-icon"><i class="fa fa-book"></i></span>
+                        <h4 class="modal-title custom-modal-title" id="ginVoucherTitle">Voucher</h4>
+                    </div>
+                    <button type="button" class="custom-modal-close" data-dismiss="modal" aria-label="Close">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </div>
+
+                <div class="modal-body custom-modal-body">
+                    <div style="max-height: calc(100vh - 240px); overflow-y: auto; padding: 14px 16px;">
+                        <div id="ginVoucherBody"></div>
+                    </div>
+                </div>
+
+                <div class="custom-modal-footer">
+                    <span class="custom-modal-count">GL entries posted for this record.</span>
+                    <button type="button" class="custom-modal-btn-close" data-dismiss="modal">
+                        <i class="fa fa-times-circle"></i> Close
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div></asp:Content>

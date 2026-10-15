@@ -192,6 +192,7 @@ namespace PMS.Modules.Accounts
                                 revenue = x.Revenue.ToString(),
                                 cgs = x.CGS.ToString(),         
                                 balanceaccount = x.BalanceAccount.ToString(),
+                                itemaccount = x.ItemAccount.ToString(),
                                 financialdepartment = x.Fn_Department
                             }).ToList();
                 return data;
@@ -398,6 +399,7 @@ namespace PMS.Modules.Accounts
                         Expense = expense,
                         CGS = string.IsNullOrEmpty(row.cgs) ? (int?)null : int.Parse(row.cgs),
                         BalanceAccount = string.IsNullOrEmpty(row.balanceaccount) ? (int?)null : int.Parse(row.balanceaccount),
+                        ItemAccount = (string.IsNullOrEmpty(row.itemaccount) || row.itemaccount == "0") ? (int?)null : int.Parse(row.itemaccount),
                         CreatedBy = AppConfig.UserID,
                         CreatedDate = DateTime.Now,
                         IsCancel = false
@@ -486,7 +488,8 @@ namespace PMS.Modules.Accounts
             public string dr { get; set; }  // Add this line
             public string cr { get; set; }
             public string cgs { get; set; }      
-            public string balanceaccount { get; set; } 
+            public string balanceaccount { get; set; }
+            public string itemaccount { get; set; } 
         }
     }
 }
