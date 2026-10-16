@@ -18,6 +18,74 @@ namespace PMS.Modules.Dashboards
 
         }
 
+        // Sys_Parms "Show Pharmacy in CEO Dashboard": "01" = PB1 visible + pharmacy separate;
+        // anything else = PB1 hidden + pharmacy merged into Services. Missing row => "01".
+        private static bool ShowPharmacySeparately()
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    string code = (from tbl in db.sys_Parms
+                                   where tbl.Name == "Show Pharmacy in CEO Dashboard"
+                                   select tbl.Code).FirstOrDefault();
+                    return (code ?? "01").Trim() == "01";
+                }
+            }
+            catch (Exception)
+            {
+                return true;
+            }
+        }
+
+        // Used by the .aspx to hand the flag to JavaScript (single read per page load).
+        protected string ShowPharmacySeparatelyJs
+        {
+            get { return ShowPharmacySeparately() ? "true" : "false"; }
+        }
+
+        // Warehouse filter for the main pharmacy figures: "01" = hardcoded 008 only; otherwise null = every pharmacy warehouse.
+        private static string[] PharmacyWarehouseFilter()
+        {
+            return ShowPharmacySeparately() ? new[] { "008" } : null;
+        }
+
+        // Warehouse codes that have pharmacy bills (used when the parameter is not "01").
+        private static List<string> GetPharmacyWarehouseCodes()
+        {
+            using (var db = new DataBaseDataContext())
+            {
+                return (from b in db.Ar_Billings
+                        where b.IsPharmacy == true && b.Ware_House != null && b.Ware_House != ""
+                        select b.Ware_House).Distinct().OrderBy(c => c).ToList();
+            }
+        }
+
+        // Codes for the pharmacy warehouse dropdown: "01" = hardcoded 008/009; otherwise every pharmacy warehouse.
+        [WebMethod(EnableSession = false)]
+        public static string GetPharmacyWarehouseList()
+        {
+            var codes = ShowPharmacySeparately() ? new List<string> { "008", "009" } : GetPharmacyWarehouseCodes();
+            return new JavaScriptSerializer().Serialize(codes);
+        }
+
+        // Net pharmacy revenue (sales - returns); warehouses == null means all pharmacy warehouses.
+        private static decimal GetPharmacyNet(DataBaseDataContext db, DateTime sDate, DateTime eDate, string[] warehouses)
+        {
+            bool all = warehouses == null;
+            string[] wh = warehouses ?? new string[0];
+            decimal pharmacySum = (from b in db.Ar_Billings
+                                   where b.Creation_Date >= sDate &&
+                                         b.Creation_Date <= eDate &&
+                                         b.IsPharmacy == true &&
+                                         (all || wh.Contains(b.Ware_House))
+                                   select (decimal?)b.Total_Amount - (b.Discount_Amount - b.Disc_Adjustment)).Sum() ?? 0;
+            decimal returnSum = (from b in db.Pharmacy_SaleReturns
+                                 where b.Created_Date >= sDate && b.Created_Date <= eDate && b.Is_Pharmacy == true && (all || wh.Contains(b.Ware_House))
+                                 select (decimal?)b.Total_Amount - (b.TotalDisc_Amount - b.Disc_Adjustment)).Sum() ?? 0;
+            return pharmacySum - returnSum;
+        }
+
         private static void ResolveDates(string period, string startDateStr, string endDateStr, out DateTime startDate, out DateTime endDate)
         {
             DateTime now = DateTime.Now;
@@ -80,11 +148,15 @@ namespace PMS.Modules.Dashboards
                     decimal billingSum = (from b in db.Ar_Billings
                                           where b.Creation_Date >= sDate && b.Creation_Date <= eDate && (b.IsPharmacy == null || b.IsPharmacy == false) && (b.isCancel == null || b.isCancel == false)
                                           select (decimal?)b.Received_Amount).Sum() ?? 0;
+                    // "01": 008 only (hardcoded). Otherwise every pharmacy warehouse is included.
+                    string[] phWarehouses = PharmacyWarehouseFilter();
+                    bool phAll = phWarehouses == null;
+                    string[] phWh = phWarehouses ?? new string[0];
                     decimal PharSum = (from b in db.Ar_Billings
-                                          where b.Creation_Date >= sDate && b.Creation_Date <= eDate && b.IsPharmacy == true && b.Ware_House == "008" && (b.isCancel == null || b.isCancel == false)
+                                          where b.Creation_Date >= sDate && b.Creation_Date <= eDate && b.IsPharmacy == true && (phAll || phWh.Contains(b.Ware_House)) && (b.isCancel == null || b.isCancel == false)
                                        select (decimal?)b.Received_Amount).Sum() ?? 0;
                     decimal ReturnSum = (from b in db.Pharmacy_SaleReturns
-                                          where b.Created_Date >= sDate && b.Created_Date <= eDate && b.Is_Pharmacy == true && b.Ware_House == "008"
+                                          where b.Created_Date >= sDate && b.Created_Date <= eDate && b.Is_Pharmacy == true && (phAll || phWh.Contains(b.Ware_House))
                                        select (decimal?)b.Total_Amount - (b.TotalDisc_Amount - b.Disc_Adjustment)).Sum() ?? 0;
 
                     decimal totalRevenue = patientSum + billingSum + RegSum + PharSum + EMRSum - ReturnSum;
@@ -189,19 +261,9 @@ namespace PMS.Modules.Dashboards
 
                 using (DataBaseDataContext db = new DataBaseDataContext())
                 {
-                    decimal pharmacySum = (from b in db.Ar_Billings
-                                           where b.Creation_Date >= sDate &&
-                                                 b.Creation_Date <= eDate &&
-                                                 b.IsPharmacy == true  &&
-                                                 b.Ware_House == "008"
-                                           select (decimal?)b.Total_Amount - (b.Discount_Amount - b.Disc_Adjustment)).Sum() ?? 0;
-                    decimal ReturnSum = (from b in db.Pharmacy_SaleReturns
-                                         where b.Created_Date >= sDate && b.Created_Date <= eDate && b.Is_Pharmacy == true && b.Ware_House == "008"
-                                         select (decimal?)b.Total_Amount - (b.TotalDisc_Amount - b.Disc_Adjustment)).Sum() ?? 0;
-
                     return new JavaScriptSerializer().Serialize(new
                     {
-                        PharmacyRevenue = pharmacySum - ReturnSum
+                        PharmacyRevenue = GetPharmacyNet(db, sDate, eDate, PharmacyWarehouseFilter())
                     });
                 }
             }
@@ -219,21 +281,14 @@ namespace PMS.Modules.Dashboards
                 DateTime sDate, eDate;
                 ResolveDates(period, startDate, endDate, out sDate, out eDate);
 
+                if (!ShowPharmacySeparately())
+                    return new JavaScriptSerializer().Serialize(new { PharmacyRevenue = 0 });
+
                 using (DataBaseDataContext db = new DataBaseDataContext())
                 {
-                    decimal pharmacySum = (from b in db.Ar_Billings
-                                           where b.Creation_Date >= sDate &&
-                                                 b.Creation_Date <= eDate &&
-                                                 b.IsPharmacy == true  &&
-                                                 b.Ware_House == "009"
-                                           select (decimal?)b.Total_Amount - (b.Discount_Amount - b.Disc_Adjustment)).Sum() ?? 0;
-                    decimal ReturnSum = (from b in db.Pharmacy_SaleReturns
-                                         where b.Created_Date >= sDate && b.Created_Date <= eDate && b.Is_Pharmacy == true && b.Ware_House == "009"
-                                         select (decimal?)b.Total_Amount - (b.TotalDisc_Amount - b.Disc_Adjustment)).Sum() ?? 0;
-
                     return new JavaScriptSerializer().Serialize(new
                     {
-                        PharmacyRevenue = pharmacySum - ReturnSum
+                        PharmacyRevenue = GetPharmacyNet(db, sDate, eDate, new[] { "009" })
                     });
                 }
             }
@@ -552,11 +607,14 @@ namespace PMS.Modules.Dashboards
 
                 using (DataBaseDataContext db = new DataBaseDataContext())
                 {
+                    string[] phWarehouses = PharmacyWarehouseFilter();
+                    bool phAll = phWarehouses == null;
+                    string[] phWh = phWarehouses ?? new string[0];
                     var pharmacyBills = from bill in db.Ar_Billings
                                         where bill.IsPharmacy == true
                                         && bill.Creation_Date >= sDate
                                         && bill.Creation_Date <= eDate
-                                        && bill.Ware_House == "008"
+                                        && (phAll || phWh.Contains(bill.Ware_House))
                                         select bill;
 
                     return new JavaScriptSerializer().Serialize(new
@@ -994,27 +1052,32 @@ public static string GetClinicalOutcomes(
         {
             try
             {
-                var rows = new List<Dictionary<string, object>>();
-                using (var conn = new System.Data.SqlClient.SqlConnection(
-                    System.Web.Configuration.WebConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString))
+                List<Dictionary<string, object>> rows;
+
+                // Not "01" with the default "all" warehouse: run the proc once per pharmacy warehouse (no hardcoded codes) and sum metric by metric.
+                if (!ShowPharmacySeparately() && (warehouse ?? "0") == "0")
                 {
-                    using (var cmd = new System.Data.SqlClient.SqlCommand("dbo.sp_YearlyPharmacySummary", conn))
+                    rows = null;
+                    foreach (string code in GetPharmacyWarehouseCodes())
                     {
-                        cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@Year", year);
-                        cmd.Parameters.AddWithValue("@Warehouse", warehouse ?? "0");
-                        conn.Open();
-                        using (var reader = cmd.ExecuteReader())
+                        var part = RunPharmacySummaryProc("dbo.sp_YearlyPharmacySummary", year, code);
+                        if (rows == null) { rows = part; continue; }
+                        foreach (var p in part)
                         {
-                            while (reader.Read())
+                            var target = rows.FirstOrDefault(r => Convert.ToString(r["Metric"]) == Convert.ToString(p["Metric"]));
+                            if (target == null) { rows.Add(p); continue; }
+                            foreach (var key in p.Keys.ToList())
                             {
-                                var row = new Dictionary<string, object>();
-                                for (int i = 0; i < reader.FieldCount; i++)
-                                    row[reader.GetName(i)] = reader[i];
-                                rows.Add(row);
+                                if (key == "Metric" || p[key] == null || p[key] is DBNull || p[key] is string || !target.ContainsKey(key)) continue;
+                                target[key] = (target[key] == null || target[key] is DBNull ? 0m : Convert.ToDecimal(target[key])) + Convert.ToDecimal(p[key]);
                             }
                         }
                     }
+                    if (rows == null) rows = RunPharmacySummaryProc("dbo.sp_YearlyPharmacySummary", year, warehouse);
+                }
+                else
+                {
+                    rows = RunPharmacySummaryProc("dbo.sp_YearlyPharmacySummary", year, warehouse);
                 }
                 return new JavaScriptSerializer().Serialize(rows);
             }
@@ -1023,7 +1086,31 @@ public static string GetClinicalOutcomes(
                 return new JavaScriptSerializer().Serialize(new { Error = ex.Message + "|" + ex.GetType().Name + "|" + (ex.InnerException?.Message ?? "") });
             }
         }
-        
+
+        private static List<Dictionary<string, object>> RunPharmacySummaryProc(string procName, int year, string warehouse)
+        {
+            var rows = new List<Dictionary<string, object>>();
+            using (var conn = new System.Data.SqlClient.SqlConnection(
+                System.Web.Configuration.WebConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString))
+            using (var cmd = new System.Data.SqlClient.SqlCommand(procName, conn))
+            {
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@Year", year);
+                cmd.Parameters.AddWithValue("@Warehouse", warehouse ?? "0");
+                conn.Open();
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var row = new Dictionary<string, object>();
+                        for (int i = 0; i < reader.FieldCount; i++)
+                            row[reader.GetName(i)] = reader[i];
+                        rows.Add(row);
+                    }
+                }
+            }
+            return rows;
+        }
 
         [WebMethod(EnableSession = false)]
         public static string GetYearlyPharmacySummaryPB(int year, string warehouse = "0")
@@ -1194,6 +1281,10 @@ public static string GetClinicalOutcomes(
                 var monthLab = new Dictionary<string, decimal>();
                 var monthServices = new Dictionary<string, decimal>();
 
+                // Merged mode: the Pharmacy series covers every pharmacy warehouse (008 + 009).
+                bool separate = ShowPharmacySeparately();
+                string phWhSql = separate ? "Ware_House = '008'" : "1 = 1";
+
                 using (var conn = new System.Data.SqlClient.SqlConnection(
                     System.Web.Configuration.WebConfigurationManager.ConnectionStrings["ASPGLConnectionString"].ConnectionString))
                 {
@@ -1261,7 +1352,7 @@ public static string GetClinicalOutcomes(
 
                     using (var cmd = new System.Data.SqlClient.SqlCommand(
                         @"SELECT YEAR(Creation_Date) AS Yr, MONTH(Creation_Date) AS Mn, ISNULL(SUM(Received_Amount), 0) AS val
-                          FROM Ar_Billings WHERE Creation_Date >= @ts AND Creation_Date < @te AND IsPharmacy = 1 and Ware_House = '008'
+                          FROM Ar_Billings WHERE Creation_Date >= @ts AND Creation_Date < @te AND IsPharmacy = 1 and " + phWhSql + @"
                           GROUP BY YEAR(Creation_Date), MONTH(Creation_Date)", conn))
                     {
                         cmd.Parameters.AddWithValue("@ts", trendStart);
@@ -1360,7 +1451,7 @@ public static string GetClinicalOutcomes(
                     }
 
                     using (var cmd = new System.Data.SqlClient.SqlCommand(
-                        "SELECT ISNULL(SUM(Received_Amount), 0) FROM Ar_Billings WHERE Creation_Date >= @cs AND Creation_Date <= @ce AND IsPharmacy = 1 and Ware_House = '008'", conn))
+                        "SELECT ISNULL(SUM(Received_Amount), 0) FROM Ar_Billings WHERE Creation_Date >= @cs AND Creation_Date <= @ce AND IsPharmacy = 1 and " + phWhSql, conn))
                     {
                         cmd.Parameters.AddWithValue("@cs", endMonthStart);
                         cmd.Parameters.AddWithValue("@ce", endPointEnd);
@@ -1369,14 +1460,6 @@ public static string GetClinicalOutcomes(
 
                     using (var cmd = new System.Data.SqlClient.SqlCommand(
                         "SELECT ISNULL(SUM(Received_Amount), 0) FROM Ar_Billings WHERE Creation_Date >= @cs AND Creation_Date <= @ce AND IsPharmacy = 1 and Ware_House = '009'", conn))
-                    {
-                        cmd.Parameters.AddWithValue("@cs", endMonthStart);
-                        cmd.Parameters.AddWithValue("@ce", endPointEnd);
-                        curPh = (decimal)cmd.ExecuteScalar();
-                    }
-
-                    using (var cmd = new System.Data.SqlClient.SqlCommand(
-                        "SELECT ISNULL(SUM(Received_Amount), 0) FROM Ar_Billings WHERE Creation_Date >= @cs AND Creation_Date <= @ce AND IsPharmacy = 1", conn))
                     {
                         cmd.Parameters.AddWithValue("@cs", endMonthStart);
                         cmd.Parameters.AddWithValue("@ce", endPointEnd);

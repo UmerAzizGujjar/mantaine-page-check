@@ -3,6 +3,8 @@
    
     <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
     <script type="text/javascript">
+        // Sys_Parms "Show Pharmacy in CEO Dashboard" ("01" = PB1 visible, pharmacy 008 only; else PB1 hidden, pharmacy = 008 + 009 combined)
+        var SHOW_PHARMACY_SEPARATE = <%= ShowPharmacySeparatelyJs %>;
         var opdChartInstance = null;
         var billingChartInstance = null;
         var pharmacyChartInstance = null;
@@ -90,7 +92,7 @@
             console.error("[" + wm + "] AJAX Error: " + error + " | Response: " + (xhr.responseText || '').substring(0, 200));
         });
         $(document).ready(function () {
-            $("#trendMonth").val(String(new Date().getMonth()));
+            $(".bento-grid").toggleClass("pharm-merged", !SHOW_PHARMACY_SEPARATE);            $("#trendMonth").val(String(new Date().getMonth()));
             setPeriod("today");
             renderSatisfaction();
             FillWarehouse();
@@ -267,7 +269,7 @@
                         $('#pharmClosing').text('Rs. ' + fmt(pc));
                     }
                 });
-                $.ajax({
+                if (SHOW_PHARMACY_SEPARATE) $.ajax({
                     type: "POST",
                     url: "Chief_Executive_Dashboard.aspx/GetYearlyPharmacySummaryPB",
                     data: JSON.stringify({ year: y, warehouse: pharmacyWarehouse }),
@@ -533,6 +535,7 @@
         }
 
         function LoadPBRevenue(period, startDate, endDate) {
+            if (!SHOW_PHARMACY_SEPARATE) return;
             var data = { 'period': period, 'startDate': startDate || null, 'endDate': endDate || null };
             $.ajax({
                 type: "POST",
@@ -768,6 +771,7 @@
         }
 
         function LoadPharmacySnapshot(period, startDate, endDate) {
+            if (!SHOW_PHARMACY_SEPARATE) return;
             var data = { 'period': period, 'startDate': startDate || null, 'endDate': endDate || null };
             $.ajax({
                 type: "POST",
@@ -1556,18 +1560,21 @@
 
         function FillWarehousePharmacy() {
             var optionInv = '';
-            PageMethods.fillWarehouse(function (Tests) {
-                optionInv = '<option value="0">Please Select</option>';
-                $.each(JSON.parse(Tests), function (key, value) {
+            PageMethods.GetPharmacyWarehouseList(function (codesJson) {
+                var codes = JSON.parse(codesJson);
+                PageMethods.fillWarehouse(function (Tests) {
+                    optionInv = '<option value="0">Please Select</option>';
+                    $.each(JSON.parse(Tests), function (key, value) {
 
-                    if (value.DataValueName === "008" || value.DataValueName === "009") {
-                        optionInv += '<option value="' + value.DataValueName + '">' +
-                            value.DataValueDescription +
-                            '</option>';
-                    }
+                        if (codes.indexOf(value.DataValueName) !== -1) {
+                            optionInv += '<option value="' + value.DataValueName + '">' +
+                                value.DataValueDescription +
+                                '</option>';
+                        }
+                    });
+
+                    $('#ddlWarehousepharmacy').html(optionInv);
                 });
-
-                $('#ddlWarehousepharmacy').html(optionInv);
             });
         }
     </script>
@@ -1585,6 +1592,17 @@
                 "left trend trend lab"
                 "ipd ipd ipd ipd";
         }
+        /* Sys_Parms "Show Pharmacy in CEO Dashboard" != 01: PB1 + separate pharmacy cards hidden, grid reflowed without gaps */
+        .bento-grid.pharm-merged {
+            grid-template-areas:
+                "period period period period"
+                "left opd opd dia"
+                "left dept dept hp"
+                "left trend trend lab"
+                "left trend trend lab"
+                "ipd ipd ipd ipd";
+        }
+        .pharm-merged #ph, .pharm-merged #rev-pb1, .pharm-merged #pharmStockCardPB { display: none !important; }
         #left-stack { grid-area: left; align-self: start; display: flex; flex-direction: column; gap: 10px; }
         #left-stack .rev-item { min-height: auto; }
         #left-stack .rev-item .rev-label {
@@ -2369,7 +2387,7 @@
                 <div class="rev-value">Rs. <span id="lblPharmacyRevenue">0</span></div>
                 <div class="rev-chart" id="sparkPharmacy"></div>
             </div>
-            <div class="bento-item rev-item">
+            <div class="bento-item rev-item" id="rev-pb1">
                 <div class="rev-label">PB-1 Revenue</div>
                 <div class="rev-value">Rs. <span id="lblPB1Revenue">0</span></div>
                 <div class="rev-chart" id="sparkPB"></div>

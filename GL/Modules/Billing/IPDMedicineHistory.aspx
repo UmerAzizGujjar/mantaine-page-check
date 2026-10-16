@@ -92,6 +92,8 @@
             "destroy": true,
             "filter": true,
             "lengthChange": true,
+            "searchDelay": 500,
+            "deferRender": true,
 
             "dom": 'lBfrtip',
 
@@ -174,7 +176,7 @@
                 {"data": "Full_Name","name": "Full_Name", "width": "8%", "orderable": true},
                 {"data": "Father_Name","width": "8%","orderable": false },
                 { "data": "Ward_Name", "width": "8%", "orderable": false },
-                { "data": "Medicine_Name", "width": "12%", "orderable": false },
+                { "data": "Medicine_Name", "name": "Medicine_Name", "width": "12%", "orderable": false },
                 { "data": "Bed_No", "width": "6%", "orderable": false },
                 {
                     "data": "Request_Time", "name": "Request_Time",
