@@ -64,6 +64,7 @@
             LoadDepartments();
             $('#ddlBranch').select2();
             loadUserBranch();
+            BranchWareHouse.attach('#ddlBranch', '#ddlInventoryOrg');
             // Move this OUTSIDE the document ready function or ensure it's properly bound
             // Use event delegation or ensure the DOM is ready
             $(document).ready(function () {

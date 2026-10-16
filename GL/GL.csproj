@@ -345,6 +345,8 @@
     <Content Include="Modules\Administrator\UserWiseDoctorList.aspx" />
     <Content Include="Modules\Administrator\User_BranchWise.aspx" />
     <Content Include="Modules\Administrator\User_BranchWiseList.aspx" />
+    <Content Include="Modules\Administrator\BranchWiseWareHouse.aspx" />
+    <Content Include="Modules\Administrator\BranchWiseWareHouseList.aspx" />
     <Content Include="Modules\Administrator\ValueSet.aspx" />
     <Content Include="Modules\Appointment\Derma_Appointment.aspx" />
     <Content Include="Modules\Appointment\Derma_Appointment_List.aspx" />
@@ -1193,6 +1195,7 @@
     <Content Include="wwwroot\lib\theme\pharmacy-form.css" />
     <Content Include="wwwroot\lib\theme\modal-modern.css" />
     <Content Include="wwwroot\lib\theme\modal-modern.js" />
+    <Content Include="wwwroot\lib\theme\branch-warehouse.js" />
     <Content Include="wwwroot\lib\theme\datepicker-modern.css" />
     <Content Include="wwwroot\lib\theme\datepicker-modern.js" />
     <Content Include="wwwroot\lib\theme\table-modern.css" />
@@ -3269,6 +3272,20 @@
     <Compile Include="Modules\Administrator\User_BranchWiseList.aspx.designer.cs">
       <DependentUpon>User_BranchWiseList.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Modules\Administrator\BranchWiseWareHouse.aspx.cs">
+      <DependentUpon>BranchWiseWareHouse.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Administrator\BranchWiseWareHouse.aspx.designer.cs">
+      <DependentUpon>BranchWiseWareHouse.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Administrator\BranchWiseWareHouseList.aspx.cs">
+      <DependentUpon>BranchWiseWareHouseList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Administrator\BranchWiseWareHouseList.aspx.designer.cs">
+      <DependentUpon>BranchWiseWareHouseList.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Modules\Administrator\ValueSet.aspx.cs">
       <DependentUpon>ValueSet.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -4279,6 +4296,9 @@
     </Compile>
     <Compile Include="Modules\Others\AutoCompleteData.ashx.cs">
       <DependentUpon>AutoCompleteData.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Inventory\BranchWareHouse.ashx.cs">
+      <DependentUpon>BranchWareHouse.ashx</DependentUpon>
     </Compile>
     <Compile Include="Modules\Others\AuxiliaryServicesSection.aspx.cs">
       <DependentUpon>AuxiliaryServicesSection.aspx</DependentUpon>
@@ -6466,6 +6486,7 @@
   <ItemGroup>
     <Content Include="App_Themes\Default_Theme\Skin1.skin" />
     <Content Include="Modules\Others\AutoCompleteData.ashx" />
+    <Content Include="Modules\Inventory\BranchWareHouse.ashx" />
     <Content Include="ImageHandler.ashx" />
     <None Include="PMSDataSet.xsc">
       <DependentUpon>PMSDataSet.xsd</DependentUpon>

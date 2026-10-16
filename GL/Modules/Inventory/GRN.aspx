@@ -155,6 +155,7 @@ $(document).ready(function() {
             <% } %>
             $('select').select2();
             loadUserBranch();
+            BranchWareHouse.attach('#ddlBranch', '#ddlInv_org');
 
             var GRN_ID = '<%= Request.QueryString["GRN_ID"]%>';
             if (GRN_ID == '') {

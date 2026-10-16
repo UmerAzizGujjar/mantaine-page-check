@@ -792,6 +792,9 @@ namespace PMS
         partial void InsertBranch_Wise_User_Detail(Branch_Wise_User_Detail instance);
         partial void UpdateBranch_Wise_User_Detail(Branch_Wise_User_Detail instance);
         partial void DeleteBranch_Wise_User_Detail(Branch_Wise_User_Detail instance);
+        partial void InsertBranch_Wise_WareHouse(Branch_Wise_WareHouse instance);
+        partial void UpdateBranch_Wise_WareHouse(Branch_Wise_WareHouse instance);
+        partial void DeleteBranch_Wise_WareHouse(Branch_Wise_WareHouse instance);
         partial void InsertInPatient_Monitoring_Detail(InPatient_Monitoring_Detail instance);
         partial void UpdateInPatient_Monitoring_Detail(InPatient_Monitoring_Detail instance);
         partial void DeleteInPatient_Monitoring_Detail(InPatient_Monitoring_Detail instance);
@@ -3171,6 +3174,14 @@ namespace PMS
             get
             {
                 return this.GetTable<Branch_Wise_User_Detail>();
+            }
+        }
+
+        public System.Data.Linq.Table<Branch_Wise_WareHouse> Branch_Wise_WareHouses
+        {
+            get
+            {
+                return this.GetTable<Branch_Wise_WareHouse>();
             }
         }
 
@@ -97772,6 +97783,260 @@ namespace PMS
                     this._User_Id = value;
                     this.SendPropertyChanged("User_Id");
                     this.OnUser_IdChanged();
+                }
+            }
+        }
+
+        public event PropertyChangingEventHandler PropertyChanging;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void SendPropertyChanging()
+        {
+            if ((this.PropertyChanging != null))
+            {
+                this.PropertyChanging(this, emptyChangingEventArgs);
+            }
+        }
+
+        protected virtual void SendPropertyChanged(String propertyName)
+        {
+            if ((this.PropertyChanged != null))
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+
+    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.Branch_Wise_WareHouse")]
+    public partial class Branch_Wise_WareHouse : INotifyPropertyChanging, INotifyPropertyChanged
+    {
+
+        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+
+        private int _Branch_WareHouse_Id;
+
+        private int _Branch_ID;
+
+        private string _WareHouse;
+
+        private System.Nullable<int> _Company_ID;
+
+        private System.Nullable<int> _Book_ID;
+
+        private System.Nullable<System.Guid> _Created_By;
+
+        private System.Nullable<System.DateTime> _Created_Time;
+
+        private System.Nullable<System.Guid> _Updated_By;
+
+        private System.Nullable<System.DateTime> _Updated_Time;
+
+        #region Extensibility Method Definitions
+        partial void OnLoaded();
+        partial void OnValidate(System.Data.Linq.ChangeAction action);
+        partial void OnCreated();
+        partial void OnBranch_WareHouse_IdChanging(int value);
+        partial void OnBranch_WareHouse_IdChanged();
+        partial void OnBranch_IDChanging(int value);
+        partial void OnBranch_IDChanged();
+        partial void OnWareHouseChanging(string value);
+        partial void OnWareHouseChanged();
+        partial void OnCompany_IDChanging(System.Nullable<int> value);
+        partial void OnCompany_IDChanged();
+        partial void OnBook_IDChanging(System.Nullable<int> value);
+        partial void OnBook_IDChanged();
+        partial void OnCreated_ByChanging(System.Nullable<System.Guid> value);
+        partial void OnCreated_ByChanged();
+        partial void OnCreated_TimeChanging(System.Nullable<System.DateTime> value);
+        partial void OnCreated_TimeChanged();
+        partial void OnUpdated_ByChanging(System.Nullable<System.Guid> value);
+        partial void OnUpdated_ByChanged();
+        partial void OnUpdated_TimeChanging(System.Nullable<System.DateTime> value);
+        partial void OnUpdated_TimeChanged();
+        #endregion
+
+        public Branch_Wise_WareHouse()
+        {
+            OnCreated();
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Branch_WareHouse_Id", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
+        public int Branch_WareHouse_Id
+        {
+            get
+            {
+                return this._Branch_WareHouse_Id;
+            }
+            set
+            {
+                if ((this._Branch_WareHouse_Id != value))
+                {
+                    this.OnBranch_WareHouse_IdChanging(value);
+                    this.SendPropertyChanging();
+                    this._Branch_WareHouse_Id = value;
+                    this.SendPropertyChanged("Branch_WareHouse_Id");
+                    this.OnBranch_WareHouse_IdChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Branch_ID", DbType = "Int NOT NULL")]
+        public int Branch_ID
+        {
+            get
+            {
+                return this._Branch_ID;
+            }
+            set
+            {
+                if ((this._Branch_ID != value))
+                {
+                    this.OnBranch_IDChanging(value);
+                    this.SendPropertyChanging();
+                    this._Branch_ID = value;
+                    this.SendPropertyChanged("Branch_ID");
+                    this.OnBranch_IDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_WareHouse", DbType = "VarChar(100) NOT NULL", CanBeNull = false)]
+        public string WareHouse
+        {
+            get
+            {
+                return this._WareHouse;
+            }
+            set
+            {
+                if ((this._WareHouse != value))
+                {
+                    this.OnWareHouseChanging(value);
+                    this.SendPropertyChanging();
+                    this._WareHouse = value;
+                    this.SendPropertyChanged("WareHouse");
+                    this.OnWareHouseChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Company_ID", DbType = "Int")]
+        public System.Nullable<int> Company_ID
+        {
+            get
+            {
+                return this._Company_ID;
+            }
+            set
+            {
+                if ((this._Company_ID != value))
+                {
+                    this.OnCompany_IDChanging(value);
+                    this.SendPropertyChanging();
+                    this._Company_ID = value;
+                    this.SendPropertyChanged("Company_ID");
+                    this.OnCompany_IDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Book_ID", DbType = "Int")]
+        public System.Nullable<int> Book_ID
+        {
+            get
+            {
+                return this._Book_ID;
+            }
+            set
+            {
+                if ((this._Book_ID != value))
+                {
+                    this.OnBook_IDChanging(value);
+                    this.SendPropertyChanging();
+                    this._Book_ID = value;
+                    this.SendPropertyChanged("Book_ID");
+                    this.OnBook_IDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Created_By", DbType = "UniqueIdentifier")]
+        public System.Nullable<System.Guid> Created_By
+        {
+            get
+            {
+                return this._Created_By;
+            }
+            set
+            {
+                if ((this._Created_By != value))
+                {
+                    this.OnCreated_ByChanging(value);
+                    this.SendPropertyChanging();
+                    this._Created_By = value;
+                    this.SendPropertyChanged("Created_By");
+                    this.OnCreated_ByChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Created_Time", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Created_Time
+        {
+            get
+            {
+                return this._Created_Time;
+            }
+            set
+            {
+                if ((this._Created_Time != value))
+                {
+                    this.OnCreated_TimeChanging(value);
+                    this.SendPropertyChanging();
+                    this._Created_Time = value;
+                    this.SendPropertyChanged("Created_Time");
+                    this.OnCreated_TimeChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Updated_By", DbType = "UniqueIdentifier")]
+        public System.Nullable<System.Guid> Updated_By
+        {
+            get
+            {
+                return this._Updated_By;
+            }
+            set
+            {
+                if ((this._Updated_By != value))
+                {
+                    this.OnUpdated_ByChanging(value);
+                    this.SendPropertyChanging();
+                    this._Updated_By = value;
+                    this.SendPropertyChanged("Updated_By");
+                    this.OnUpdated_ByChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Updated_Time", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Updated_Time
+        {
+            get
+            {
+                return this._Updated_Time;
+            }
+            set
+            {
+                if ((this._Updated_Time != value))
+                {
+                    this.OnUpdated_TimeChanging(value);
+                    this.SendPropertyChanging();
+                    this._Updated_Time = value;
+                    this.SendPropertyChanged("Updated_Time");
+                    this.OnUpdated_TimeChanged();
                 }
             }
         }

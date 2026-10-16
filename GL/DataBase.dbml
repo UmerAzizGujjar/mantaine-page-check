@@ -4442,6 +4442,19 @@
       <Column Name="User_Id" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
     </Type>
   </Table>
+  <Table Name="dbo.Branch_Wise_WareHouse" Member="Branch_Wise_WareHouses">
+    <Type Name="Branch_Wise_WareHouse">
+      <Column Name="Branch_WareHouse_Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Branch_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="WareHouse" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="Company_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Book_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Created_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Created_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Updated_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Updated_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+    </Type>
+  </Table>
   <Table Name="dbo.InPatient_Monitoring_Detail" Member="InPatient_Monitoring_Details">
     <Type Name="InPatient_Monitoring_Detail">
       <Column Name="InPatient_Mon_Dtl_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />

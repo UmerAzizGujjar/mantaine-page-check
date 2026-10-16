@@ -54,6 +54,7 @@
             });
             $('select').select2();
             loadUserBranch();
+            BranchWareHouse.attach('#ddlBranch', '#ddlInv_Org');
             var IgpID = '<%= Request.QueryString["IGP_ID"] %>';
             if (IgpID == '') {
                 $('#btn_Print').hide();

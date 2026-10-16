@@ -86,6 +86,7 @@
                 $('#ddlBranch').select2();
                 loadUserBranch();
             }, 2500);
+            BranchWareHouse.attach('#ddlBranch', '#ddlWarehouse');
             $('[id*=checkHeader]').click(function () {
                 var isTrue = $('#checkHeader').is(':checked');
                 if (isTrue) {

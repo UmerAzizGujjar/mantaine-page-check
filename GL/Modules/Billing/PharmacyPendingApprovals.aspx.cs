@@ -52,6 +52,7 @@ namespace PMS.Modules.Billing
                                 Customer_Name = AB.Customer_Name,
                                 MR_No = db.Reg_patients.Where(rg => rg.pat_id == AB.Patient_ID).Select(rg => rg.mr_no_sequence).FirstOrDefault(),
                                 WareHouse = db.GetDataValueName("Ware House", AB.Ware_House),
+                                Payment = AB.IsBank == true ? "Bank" : (AB.IsCash == true ? "Cash" : "-"),
                                 AB.Total_Amount,
                                 AB.Discount_Amount,
                                 AB.Total_CGS,
