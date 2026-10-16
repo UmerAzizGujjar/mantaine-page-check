@@ -77,6 +77,7 @@
             $('#ddlPriority').select2();
             $('#ddlBranch').select2();
             loadUserBranch();
+            BranchWareHouse.attach('#ddlBranch', '#ddlwarehouse');
             var currentDate = new Date();
             var formattedDate = $.datepicker.formatDate('dd M yy', currentDate);
             $("#txtMIR_Date").val(formattedDate).datepicker({ dateFormat: 'dd M yy', readOnly: true });

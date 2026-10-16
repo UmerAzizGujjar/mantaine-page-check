@@ -880,6 +880,7 @@ function buildNewRow(length, PR_Num, itemcode, item_name, unit, Qty, UOM_Qty, Ra
             FillFurtherTaxType();
             $('#ddlBranch').select2();
             loadUserBranch();
+            BranchWareHouse.attach('#ddlBranch', '#ddlWarehouse');
 
             // Set default dates
             var currentDate = new Date();

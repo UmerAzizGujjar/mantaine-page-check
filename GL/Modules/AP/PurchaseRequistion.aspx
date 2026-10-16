@@ -144,6 +144,7 @@
             $('#ddlMode').select2();
             $('#ddlBranch').select2();
             loadUserBranch();
+            BranchWareHouse.attach('#ddlBranch', '#ddlWarehouse');
             $('#ctl00_MainContent_ddlGIR').select2();
 
             initSourceToggle();

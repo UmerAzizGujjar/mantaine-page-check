@@ -288,6 +288,13 @@
                     { data: 'Customer_Name', defaultContent: '', render: function (d) { return pEsc(d); } },
                     { data: 'MR_No', defaultContent: '', render: function (d) { return pEsc(d); } },
                     { data: 'WareHouse', defaultContent: '', render: function (d) { return pEsc(d); } },
+                    {
+                        data: 'Payment', defaultContent: '-',
+                        render: function (d) {
+                            var cls = d === 'Bank' ? 'label-info' : (d === 'Cash' ? 'label-success' : 'label-default');
+                            return '<span class="label ' + cls + '">' + pEsc(d || '-') + '</span>';
+                        }
+                    },
                     { data: 'Total_Amount', className: 'text-right', render: function (d) { return pMoney(d); } },
                     { data: 'Discount_Amount', className: 'text-right', render: function (d) { return pMoney(d); } },
                     { data: 'Total_CGS', className: 'text-right', render: function (d) { return pMoney(d); } },
@@ -404,6 +411,7 @@
                         <th>Customer</th>
                         <th>MR No</th>
                         <th>Ware House</th>
+                        <th>Payment</th>
                         <th style="text-align: right;">Total</th>
                         <th style="text-align: right;">Discount</th>
                         <th style="text-align: right;">CGS</th>

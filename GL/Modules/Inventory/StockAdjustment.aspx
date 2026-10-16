@@ -112,6 +112,7 @@
             savedBranch = $('#<%= hdnBranch_Id.ClientID %>').val();
             $('#ddlBranch').select2({ width: '100%' });
             loadUserBranch();
+            BranchWareHouse.attach('#ddlBranch', '#<%= ddl_Ware_House.ClientID %>');
 
             // Initialize TokenInput for Item Selection
             $('#ctl00_MainContent_txtItem_Code').tokenInput(function () {
