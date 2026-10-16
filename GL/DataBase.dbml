@@ -4455,6 +4455,175 @@
       <Column Name="Updated_Time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
     </Type>
   </Table>
+  <Table Name="dbo.Anesthesia_PreOp" Member="Anesthesia_PreOps">
+    <Type Name="Anesthesia_PreOp">
+      <Column Name="PreOp_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Anesthesia_ID" Type="System.String" DbType="NVarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="Patient_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="In_Patient_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Company_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Book_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Procedure_Date" Type="System.DateTime" DbType="Date" CanBeNull="true" />
+      <Column Name="Procedure_Name" Type="System.String" DbType="NVarChar(250)" CanBeNull="true" />
+      <Column Name="Anaesthetist_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Weight_Kg" Type="System.Decimal" DbType="Decimal(6,2)" CanBeNull="true" />
+      <Column Name="Height_Cm" Type="System.Decimal" DbType="Decimal(6,2)" CanBeNull="true" />
+      <Column Name="Pulse" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="SpO2" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="BP" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="Temp_F" Type="System.Decimal" DbType="Decimal(5,1)" CanBeNull="true" />
+      <Column Name="Resp_Rate" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Family_History" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Column Name="Phys_Exam" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Column Name="Resp_Exam" Type="System.String" DbType="NVarChar(300)" CanBeNull="true" />
+      <Column Name="CVS_Exam" Type="System.String" DbType="NVarChar(300)" CanBeNull="true" />
+      <Column Name="Other_Exam" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Column Name="Mallampati_Grade" Type="System.String" DbType="NVarChar(5)" CanBeNull="true" />
+      <Column Name="Mandibular_Protrusion" Type="System.String" DbType="NVarChar(5)" CanBeNull="true" />
+      <Column Name="Atlantooccipital_Ext" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Neck_Circumference" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Thyromental_Distance" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Airway_Others" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
+      <Column Name="Teeth" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
+      <Column Name="Routine_Medication" Type="System.String" DbType="NVarChar(1000)" CanBeNull="true" />
+      <Column Name="Advised_Rx_Night" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Column Name="Advised_Rx_Morning" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Column Name="Pre_Medication" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Column Name="Blood_Group" Type="System.String" DbType="NVarChar(10)" CanBeNull="true" />
+      <Column Name="Hb" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="PLT" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="WBC" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="BSL" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="RETS" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="CXR" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
+      <Column Name="ECG" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
+      <Column Name="Investigations_Others" Type="System.String" DbType="NVarChar(1000)" CanBeNull="true" />
+      <Column Name="ASA_Status" Type="System.String" DbType="NVarChar(5)" CanBeNull="true" />
+      <Column Name="Anticipated_Problems" Type="System.String" DbType="NVarChar(2000)" CanBeNull="true" />
+      <Column Name="Consultant_Advice" Type="System.String" DbType="NVarChar(2000)" CanBeNull="true" />
+      <Column Name="Anesthetic_Plan" Type="System.String" DbType="NVarChar(2000)" CanBeNull="true" />
+      <Column Name="Assessed_By_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Assessment_Date" Type="System.DateTime" DbType="Date" CanBeNull="true" />
+      <Column Name="Created_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Created_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Modified_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Modified_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Anesthesia_History" Member="Anesthesia_Histories">
+    <Type Name="Anesthesia_History">
+      <Column Name="History_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Anesthesia_ID" Type="System.String" DbType="NVarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="Item_Name" Type="System.String" DbType="NVarChar(60) NOT NULL" CanBeNull="false" />
+      <Column Name="Is_Present" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Notes" Type="System.String" DbType="NVarChar(300)" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Anesthesia_IntraOp" Member="Anesthesia_IntraOps">
+    <Type Name="Anesthesia_IntraOp">
+      <Column Name="IntraOp_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Anesthesia_ID" Type="System.String" DbType="NVarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="Patient_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="In_Patient_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Company_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Book_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Hemoglobin" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="Anaesthetist_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Surgeon_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Age_Weight" Type="System.String" DbType="NVarChar(40)" CanBeNull="true" />
+      <Column Name="Bed_No" Type="System.String" DbType="NVarChar(30)" CanBeNull="true" />
+      <Column Name="Blood_No" Type="System.String" DbType="NVarChar(30)" CanBeNull="true" />
+      <Column Name="Premedication" Type="System.String" DbType="NVarChar(300)" CanBeNull="true" />
+      <Column Name="Diagnosis" Type="System.String" DbType="NVarChar(300)" CanBeNull="true" />
+      <Column Name="Op_Date" Type="System.DateTime" DbType="Date" CanBeNull="true" />
+      <Column Name="Room_Ward" Type="System.String" DbType="NVarChar(60)" CanBeNull="true" />
+      <Column Name="Blood_Pressure" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="Time_Given" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
+      <Column Name="Operation" Type="System.String" DbType="NVarChar(250)" CanBeNull="true" />
+      <Column Name="Id_Verified_By" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="Type_Of_Anesthesia" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="Preop_Condition" Type="System.String" DbType="NVarChar(300)" CanBeNull="true" />
+      <Column Name="Drugs" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Column Name="ASA_Status" Type="System.String" DbType="NVarChar(5)" CanBeNull="true" />
+      <Column Name="Induction_Notes" Type="System.String" DbType="NVarChar(1000)" CanBeNull="true" />
+      <Column Name="Inhalation_Agent" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="IV_Drugs" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Column Name="Airway_Mask" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Airway_LMA" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Airway_Tube" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Airway_Route" Type="System.String" DbType="NVarChar(10)" CanBeNull="true" />
+      <Column Name="Airway_Size" Type="System.String" DbType="NVarChar(30)" CanBeNull="true" />
+      <Column Name="Airway_Cuff_Pack" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Airway_Position" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Maintenance_Mode" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="Maint_O2" Type="System.String" DbType="NVarChar(30)" CanBeNull="true" />
+      <Column Name="Maint_N2O" Type="System.String" DbType="NVarChar(30)" CanBeNull="true" />
+      <Column Name="Maint_VI" Type="System.String" DbType="NVarChar(30)" CanBeNull="true" />
+      <Column Name="Maint_RR" Type="System.String" DbType="NVarChar(30)" CanBeNull="true" />
+      <Column Name="Airway_Pressure" Type="System.String" DbType="NVarChar(30)" CanBeNull="true" />
+      <Column Name="Recovery_Notes" Type="System.String" DbType="NVarChar(1000)" CanBeNull="true" />
+      <Column Name="Comments_OT_To_RR" Type="System.String" DbType="NVarChar(1000)" CanBeNull="true" />
+      <Column Name="Notes_RR_To_Room" Type="System.String" DbType="NVarChar(1000)" CanBeNull="true" />
+      <Column Name="Anesthetist_Sign" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="Sign_Time" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
+      <Column Name="Total_Blood_Loss" Type="System.String" DbType="NVarChar(30)" CanBeNull="true" />
+      <Column Name="Total_Urine_Output" Type="System.String" DbType="NVarChar(30)" CanBeNull="true" />
+      <Column Name="Created_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Created_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Modified_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Modified_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Anesthesia_IntraOp_Vital" Member="Anesthesia_IntraOp_Vitals">
+    <Type Name="Anesthesia_IntraOp_Vital">
+      <Column Name="Vital_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Anesthesia_ID" Type="System.String" DbType="NVarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="Chart_Time" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
+      <Column Name="BP_Sys" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="BP_Dias" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Pulse" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="SpO2" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Resp_Rate" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Drug_Event" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
+      <Column Name="Created_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Anesthesia_OpNote" Member="Anesthesia_OpNotes">
+    <Type Name="Anesthesia_OpNote">
+      <Column Name="OpNote_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Anesthesia_ID" Type="System.String" DbType="NVarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="Patient_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="In_Patient_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Company_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Book_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Bed_Room_No" Type="System.String" DbType="NVarChar(60)" CanBeNull="true" />
+      <Column Name="Op_Date" Type="System.DateTime" DbType="Date" CanBeNull="true" />
+      <Column Name="Op_Time" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
+      <Column Name="PreOp_Dx" Type="System.String" DbType="NVarChar(300)" CanBeNull="true" />
+      <Column Name="PostOp_Dx" Type="System.String" DbType="NVarChar(300)" CanBeNull="true" />
+      <Column Name="Surgeon_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Assistants" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
+      <Column Name="Anaesthetist_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Type_Of_Anaesthesia" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="Procedure_Name" Type="System.String" DbType="NVarChar(250)" CanBeNull="true" />
+      <Column Name="Duration" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Thread_Catgut" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Thread_Vicryl" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Thread_Proline" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Thread_Silk" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Procedure_Notes" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Blood_Loss" Type="System.String" DbType="NVarChar(30)" CanBeNull="true" />
+      <Column Name="IV_Fluids" Type="System.String" DbType="NVarChar(30)" CanBeNull="true" />
+      <Column Name="Blood_Transfused" Type="System.String" DbType="NVarChar(30)" CanBeNull="true" />
+      <Column Name="Urine_Output" Type="System.String" DbType="NVarChar(30)" CanBeNull="true" />
+      <Column Name="Swab_Instrument_Count" Type="System.String" DbType="NVarChar(60)" CanBeNull="true" />
+      <Column Name="Scrub_Nurse_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Created_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Created_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Modified_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Modified_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+    </Type>
+  </Table>
   <Table Name="dbo.InPatient_Monitoring_Detail" Member="InPatient_Monitoring_Details">
     <Type Name="InPatient_Monitoring_Detail">
       <Column Name="InPatient_Mon_Dtl_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />

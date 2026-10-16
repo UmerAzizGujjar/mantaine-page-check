@@ -496,6 +496,9 @@
     <Content Include="Modules\PatientManagement\BirthCertificateView.aspx" />
     <Content Include="Modules\PatientManagement\DialysisForm.aspx" />
     <Content Include="Modules\PatientManagement\DialysisView.aspx" />
+    <Content Include="Modules\PatientManagement\AnesthesiaForm.aspx" />
+    <Content Include="Modules\PatientManagement\AnesthesiaView.aspx" />
+    <Content Include="Modules\PatientManagement\AnesthesiaPrint.aspx" />
     <Content Include="Modules\PatientManagement\EmergencyAdmission.aspx" />
     <Content Include="Modules\PatientManagement\EmergencyForm.aspx" />
     <Content Include="Modules\PatientManagement\Emergency_Admission_View.aspx" />
@@ -4447,6 +4450,27 @@
     </Compile>
     <Compile Include="Modules\PatientManagement\BirthCertificateView.aspx.designer.cs">
       <DependentUpon>BirthCertificateView.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\PatientManagement\AnesthesiaForm.aspx.cs">
+      <DependentUpon>AnesthesiaForm.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\PatientManagement\AnesthesiaForm.aspx.designer.cs">
+      <DependentUpon>AnesthesiaForm.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\PatientManagement\AnesthesiaPrint.aspx.cs">
+      <DependentUpon>AnesthesiaPrint.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\PatientManagement\AnesthesiaPrint.aspx.designer.cs">
+      <DependentUpon>AnesthesiaPrint.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\PatientManagement\AnesthesiaView.aspx.cs">
+      <DependentUpon>AnesthesiaView.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\PatientManagement\AnesthesiaView.aspx.designer.cs">
+      <DependentUpon>AnesthesiaView.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\PatientManagement\DialysisForm.aspx.cs">
       <DependentUpon>DialysisForm.aspx</DependentUpon>

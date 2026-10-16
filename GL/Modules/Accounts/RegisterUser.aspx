@@ -238,7 +238,8 @@
             var Rejectradiology = $('#Rejectradiology').prop('checked');
             var AlllowPAtientAdd = $('#AlllowPAtientAdd').prop('checked');
             var AllowSamplelist = $('#AllowSamplelist').prop('checked');
-            var AllowRegisterRefund = $('#AllowRegisterRefund').prop('checked');            
+            var AllowRegisterRefund = $('#AllowRegisterRefund').prop('checked');
+            var Allow_Return_Queue = $('#Allow_Return_Queue').prop('checked');
             var AllowRateEdit = $('#AllowRateEdit').prop('checked');
             var AllowUndischarge = $('#AllowUndischarge').prop('checked');
             var AllDoctorTemplate = $('#AllDoctorTemplate').prop('checked');

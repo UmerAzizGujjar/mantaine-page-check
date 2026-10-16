@@ -303,6 +303,7 @@ namespace PMS.Modules.Accounts
                 newuser.AllowToAccessAllTest = data.AllowToAccessAllTest;
                 newuser.allow_cardio = data.AllowCardio;
                 newuser.Allow_Sample_list = data.AllowSamplelist;
+                newuser.AllowAddPatient = data.AlllowPAtientAdd;
                 newuser.IsNotificationViewed = data.PRFsNotifications;
                 newuser.AllowLineDiscount = data.AllowLineDiscount;
                 newuser.AllowApprovalitem = data.AllowApprovalitem;
