@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Inv_OriginatorTempelates.aspx.cs" Inherits="PMS.GL.Inv_OriginatorTempelates" %>
+﻿<%@ Page Title="" Language="C#" EnableSessionState="ReadOnly" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Inv_OriginatorTempelates.aspx.cs" Inherits="PMS.GL.Inv_OriginatorTempelates" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
      <link href="../../wwwroot/lib/sweetalert/swalalert.css" rel="stylesheet" />
@@ -11,9 +11,7 @@
             if (id != "") {
                 $('#btnSave').val('Update');
                 LoadMasterData(id);
-                setTimeout(function () {
-                    LoadOriginators(id);
-                }, 1000);
+                LoadOriginators(id);
                 LoadFormIds(id);
             }
             $('#btnNew').on('click', function () {
@@ -63,9 +61,8 @@
                     });
                     return false;
                 }
-                var usertable = $('#appusers');
-                usertable.find('tr').each(function (key, value) {
-                    var ddlUser = $("#tblddlUser" + (key + 1) + " option:selected").val();
+                $('#appusers select').each(function (key) {
+                    var ddlUser = $(this).val();
                     if (ddlUser == "") {
                         Swal.fire({
                             icon: 'error',
@@ -176,62 +173,63 @@
             });
         }
 
-        function LoadOriginators(id) {
-            var rows = '';
-            PageMethods.LoadOriginators(id, function (resp) {
-                var data = JSON.parse(resp);
-                var rowIndex = $('#appusers tbody tr').length;
-                $.each(data, function (key, value) {
-                    rows += '<tr>' +
-                        '<td><select class="form-control ddlUser" id="tblddlUser' + (key + 1) + '" name="tblddlUser" style="width:100% !important"></select></td>' +
-                        '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="width:15px !important;font-size: 13px;color:#f30a0a;position:relative;" ></i></a>' +
-                        '</td>' +
-                        '</tr>';
+        // One shared user list for the whole page (loaded once, not once per row)
+        var userOptionsHtml = null;
+        var userNameMap = {};
+        function escHtml(s) {
+            return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+        function getUsers(callback) {
+            if (userOptionsHtml !== null) { callback(); return; }
+            PageMethods.loadUser(function (resp) {
+                var html = '<option value="0">Please Select</option>';
+                $.each(JSON.parse(resp), function (k, v) {
+                    userNameMap[String(v.UserId).toLowerCase()] = v.UserName;
+                    html += '<option value="' + v.UserId + '">' + escHtml(v.UserName) + '</option>';
                 });
-                $('#appusers').append(rows);
-                loadOriginatorsItemList(data);
+                userOptionsHtml = html;
+                callback();
+            }, function (error) {
+                alert(error.get_message());
             });
         }
-        function loadOriginatorsItemList(selectedOptions) {
-            var optionsUser = '';
-            var ddlPromises = [];
-            $('.ddlUser').each(function (index) {
-                var ddl = $(this);
-                ddl.select2();
-                var ddlPromise = new Promise(function (resolve, reject) {
-                    PageMethods.loadUser(function (resp) {
-                        optionsUser = '<option value="0">Please Select</option>';
-                        $.each(JSON.parse(resp), function (key, value) {
-                            optionsUser += '<option value="' + value.UserId + '" >' + value.UserName + '</option>';
-                        });
-                        ddl.html(optionsUser);
-                        resolve();
-                    }, function (error) {
-                        reject(error);
-                    });
-                });
-                ddlPromises.push(ddlPromise);
+        // Rows are drawn with only their own selected user; the full list and select2 are attached
+        // the first time the user clicks the dropdown, so 250+ rows open instantly.
+        $(document).on('mousedown focus', 'select.lazyUser', function (e) {
+            var $s = $(this);
+            if (!$s.hasClass('lazyUser')) return;
+            $s.removeClass('lazyUser');
+            var cur = $s.val();
+            var isClick = (e.type === 'mousedown');
+            if (isClick) e.preventDefault();
+            getUsers(function () {
+                $s.html(userOptionsHtml).val(cur).select2();
+                if (isClick) $s.select2('open');
             });
-            Promise.all(ddlPromises).then(function () {
-                $('.ddlUser').each(function (index) {
-                    var selectedValue = selectedOptions[index];
-                    selectedValue = selectedValue.toLowerCase();
-                    if (selectedValue) {
-                        $('#tblddlUser' + (index + 1)).val(selectedValue).trigger('change');
-                    }
+        });
+        function LoadOriginators(id) {
+            PageMethods.LoadOriginators(id, function (resp) {
+                var data = JSON.parse(resp);
+                getUsers(function () {
+                    var rows = [];
+                    $.each(data, function (key, value) {
+                        var uid = String(value).toLowerCase();
+                        var name = userNameMap[uid] || uid;
+                        rows.push('<tr>' +
+                            '<td><select class="form-control ddlUser lazyUser" id="tblddlUser' + (key + 1) + '" name="tblddlUser" style="width:100% !important"><option value="' + uid + '" selected>' + escHtml(name) + '</option></select></td>' +
+                            '<td><a href="javascript:void(0)" onclick="ExcludeFromPayment(this)"><i class="glyphicon glyphicon-trash" style="width:15px !important;font-size: 13px;color:#f30a0a;position:relative;" ></i></a>' +
+                            '</td>' +
+                            '</tr>');
+                    });
+                    $('#appusers').append(rows.join(''));
                 });
-            }).catch(function (error) {
-                console.error('Error loading dropdowns:', error);
             });
         }
 
         function LoadFormIds(id) {
-            var rows = '';
             PageMethods.LoadFormIds(id, function (resp) {
                 var data = JSON.parse(resp);
-                console.log(data);
                 data.forEach(function (checkboxId) {
-                    console.log(checkboxId);
                     $('#' + checkboxId).prop('checked', true);
                 });
             });
@@ -274,19 +272,9 @@
             }
         }
         function loadItemList(rowlength) {
-            var optionsUser = '';
-            var length = rowlength;
-            $('#tblddlUser' + length + '').select2();
-            PageMethods.loadUser(function (resp) {
-                optionsUser = '<option value="0">Please Select</option>';
-                $.each(JSON.parse(resp), function (key, value) {
-                    optionsUser += '<option value="' + value.UserId + '" >' + value.UserName + '</option>';
-                });
-                $('#tblddlUser' + length + '').html(optionsUser);
-            },
-                function (error) {
-                    alert(error.get_message());
-                });
+            getUsers(function () {
+                $('#tblddlUser' + rowlength).html(userOptionsHtml).select2();
+            });
         }
 
 

@@ -281,6 +281,7 @@
                     $(this).datepicker({
                         changeMonth: true,
                         changeYear: true,
+                        constrainInput: false,
                         yearRange: "1950:2050",
                         dateFormat: 'dd M yy'
                     });
@@ -347,6 +348,128 @@
                 });
             }
         }
+        // Flexible date entry for Mfg / Expiry date. Whatever the user types, it is converted to the
+        // system format "dd Mon yyyy" (for example 01 Feb 2028) before it is read or saved.
+        // Accepted: 010228, 01022028, 01-0228, 1-2-28, 01/02/28, 01.02.2028, 01 02 28, 28-02-01 style
+        // (year first, 4-digit year), 20280201, 01 Feb 28, 1-feb-2028, Feb 1 2028 ...
+        // Order is always day, month, year. Two-digit years mean 20yy.
+        var igpMonths = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+        function parseQuickDate(v) {
+            v = $.trim(v);
+            if (v === '') return undefined;                 // empty: nothing to do
+            var d, mo, y, i;
+            var parts = v.match(/[A-Za-z]+|\d+/g) || [];
+            var words = [], nums = [];
+            for (i = 0; i < parts.length; i++) { (/^\d+$/.test(parts[i]) ? nums : words).push(parts[i]); }
+            if (/[^A-Za-z0-9\s\/\-\.,\\_:]/.test(v)) return null;
+            if (words.length > 1) return null;
+            if (words.length === 1) {                       // month written as a word
+                mo = -1;
+                var w = words[0].toLowerCase();
+                for (i = 0; i < 12; i++) { if (w.length >= 3 && igpMonths[i].indexOf(w.substring(0, 3)) === 0 && ('january february march april may june july august september october november december').indexOf(w) >= 0) { mo = i + 1; break; } }
+                if (mo < 1 || nums.length !== 2) return null;
+                if (nums[0].length === 4) { y = parseInt(nums[0], 10); d = parseInt(nums[1], 10); }
+                else if (nums[1].length === 4) { y = parseInt(nums[1], 10); d = parseInt(nums[0], 10); }
+                else { d = parseInt(nums[0], 10); y = parseInt(nums[1], 10); }
+            } else {
+                var digits = nums.join('');
+                if (nums.length === 3) {
+                    if (nums[0].length === 4) { y = parseInt(nums[0], 10); mo = parseInt(nums[1], 10); d = parseInt(nums[2], 10); }   // yyyy-mm-dd
+                    else { d = parseInt(nums[0], 10); mo = parseInt(nums[1], 10); y = parseInt(nums[2], 10); }
+                    if (nums[0].length > 2 && nums[0].length !== 4) return null;
+                    if (nums[2].length !== 2 && nums[2].length !== 4 && nums[0].length !== 4) return null;
+                } else if (nums.length === 1 || nums.length === 2) {
+                    if (digits.length === 6) { d = parseInt(digits.substr(0, 2), 10); mo = parseInt(digits.substr(2, 2), 10); y = parseInt(digits.substr(4, 2), 10); }
+                    else if (digits.length === 8) {
+                        if (parseInt(digits.substr(0, 4), 10) >= 1900) { y = parseInt(digits.substr(0, 4), 10); mo = parseInt(digits.substr(4, 2), 10); d = parseInt(digits.substr(6, 2), 10); }   // yyyymmdd
+                        else { d = parseInt(digits.substr(0, 2), 10); mo = parseInt(digits.substr(2, 2), 10); y = parseInt(digits.substr(4, 4), 10); }
+                    } else return null;
+                } else return null;
+            }
+            if (y < 100) y += 2000;
+            var dt = new Date(y, mo - 1, d);
+            if (dt.getFullYear() !== y || dt.getMonth() !== mo - 1 || dt.getDate() !== d) return null;   // impossible date
+            return dt;
+        }
+        // Returns true when the box was handled (converted or rejected), false when there was nothing to do.
+        function applyQuickDate(el) {
+            var dt = parseQuickDate($(el).val());
+            if (dt === undefined) return false;
+            if (dt === null) {
+                $(el).val('');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Invalid date. Type day, month and year, for example 010228, 01-02-28 or 01 Feb 2028.',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+                return true;
+            }
+            $(el).val($.datepicker.formatDate('dd M yy', dt));
+            if ($(el).hasClass('hasDatepicker')) { $(el).datepicker('setDate', dt); }
+            return true;
+        }
+        // Enter / Tab right after typing: convert FIRST. Otherwise the date picker (which highlights today
+        // while the box has no valid date) picks today's date on Enter before the conversion runs.
+        // This listener runs in the capture phase, ahead of the date picker's own key handling.
+        document.addEventListener('keydown', function (e) {
+            var t = e.target;
+            if (!t || t.tagName !== 'INPUT' || (t.name !== 'Expdate' && t.name !== 'txtMfgdate') || t.readOnly) return;
+            var isEnter = (e.key === 'Enter' || e.keyCode === 13), isTab = (e.key === 'Tab' || e.keyCode === 9);
+            if (!isEnter && !isTab) return;
+            clearTimeout($(t).data('igpT'));
+            var handled = applyQuickDate(t);
+            if (isEnter && handled) {
+                e.preventDefault();
+                e.stopImmediatePropagation();
+                if ($(t).hasClass('hasDatepicker')) { $(t).datepicker('hide'); }
+            }
+        }, true);
+        // While typing: once exactly 6 digits are in the box and the user pauses, convert it (so 010228 is
+        // enough). The short pause lets someone who keeps typing 8 digits (01022028) finish first.
+        // Any other format is converted when the user leaves the box (Tab / Enter / click away).
+        $(document).on('input.igpquick', 'input[name="Expdate"], input[name="txtMfgdate"]', function () {
+            var el = this;
+            clearTimeout($(el).data('igpT'));
+            if (/^\d{6}$/.test($.trim($(el).val()))) {
+                $(el).data('igpT', setTimeout(function () {
+                    if (/^\d{6}$/.test($.trim($(el).val()))) { applyQuickDate(el); }
+                }, 900));
+            }
+        });
+        $(document).on('focusout.igpquick', 'input[name="Expdate"], input[name="txtMfgdate"]', function () {
+            clearTimeout($(this).data('igpT'));
+            applyQuickDate(this);
+        });
+        // Clicking into a date box selects the whole text, so typing replaces the old value
+        // (the Mfg date comes pre-filled with today's date; without this the digits get inserted inside it).
+        $(document).on('focusin.igpquick', 'input[name="Expdate"], input[name="txtMfgdate"]', function () {
+            var el = this;
+            if (!el.readOnly && el.value) {
+                setTimeout(function () { try { el.select(); } catch (e) { } }, 0);
+            }
+        });
+        $(document).on('mouseup.igpquick', 'input[name="Expdate"], input[name="txtMfgdate"]', function (e) {
+            // the click that gave the box focus: select everything and keep it selected
+            if (!this.readOnly && $(this).data('igpFirstClick') === this) {
+                $(this).data('igpFirstClick', null);
+                if (this.value) { this.select(); }
+                e.preventDefault();
+            }
+        });
+        $(document).on('mousedown.igpquick', 'input[name="Expdate"], input[name="txtMfgdate"]', function () {
+            // only the click that gives the box focus selects everything; later clicks place the caret as usual
+            $(this).data('igpFirstClick', document.activeElement === this ? null : this);
+        });
+        $(document).on('focusin.igpquick', 'input[name="Expdate"], input[name="txtMfgdate"]', function () {
+            if (!this.readOnly && !this.getAttribute('placeholder')) { this.setAttribute('placeholder', 'ddmmyy'); }
+        });
         function BatchValidation2() {
             $.each($('#tblItemDescription tbody tr'), function (key, value) {
                 var batch = $($(value).find('td input[name=Isbatch]')[0]).val();
@@ -922,6 +1045,7 @@
                         $(this).datepicker({
                             changeMonth: true,
                             changeYear: true,
+                            constrainInput: false,
                             yearRange: "1950:2050",
                             dateFormat: 'dd M yy'
                         });
