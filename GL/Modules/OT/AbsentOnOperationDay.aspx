@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="AbsentOnOperationDay.aspx.cs" Inherits="PMS.AbsentOnOperationDay" %>
+﻿<%@ Page EnableSessionState="ReadOnly" Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="AbsentOnOperationDay.aspx.cs" Inherits="PMS.AbsentOnOperationDay" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
        <script type="text/javascript">
            var optionsList = '';

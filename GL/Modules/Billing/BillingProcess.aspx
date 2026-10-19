@@ -1,4 +1,4 @@
-<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="BillingProcess.aspx.cs" Inherits="PMS.BillingProcess" %>
+<%@ Page EnableSessionState="ReadOnly" Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="BillingProcess.aspx.cs" Inherits="PMS.BillingProcess" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
         <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/Billing.css" rel="stylesheet" />
     

@@ -1,4 +1,4 @@
-<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="GoodsIssuanceRequest.aspx.cs" Inherits="PMS.Inventory.GoodsIssuanceRequest" %>
+<%@ Page EnableSessionState="ReadOnly" Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="GoodsIssuanceRequest.aspx.cs" Inherits="PMS.Inventory.GoodsIssuanceRequest" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/goods-issuance-request.css?v=20261019" rel="stylesheet" />

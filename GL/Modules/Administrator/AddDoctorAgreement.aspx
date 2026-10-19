@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="AddDoctorAgreement.aspx.cs" Inherits="PMS.Inventory.AddDoctorAgreement" %>
+﻿<%@ Page EnableSessionState="ReadOnly" Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="AddDoctorAgreement.aspx.cs" Inherits="PMS.Inventory.AddDoctorAgreement" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/lib/theme/pharmacy-form.css?v=6" rel="stylesheet" />

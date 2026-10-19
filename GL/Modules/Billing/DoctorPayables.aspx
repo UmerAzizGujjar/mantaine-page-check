@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="DoctorPayables.aspx.cs" Inherits="PMS.Modules.Billing.DoctorPayables" %>
+﻿<%@ Page EnableSessionState="ReadOnly" Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="DoctorPayables.aspx.cs" Inherits="PMS.Modules.Billing.DoctorPayables" %>
 
 
 

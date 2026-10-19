@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Emergency_View.aspx.cs" Inherits="PMS.Modules.PatientManagement.Emergency_View" %>
+﻿<%@ Page EnableSessionState="ReadOnly" Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Emergency_View.aspx.cs" Inherits="PMS.Modules.PatientManagement.Emergency_View" %>
  
 <asp:Content ID="Content2" ContentPlaceHolderID="HeadContent" runat="server">
  <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/tablestyle.css" rel="stylesheet" />

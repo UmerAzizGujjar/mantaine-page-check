@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="DiscountDefinition.aspx.cs" Inherits="PMS.DiscountDefinition" %>
+﻿<%@ Page EnableSessionState="ReadOnly" Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="DiscountDefinition.aspx.cs" Inherits="PMS.DiscountDefinition" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     
     

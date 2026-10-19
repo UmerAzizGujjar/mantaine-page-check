@@ -1,4 +1,4 @@
-<%@ Page Title="Approved Tests" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ApproveTest.aspx.cs" Inherits="PMS.Modules.Lab.ApproveTest" ValidateRequest="false" %>
+<%@ Page EnableSessionState="ReadOnly" Title="Approved Tests" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ApproveTest.aspx.cs" Inherits="PMS.Modules.Lab.ApproveTest" ValidateRequest="false" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/tablestyle.css" rel="stylesheet" />

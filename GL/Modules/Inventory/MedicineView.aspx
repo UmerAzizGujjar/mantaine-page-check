@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="MedicineView.aspx.cs" Inherits="PMS.MedicineView" %>
+﻿<%@ Page EnableSessionState="ReadOnly" Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="MedicineView.aspx.cs" Inherits="PMS.MedicineView" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
        <script type="text/javascript" src="javascripts/DataTable/jquery-2.2.3.js"></script>
     <script type="text/javascript" src="javascripts/DataTable/jquery-2.2.3.min.js"></script>

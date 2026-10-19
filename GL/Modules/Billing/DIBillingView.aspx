@@ -1,4 +1,4 @@
-<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="DIBillingView.aspx.cs" Inherits="PMS.DIBillingView" %>
+<%@ Page EnableSessionState="ReadOnly" Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="DIBillingView.aspx.cs" Inherits="PMS.DIBillingView" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
          <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/tablestyle.css" rel="stylesheet" />
       <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.colVis.min.js"></script>

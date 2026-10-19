@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ApproveMI.aspx.cs" Inherits="PMS.ApproveMI" %>
+﻿<%@ Page EnableSessionState="ReadOnly" Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ApproveMI.aspx.cs" Inherits="PMS.ApproveMI" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
                       <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/tablestyle.css" rel="stylesheet" />

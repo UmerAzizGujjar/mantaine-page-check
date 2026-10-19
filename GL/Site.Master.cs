@@ -591,27 +591,41 @@ namespace PMS
             return _menuChildCounts.TryGetValue(menuId, out count) ? count : 0;
         }
 
+        // All menu rows the user may see, loaded ONCE per request. getMenuItems() runs once per parent menu (about 115 times
+        // for a full-rights user) and used to send one query per parent; now it filters this table in memory instead.
+        private DataTable _allowedMenus;
+        private DataTable GetAllowedMenus(string roleName)
+        {
+            if (_allowedMenus == null)
+            {
+                string sql = "select distinct(m.Menu_ID),Menu_Name,Menu_Description,URL,Parent_ID,order_By,Isactive from menus m inner join aspnet_rolesinmenus rm on m.Menu_ID=rm.Menu_ID" +
+                             " INNER JOIN aspnet_roles r on rm.roleID=r.roleID inner join aspnet_UsersInRoles userinroles on r.roleID=userinroles.roleid" +
+                             " where r.roleName in(" + roleName + ") AND IsActive=1 and (userinroles.company_id=" + AppConfig.Company_ID + " or userinroles.allCompany=1) order by Order_by, m.Menu_ID ";
+                _allowedMenus = DBClass.getDataTable(sql);
+            }
+            return _allowedMenus;
+        }
+
         public string getMenuItems(int parentId)
         {
             string roleName = GetMenuRoleNames();
             string cmd = "";
             using (DataBaseDataContext context = new DataBaseDataContext())
             {
+                DataRow[] menuRows;
                 if (roleName != "")
                 {
-                    cmd = "select distinct(m.Menu_ID),Menu_Name,Menu_Description,URL,Parent_ID,order_By,Isactive from menus m inner join aspnet_rolesinmenus rm on m.Menu_ID=rm.Menu_ID" +
-                                " INNER JOIN aspnet_roles r on rm.roleID=r.roleID inner join aspnet_UsersInRoles userinroles on r.roleID=userinroles.roleid" +
-                                " where r.roleName in(" + roleName + ") AND Parent_ID=" + parentId + " AND IsActive=1 and (userinroles.company_id=" + AppConfig.Company_ID + " or userinroles.allCompany=1) order by Order_by ";
+                    menuRows = GetAllowedMenus(roleName).Select("Parent_ID=" + parentId);
                 }
                 else
                 {
                     cmd = "select distinct(m.Menu_ID),Menu_Name,Menu_Description,URL,Parent_ID,order_By,Isactive from menus m inner join aspnet_rolesinmenus rm on m.Menu_ID=rm.Menu_ID" +
                                   " INNER JOIN aspnet_roles r on rm.roleID=r.roleID" +
                                   " where r.roleName='user' AND IsActive=1 order by Order_by ";
+                    menuRows = DBClass.getDataTable(cmd).Select();
                 }
-                DataTable dt = DBClass.getDataTable(cmd);
 
-                foreach (DataRow dr in dt.Rows)
+                foreach (DataRow dr in menuRows)
                 {
                     string href = Page.ResolveUrl(Convert.ToString(dr["URL"]));
                     childCount = GetMenuChildCount(Convert.ToInt32(dr["Menu_Id"]));

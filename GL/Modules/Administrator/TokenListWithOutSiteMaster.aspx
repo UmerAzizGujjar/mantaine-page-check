@@ -1,5 +1,5 @@
 ﻿
-<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="TokenListWithOutSiteMaster.aspx.cs" Inherits="PMS.TokenListWithOutSiteMaster" %>
+<%@ Page EnableSessionState="ReadOnly" Language="C#" AutoEventWireup="true" CodeBehind="TokenListWithOutSiteMaster.aspx.cs" Inherits="PMS.TokenListWithOutSiteMaster" %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">

@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Fluid_Electrolyte_Infusion.aspx.cs" Inherits="PMS.Fluid_Electrolyte_Infusion" %>
+﻿<%@ Page EnableSessionState="ReadOnly" Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Fluid_Electrolyte_Infusion.aspx.cs" Inherits="PMS.Fluid_Electrolyte_Infusion" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
      
     

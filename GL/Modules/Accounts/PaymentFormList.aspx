@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="PaymentFormList.aspx.cs" Inherits="PMS.PaymentFormList" %>
+﻿<%@ Page EnableSessionState="ReadOnly" Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="PaymentFormList.aspx.cs" Inherits="PMS.PaymentFormList" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <script type="text/javascript" src="javascripts/DataTable/jquery-2.2.3.js"></script>
     <script type="text/javascript" src="javascripts/DataTable/jquery-2.2.3.min.js"></script>

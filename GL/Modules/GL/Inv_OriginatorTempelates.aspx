@@ -204,7 +204,10 @@
             if (isClick) e.preventDefault();
             getUsers(function () {
                 $s.html(userOptionsHtml).val(cur).select2();
-                if (isClick) $s.select2('open');
+                // swapping in select2 drops keyboard focus; put it back so Tab / arrow keys keep working
+                var $box = $s.next('.select2-container').find('.select2-selection');
+                $s.on('select2:close', function () { setTimeout(function () { $box.trigger('focus'); }, 0); });
+                if (isClick) { $s.select2('open'); } else { $box.trigger('focus'); }
             });
         });
         function LoadOriginators(id) {

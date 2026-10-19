@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="StudentAccountDefinition.aspx.cs" Inherits="PMS.Modules.StudentAffair.StudentAccountDefinition" %>
+﻿<%@ Page EnableSessionState="ReadOnly" Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="StudentAccountDefinition.aspx.cs" Inherits="PMS.Modules.StudentAffair.StudentAccountDefinition" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     

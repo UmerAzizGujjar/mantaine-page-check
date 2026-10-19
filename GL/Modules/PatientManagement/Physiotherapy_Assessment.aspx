@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Physiotherapy Assessment" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Physiotherapy_Assessment.aspx.cs" Inherits="PMS.Modules.PatientManagement.Physiotherapy_Assessment" %>
+﻿<%@ Page EnableSessionState="ReadOnly" Title="Physiotherapy Assessment" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Physiotherapy_Assessment.aspx.cs" Inherits="PMS.Modules.PatientManagement.Physiotherapy_Assessment" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 

@@ -1,4 +1,4 @@
-<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="DashPatientsCount.aspx.cs" Inherits="PMS.Modules.Dashboards.DashPatientsCount" %>
+<%@ Page EnableSessionState="ReadOnly" Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="DashPatientsCount.aspx.cs" Inherits="PMS.Modules.Dashboards.DashPatientsCount" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <script src="../../wwwroot/THEME_TIBBIT/Scripts/jquery.canvasjs.min.js"></script>

@@ -1,4 +1,4 @@
-<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="OperationBooking.aspx.cs" Inherits="PMS.OperationBooking" EnableEventValidation="false" %>
+<%@ Page EnableSessionState="ReadOnly" Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="OperationBooking.aspx.cs" Inherits="PMS.OperationBooking" EnableEventValidation="false" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
    <%-- <script type="../../text/javascript" src="Scripts/upload.js"></script>--%>

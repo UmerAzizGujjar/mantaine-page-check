@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="StockLedgerReport.aspx.cs" Inherits="PMS.StockLedgerReport" %>
+﻿<%@ Page EnableSessionState="ReadOnly" Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="StockLedgerReport.aspx.cs" Inherits="PMS.StockLedgerReport" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <style type="text/css">
         #ctl00_MainContent_ddlInventoryOrg,ctl00_MainContent_ddlItemGroup,

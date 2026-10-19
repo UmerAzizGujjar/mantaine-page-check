@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="UserDoctorControl.aspx.cs" Inherits="PMS.Account.UserDoctorControl" %>
+﻿<%@ Page EnableSessionState="ReadOnly" Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="UserDoctorControl.aspx.cs" Inherits="PMS.Account.UserDoctorControl" %>
 <asp:Content ID="Content2" ContentPlaceHolderID="HeadContent" runat="server">
     <style type="text/css">
         th {

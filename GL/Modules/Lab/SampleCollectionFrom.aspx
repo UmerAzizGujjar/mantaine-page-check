@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="SampleCollectionFrom.aspx.cs" Inherits="PMS.SampleCollectionFrom" %>
+﻿<%@ Page EnableSessionState="ReadOnly" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="SampleCollectionFrom.aspx.cs" Inherits="PMS.SampleCollectionFrom" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/sample-collection.css" rel="stylesheet" />

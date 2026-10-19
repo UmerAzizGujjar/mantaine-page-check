@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ApprovedPRFsAck.aspx.cs" Inherits="PMS.ApprovedPRFsAck" %>
+﻿<%@ Page EnableSessionState="ReadOnly" Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ApprovedPRFsAck.aspx.cs" Inherits="PMS.ApprovedPRFsAck" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
                     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/tablestyle.css" rel="stylesheet" />
 <script type="text/javascript">  

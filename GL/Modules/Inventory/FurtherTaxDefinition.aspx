@@ -1,4 +1,4 @@
-<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="FurtherTaxDefinition.aspx.cs" Inherits="PMS.Modules.Inventory.FurtherTaxDefinition" %>
+<%@ Page EnableSessionState="ReadOnly" Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="FurtherTaxDefinition.aspx.cs" Inherits="PMS.Modules.Inventory.FurtherTaxDefinition" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <script src="../../wwwroot/lib/jquery/accountlist.lazy.js?v=<%= System.IO.File.GetLastWriteTimeUtc(Server.MapPath("~/wwwroot/lib/jquery/accountlist.lazy.js")).Ticks %>" type="text/javascript"></script>
     <script type="text/javascript">

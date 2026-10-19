@@ -278,60 +278,138 @@ namespace PMS.AP
         public static string LoadPOItemDetail(int PO_ID)
         {
             DataBaseDataContext db = new DataBaseDataContext();
-            var Details = (from d in db.AP_Purchase_Order_Items
-                           join m in db.AP_Purchase_Orders
-                            on d.PO_ID equals m.PO_ID
-                           where m.PO_ID == PO_ID
-                           select new
-                           {
-                               d.Item_Code,
-                               Pack_Quantity = (from t in db.INV_Items where t.Item_Code == d.Item_Code.ToString() select t.Pack_Quantity).FirstOrDefault(),
-                               d.Item_Name,
-                               d.Unit,
-                               UnitName = db.GetDataValueName("UOM", d.Unit),
-                               d.Batch_No,
-                               d.Expire_Date,
-                               d.Qty,
-                               d.UOM_Qty,
-                               d.Rate,
-                               d.Amount,
-                               d.Discount_Amount,
-                               d.Discount_Percentage,
-                               d.SalTax_Amount,
-                               d.AdvanceTax_Amount,
-                               d.FurtherTax_Amount,
-                               d.FurtherTax_Percentage,
-                               d.FurtherTax_Id,
-                               m.Total_Adv_Amt,
-                               d.Fed_Percentage,
-                               d.Delivery_Date,
-                               d.SalTax_Id,
-                               d.FedPercent_Id,
-                               d.PRDetailId,
-                               d.CS_Ven_No,
-                               d.AdvanceTax_ID,
-                               d.Bonus_Tax,
-                               d.Bonus_Qty,
-                               pr_id = DBClass.getField("select PR.PR_Num from Purchase_Requisition PR join Purchase_Requisition_Detail PRD on PR.PR_Id = PRD.PR_ID where PRD.PR_Detail_ID = " + d.PRDetailId),
-TotalStock = db.GetInvenrtoryItemUomTotalStock(d.Item_Id ?? 0, m.Ware_House),
-                               LastPORate = d.Last_PO_Rate ?? (from pd in db.AP_Purchase_Order_Items
-                                              join ph in db.AP_Purchase_Orders on pd.PO_ID equals ph.PO_ID
-                                              where pd.Item_Id == d.Item_Id
-                                              orderby ph.Creation_Time descending
-                                              select pd.Rate).FirstOrDefault() ?? d.Rate,
 
-                               LastVendorName = d.Last_Vendor_Name ?? (from pd in db.AP_Purchase_Order_Items
-                                                 join ph in db.AP_Purchase_Orders on pd.PO_ID equals ph.PO_ID
-                                                 join v in db.AP_Vendors on ph.Vendor_ID equals v.Vendor_ID
-                                                 where pd.Item_Id == d.Item_Id
-                                                 orderby ph.Creation_Time descending
-                                                 select v.Vendor_Name).FirstOrDefault() ?? ""
-                           }).ToList();
+            // 1) The PO lines with their header values: ONE query.
+            var lines = (from d in db.AP_Purchase_Order_Items
+                         join m in db.AP_Purchase_Orders on d.PO_ID equals m.PO_ID
+                         where m.PO_ID == PO_ID
+                         select new { d, m.Total_Adv_Amt, m.Ware_House }).ToList();
+
+            // 2) Everything that used to be looked up separately for EVERY line (about 5 queries per line,
+            //    13 s for a 182-line PO) is now fetched once for the whole PO and matched in memory.
+
+            // pack quantity from the item master
+            var codes = lines.Where(x => x.d.Item_Code.HasValue).Select(x => x.d.Item_Code.Value.ToString()).Distinct().ToList();
+            var pack = new Dictionary<string, int?>();
+            if (codes.Count > 0)
+            {
+                foreach (var p in db.INV_Items.Where(t => codes.Contains(t.Item_Code)).Select(t => new { t.Item_Code, t.Pack_Quantity }).ToList())
+                {
+                    if (!pack.ContainsKey(p.Item_Code)) pack[p.Item_Code] = p.Pack_Quantity;
+                }
+            }
+
+            // unit names (a handful of distinct units)
+            var unitNames = new Dictionary<string, string>();
+            foreach (string u in lines.Select(x => x.d.Unit).Distinct())
+            {
+                unitNames[u ?? ""] = db.GetDataValueName("UOM", u);
+            }
+
+            // requisition number of each line
+            var prMap = new Dictionary<int, string>();
+            var prDetailIds = lines.Where(x => x.d.PRDetailId.HasValue).Select(x => x.d.PRDetailId.Value).Distinct().ToList();
+            if (prDetailIds.Count > 0)
+            {
+                DataTable prDt = DBClass.getDataTable("select PRD.PR_Detail_ID, PR.PR_Num from Purchase_Requisition PR join Purchase_Requisition_Detail PRD on PR.PR_Id = PRD.PR_ID where PRD.PR_Detail_ID in (" + string.Join(",", prDetailIds) + ")");
+                foreach (DataRow r in prDt.Rows)
+                {
+                    int k = Convert.ToInt32(r[0]);
+                    if (!prMap.ContainsKey(k)) prMap[k] = r[1].ToString();
+                }
+            }
+
+            // stock in the PO's warehouse: ONE grouped query over the batch ledger for all items
+            // (the database function GetInvenrtoryItemUomTotalStock scans the ledger once per line: ~13 ms each)
+            var stockByItem = new Dictionary<long, decimal>();
+            string poWarehouse = lines.Count > 0 ? lines[0].Ware_House : null;
+            var stockItemIds = lines.Select(x => (long)(x.d.Item_Id ?? 0)).Distinct().ToList();
+            if (stockItemIds.Count > 0 && poWarehouse != null)
+            {
+                DataTable stDt = DBClass.getDataTable(
+                    "select Item_ID, sum(Qty) as Qty from vwBatch_Ledger where Ware_House = @wh and Item_ID in (" + string.Join(",", stockItemIds) + ") group by Item_ID",
+                    new SqlParameter("@wh", poWarehouse));
+                foreach (DataRow r in stDt.Rows)
+                {
+                    if (r[1] != DBNull.Value)
+                        stockByItem[Convert.ToInt64(r[0])] = Math.Round(Convert.ToDecimal(r[1]), 2, MidpointRounding.AwayFromZero);
+                }
+            }
+
+            // last PO rate / last vendor of each item (only for lines that do not already store them)
+            var needIds = lines.Where(x => x.d.Item_Id.HasValue && (x.d.Last_PO_Rate == null || x.d.Last_Vendor_Name == null))
+                               .Select(x => x.d.Item_Id.Value).Distinct().ToList();
+            var lastRate = new Dictionary<int, decimal?>();
+            var lastVendor = new Dictionary<int, string>();
+            if (needIds.Count > 0)
+            {
+                string idList = string.Join(",", needIds);
+                DataTable rateDt = DBClass.getDataTable("select Item_Id, Rate from (select pd.Item_Id, pd.Rate, row_number() over (partition by pd.Item_Id order by ph.Creation_Time desc) rn " +
+                    "from AP_Purchase_Order_Items pd join AP_Purchase_Orders ph on pd.PO_ID = ph.PO_ID where pd.Item_Id in (" + idList + ")) x where rn = 1");
+                foreach (DataRow r in rateDt.Rows)
+                    lastRate[Convert.ToInt32(r[0])] = r[1] == DBNull.Value ? (decimal?)null : Convert.ToDecimal(r[1]);
+                DataTable venDt = DBClass.getDataTable("select Item_Id, Vendor_Name from (select pd.Item_Id, v.Vendor_Name, row_number() over (partition by pd.Item_Id order by ph.Creation_Time desc) rn " +
+                    "from AP_Purchase_Order_Items pd join AP_Purchase_Orders ph on pd.PO_ID = ph.PO_ID join AP_Vendors v on ph.Vendor_ID = v.Vendor_ID where pd.Item_Id in (" + idList + ")) x where rn = 1");
+                foreach (DataRow r in venDt.Rows)
+                    lastVendor[Convert.ToInt32(r[0])] = r[1] == DBNull.Value ? null : r[1].ToString();
+            }
+
+            var Details = lines.Select(x =>
+            {
+                var d = x.d;
+                int? pq = null;
+                if (d.Item_Code.HasValue) { int? v; if (pack.TryGetValue(d.Item_Code.Value.ToString(), out v)) pq = v; }
+                string prNo;
+                if (!(d.PRDetailId.HasValue && prMap.TryGetValue(d.PRDetailId.Value, out prNo)))
+                {
+                    // same behaviour as before for lines without a requisition (keeps the original text)
+                    prNo = DBClass.getField("select PR.PR_Num from Purchase_Requisition PR join Purchase_Requisition_Detail PRD on PR.PR_Id = PRD.PR_ID where PRD.PR_Detail_ID = " + d.PRDetailId);
+                }
+                decimal stk; if (!stockByItem.TryGetValue((long)(d.Item_Id ?? 0), out stk)) stk = 0;
+                decimal? lr = null; string lv = null;
+                if (d.Item_Id.HasValue) { lastRate.TryGetValue(d.Item_Id.Value, out lr); lastVendor.TryGetValue(d.Item_Id.Value, out lv); }
+                string un; unitNames.TryGetValue(d.Unit ?? "", out un);
+                return new
+                {
+                    d.Item_Code,
+                    Pack_Quantity = pq,
+                    d.Item_Name,
+                    d.Unit,
+                    UnitName = un,
+                    d.Batch_No,
+                    d.Expire_Date,
+                    d.Qty,
+                    d.UOM_Qty,
+                    d.Rate,
+                    d.Amount,
+                    d.Discount_Amount,
+                    d.Discount_Percentage,
+                    d.SalTax_Amount,
+                    d.AdvanceTax_Amount,
+                    d.FurtherTax_Amount,
+                    d.FurtherTax_Percentage,
+                    d.FurtherTax_Id,
+                    x.Total_Adv_Amt,
+                    d.Fed_Percentage,
+                    d.Delivery_Date,
+                    d.SalTax_Id,
+                    d.FedPercent_Id,
+                    d.PRDetailId,
+                    d.CS_Ven_No,
+                    d.AdvanceTax_ID,
+                    d.Bonus_Tax,
+                    d.Bonus_Qty,
+                    pr_id = prNo,
+                    TotalStock = stk,
+                    LastPORate = d.Last_PO_Rate ?? lr ?? d.Rate,
+                    LastVendorName = d.Last_Vendor_Name ?? lv ?? ""
+                };
+            }).ToList();
 
             return (new JavaScriptSerializer()).Serialize(Details);
         }
 
-        private void BindSupplier()
+                private void BindSupplier()
         {
             #region "Bind Supplier in Dropdown"
             DataTable dt = new DataTable();

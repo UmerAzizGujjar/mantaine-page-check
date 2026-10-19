@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="PurchaseRequistion.aspx.cs" Inherits="PMS.AP.PurchaseRequistion" %>
+﻿<%@ Page EnableSessionState="ReadOnly" Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="PurchaseRequistion.aspx.cs" Inherits="PMS.AP.PurchaseRequistion" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
        <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/purchase-requisition.css?v=20261022" rel="stylesheet" />

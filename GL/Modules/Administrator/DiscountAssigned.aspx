@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="DiscountAssigned.aspx.cs" Inherits="PMS.DiscountAssigned" %>
+﻿<%@ Page EnableSessionState="ReadOnly" Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="DiscountAssigned.aspx.cs" Inherits="PMS.DiscountAssigned" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
      <link href="Styles/jquery.ptTimeSelect.css" rel="stylesheet" />
     <script type="text/javascript" src="Scripts/jquery.ptTimeSelect.js"></script>

@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Zakat Donation Records" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ZakatDonationList.aspx.cs" Inherits="PMS.Modules.Billing.ZakatDonationList" %>
+﻿<%@ Page EnableSessionState="ReadOnly" Title="Zakat Donation Records" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ZakatDonationList.aspx.cs" Inherits="PMS.Modules.Billing.ZakatDonationList" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/tablestyle.css" rel="stylesheet" />
     <style>

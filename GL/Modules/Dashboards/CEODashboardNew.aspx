@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="CEODashboardNew.aspx.cs" Inherits="PMS.Modules.Dashboards.CEODashboardNew" %>
+﻿<%@ Page EnableSessionState="ReadOnly" Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="CEODashboardNew.aspx.cs" Inherits="PMS.Modules.Dashboards.CEODashboardNew" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <script src="../../wwwroot/lib/apexcharts/apexchart.js"></script>

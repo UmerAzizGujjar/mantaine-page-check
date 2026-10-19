@@ -1,4 +1,4 @@
-<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="BranchWiseWareHouse.aspx.cs" Inherits="PMS.Modules.Administrator.BranchWiseWareHouse" %>
+<%@ Page EnableSessionState="ReadOnly" Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="BranchWiseWareHouse.aspx.cs" Inherits="PMS.Modules.Administrator.BranchWiseWareHouse" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <script type="text/javascript">
         var id = '<%= Request.QueryString["ID"] %>';

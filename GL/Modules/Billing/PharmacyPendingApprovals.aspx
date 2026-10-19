@@ -1,4 +1,4 @@
-<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="PharmacyPendingApprovals.aspx.cs" Inherits="PMS.Modules.Billing.PharmacyPendingApprovals" %>
+<%@ Page EnableSessionState="ReadOnly" Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="PharmacyPendingApprovals.aspx.cs" Inherits="PMS.Modules.Billing.PharmacyPendingApprovals" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <script type="text/javascript">

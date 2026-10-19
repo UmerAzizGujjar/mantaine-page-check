@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="OldOutPatient.aspx.cs" Inherits="PMS.Modules.PatientManagement.OldOutPatient" %>
+﻿<%@ Page EnableSessionState="ReadOnly" Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="OldOutPatient.aspx.cs" Inherits="PMS.Modules.PatientManagement.OldOutPatient" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/OldOutPatients.css" rel="stylesheet" />
     <script type="text/javascript">
