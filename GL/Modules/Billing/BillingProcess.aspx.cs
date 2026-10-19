@@ -3135,8 +3135,7 @@ namespace PMS
             if (isOTPharmacy)
             {
                 pharmacyItem = (from itm in db.INV_Items
-                                where itm.IsPharmacyBilling == true
-                                      && itm.Description == "OT Pharmacy Service"
+                                where itm.IsCathBilling == true
                                 select itm).FirstOrDefault();
             }
 

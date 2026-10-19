@@ -746,6 +746,8 @@ namespace PMS.Modules.Billing
             public int In_Patient_ID { get; set; }
 
             public string Panel_Id { get; set; }
+            public string Remarks { get; set; }
+            public string Cath_Procedures { get; set; }
             public List<Medicindetails> Save_list { get; set; }
         }
 
@@ -822,6 +824,8 @@ namespace PMS.Modules.Billing
             newBill.Sale_Return = "Return Against" + '-' + data.invNumber;
             newBill.UserID = Convert.ToInt32(UserId);
             newBill.IsCathLab = true;
+            newBill.Remarks = data.Remarks;
+            newBill.Cath_Procedures = data.Cath_Procedures;
 
             var checkingcondition = db.sys_Parms
                 .Where(a => a.Name == "Amount Recevied For Pharmcay")
@@ -998,6 +1002,28 @@ namespace PMS.Modules.Billing
             public string PatientID;
 
         }
+        [WebMethod]
+        public static string GetCathProcedures()
+        {
+            string data = string.Empty;
+
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var result = (from dv in db.DataValues
+                              join ds in db.ValueSets
+                              on dv.ValueSet_ID equals ds.ValueSet_ID
+                              where ds.ValueSet_Name == "Cath Procedures"
+                              orderby dv.DataValue_ID
+                              select new
+                              {
+                                  dv.DataValue_Name,
+                                  dv.DataValue_Description
+                              }).ToList();
+                data = new JavaScriptSerializer().Serialize(result);
+            }
+            return data;
+        }
+
         [WebMethod]
         public static string GetUserFromSysParams()
         {

@@ -63,7 +63,7 @@ namespace PMS.Modules.Inventory
         }
         //
         [WebMethod]
-        public static string SaveItem(string Item_Code, string Desc, string Active, string PackUnit, string UomQty, string Menu, string ItemType, string ItemCategory, string FianceIntegration, string locatorAddress, string Lenght, string Width, string Heigth, string SalesRate, string PurchRate, string Remarks, string FinshProduct, string Consumable, string Saleable, string ItemGroup, string Warehouse, string Purchaseable, string Locator, string NonStockItem, string Fixasset, string MinimumStock, string Batch, string ReorderStock, string MaximumStock, string ATC, string GenericName, string ControllerDrug, string Narcotics, string Refregrator, string PharmacyItem, string ProcedureTypes, string Notes, string RadioCharges, string DentalItem, string Procedure, string LensRequired, string BedServices, string LabRequired, string PattHistoryRequired, string DoctorShare, string HospitalShare, string FitnessCertificate, string OtherServices, string Billing, string OTProcedure, string btnValue, string ItemId, string DepartmentId, string Subcategory, string IsHospital, string IsService,string fluid, string Procedure_Time, string Account, string IsPharmacyBilling, string Doctor_Compulsory)
+        public static string SaveItem(string Item_Code, string Desc, string Active, string PackUnit, string UomQty, string Menu, string ItemType, string ItemCategory, string FianceIntegration, string locatorAddress, string Lenght, string Width, string Heigth, string SalesRate, string PurchRate, string Remarks, string FinshProduct, string Consumable, string Saleable, string ItemGroup, string Warehouse, string Purchaseable, string Locator, string NonStockItem, string Fixasset, string MinimumStock, string Batch, string ReorderStock, string MaximumStock, string ATC, string GenericName, string ControllerDrug, string Narcotics, string Refregrator, string PharmacyItem, string ProcedureTypes, string Notes, string RadioCharges, string DentalItem, string Procedure, string LensRequired, string BedServices, string LabRequired, string PattHistoryRequired, string DoctorShare, string HospitalShare, string FitnessCertificate, string OtherServices, string Billing, string OTProcedure, string btnValue, string ItemId, string DepartmentId, string Subcategory, string IsHospital, string IsService,string fluid, string Procedure_Time, string Account, string IsPharmacyBilling, string Doctor_Compulsory, string IsCathBilling)
         {
             string result = string.Empty;
             string Id = "";
@@ -163,6 +163,7 @@ namespace PMS.Modules.Inventory
                 obj.Services = Convert.ToBoolean(IsService);
                 obj.IsPharmacyBilling = Convert.ToBoolean(IsPharmacyBilling);
                 obj.Doctor_Compulsory = Convert.ToBoolean(Doctor_Compulsory);
+                obj.IsCathBilling = Convert.ToBoolean(IsCathBilling);
                 if (DoctorShare != "")
                 {
                     obj.Doctor_Share = Convert.ToDecimal(DoctorShare);
@@ -322,6 +323,7 @@ namespace PMS.Modules.Inventory
                 obj.Services = Convert.ToBoolean(IsService);
                 obj.IsPharmacyBilling = Convert.ToBoolean(IsPharmacyBilling);
                 obj.Doctor_Compulsory = Convert.ToBoolean(Doctor_Compulsory);
+                obj.IsCathBilling = Convert.ToBoolean(IsCathBilling);
                 try
                 {
                     db.SubmitChanges();
@@ -415,6 +417,7 @@ namespace PMS.Modules.Inventory
                                      obj.IsPharmacyBilling,
                                      obj.Doctor_Compulsory,
                                      obj.Account_ID,
+                                     obj.IsCathBilling,
                                  }).FirstOrDefault();
                     result = (new JavaScriptSerializer()).Serialize(query).ToString();
                 }
