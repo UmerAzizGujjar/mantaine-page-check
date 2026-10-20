@@ -385,6 +385,7 @@
                 var Subcategory = $('#ddlSubcategory').val();
                 var isHospitalchk = $('#chkIsHospital').prop('checked');
                 var isPharmacyBilling = $('#chkIsPharmacyBilling').prop('checked');
+                var isCathBilling = $('#chkIsCathBilling').prop('checked');
                 var doctorCompulsory = $('#chkDoctorCompulsory').prop('checked');
                 var account = $('#ddlAccount').val();
                 var Id = 0;
@@ -458,6 +459,7 @@
                         "Subcategory": Subcategory,
                         "IsHospital": isHospitalchk,
                         "IsPharmacyBilling": isPharmacyBilling,
+                        "IsCathBilling": isCathBilling,
                         "Doctor_Compulsory": doctorCompulsory,
                         "Account": account,
                     }),
@@ -713,6 +715,9 @@
                     if (parse.IsPharmacyBilling == 1) {
                         $("#chkIsPharmacyBilling").prop('checked', true);
                     }
+                    if (parse.IsCathBilling == 1) {
+                        $("#chkIsCathBilling").prop('checked', true);
+                    }
                     if (parse.Doctor_Compulsory == 1) {
                         $("#chkDoctorCompulsory").prop('checked', true);
                     }
@@ -894,6 +899,7 @@
                         <div class="sv-check"><input type="checkbox" id="chkIsHospital" name="chkIsHospital" /><label for="chkIsHospital">Is Hospital Required</label></div>
                         <div class="sv-check"><input type="checkbox" id="chkIsService" name="chkIsService" /><label for="chkIsService">Services Item</label></div>
                         <div class="sv-check"><input type="checkbox" id="chkIsPharmacyBilling" name="chkIsPharmacyBilling" /><label for="chkIsPharmacyBilling">Pharmacy Billing</label></div>
+                        <div class="sv-check"><input type="checkbox" id="chkIsCathBilling" name="chkIsCathBilling" /><label for="chkIsCathBilling">Cath Billing</label></div>
                         <div class="sv-check"><input type="checkbox" id="radio_charges" name="radio_charges" /><label for="radio_charges">Lab / Radiology Charges</label></div>
                         <div class="sv-check"><input type="checkbox" id="Dental_Item" name="Dental_Item" /><label for="Dental_Item">Dental Item</label></div>
                         <div class="sv-check"><input type="checkbox" id="ckhBedServices" name="ckhBedServices" /><label for="ckhBedServices">Bed Services</label></div>

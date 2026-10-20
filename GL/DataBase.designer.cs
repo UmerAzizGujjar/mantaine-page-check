@@ -155059,6 +155059,8 @@ namespace PMS
 
         private System.Nullable<bool> _IsPharmacyBilling;
 
+        private System.Nullable<bool> _IsCathBilling;
+
         private System.Nullable<bool> _Doctor_Compulsory;
 
         private string _Cost_Center;
@@ -155293,6 +155295,10 @@ namespace PMS
         partial void OnService_Sub_CategoryChanged();
         partial void OnIsPharmacyBillingChanging(System.Nullable<bool> value);
         partial void OnIsPharmacyBillingChanged();
+
+        partial void OnIsCathBillingChanging(System.Nullable<bool> value);
+
+        partial void OnIsCathBillingChanged();
         partial void OnDoctor_CompulsoryChanging(System.Nullable<bool> value);
         partial void OnDoctor_CompulsoryChanged();
         partial void OnCost_CenterChanging(string value);
@@ -157560,6 +157566,26 @@ namespace PMS
                     this._IsPharmacyBilling = value;
                     this.SendPropertyChanged("IsPharmacyBilling");
                     this.OnIsPharmacyBillingChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_IsCathBilling", DbType = "Bit")]
+        public System.Nullable<bool> IsCathBilling
+        {
+            get
+            {
+                return this._IsCathBilling;
+            }
+            set
+            {
+                if ((this._IsCathBilling != value))
+                {
+                    this.OnIsCathBillingChanging(value);
+                    this.SendPropertyChanging();
+                    this._IsCathBilling = value;
+                    this.SendPropertyChanged("IsCathBilling");
+                    this.OnIsCathBillingChanged();
                 }
             }
         }
@@ -184107,6 +184133,8 @@ namespace PMS
 
         private System.Nullable<bool> _IsCathLab;
 
+        private string _Cath_Procedures;
+
         private string _IPD_BillNo;
 
         private int _Reprint_Count;
@@ -184294,6 +184322,8 @@ namespace PMS
         partial void Onfinal_bill_ipdChanged();
         partial void OnIsCathLabChanging(System.Nullable<bool> value);
         partial void OnIsCathLabChanged();
+        partial void OnCath_ProceduresChanging(string value);
+        partial void OnCath_ProceduresChanged();
         partial void OnIPD_BillNoChanging(string value);
         partial void OnIPD_BillNoChanged();
         partial void OnReprint_CountChanging(int value);
@@ -185972,6 +186002,26 @@ namespace PMS
                     this._IsCathLab = value;
                     this.SendPropertyChanged("IsCathLab");
                     this.OnIsCathLabChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Cath_Procedures", DbType = "VarChar(500)")]
+        public string Cath_Procedures
+        {
+            get
+            {
+                return this._Cath_Procedures;
+            }
+            set
+            {
+                if ((this._Cath_Procedures != value))
+                {
+                    this.OnCath_ProceduresChanging(value);
+                    this.SendPropertyChanging();
+                    this._Cath_Procedures = value;
+                    this.SendPropertyChanged("Cath_Procedures");
+                    this.OnCath_ProceduresChanged();
                 }
             }
         }

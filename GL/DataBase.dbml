@@ -7121,6 +7121,7 @@
       <Column Name="IsPharmacyBilling" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="Doctor_Compulsory" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="Cost_Center" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="IsCathBilling" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
     </Type>
   </Table>
   <Table Name="dbo.In_Patient" Member="In_Patients">
@@ -8322,6 +8323,7 @@
       <Column Name="QrCode_path" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
       <Column Name="final_bill_ipd" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="IsCathLab" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Cath_Procedures" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
       <Column Name="IPD_BillNo" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
       <Column Name="Reprint_Count" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="Doctor_Share_Voucher_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />

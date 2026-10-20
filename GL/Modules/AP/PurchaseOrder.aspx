@@ -1312,7 +1312,7 @@ function buildNewRow(length, PR_Num, itemcode, item_name, unit, Qty, UOM_Qty, Ra
                 setTimeout(function () {
                     $('#ctl00_MainContent_ddlPOType').val(data.PO_Type).trigger('change');
                 }, 1000)
-                $('#ctl00_MainContent_ddlWorkOrder').val(data.Work_Order || '001').prop('disabled', data.Status === 'Approved');
+                $('#ctl00_MainContent_ddlWorkOrder').val(data.Work_Order || '001').trigger('change').prop('disabled', data.Status === 'Approved');
 
                 setTimeout(function () {
                     $('#ctl00_MainContent_ddlpayment').val(data.Payment_Terms).trigger('change');

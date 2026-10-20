@@ -188,6 +188,7 @@
             items = []
             loadmed();
             loadDepartment();
+            loadCathProcedures();
             loadDoctors();
             pageSize = 50
             jQuery.fn.select2.amd.require(["select2/data/array", "select2/utils"],
@@ -263,6 +264,19 @@
                 });
                 $('#ddlDepartment').html(options);
                 $('#ddlDepartment').select2();
+            },
+                function (error) {
+                    alert(error.get_message());
+                });
+        }
+        function loadCathProcedures() {
+            PageMethods.GetCathProcedures(function (data) {
+                var options = '<option value="">Please Select</option>';
+                $.each(JSON.parse(data), function (key, value) {
+                    options += '<option value="' + value.DataValue_Name + '" >' + value.DataValue_Description + '</option>';
+                });
+                $('#ddlCathProcedures').html(options);
+                $('#ddlCathProcedures').select2();
             },
                 function (error) {
                     alert(error.get_message());
@@ -2475,6 +2489,8 @@
                 "linediscount": linediscount,
                 "DiscAmnt": DiscAmnt,
                 "Save_list": Save_list,
+                "Remarks": $('#txtCathRemarks').val() || "",
+                "Cath_Procedures": $('#ddlCathProcedures').val() || "",
                 "In_Patient_ID": In_Patient_ID,
                 "invNumber": invNumber,
                 "Panel_Id": $('#ddlpanel').val()
@@ -2649,6 +2665,8 @@
                         "linediscount": linediscount,
                         "DiscAmnt": DiscAmnt,
                         "Save_list": Save_list,
+                        "Remarks": $('#txtCathRemarks').val() || "",
+                        "Cath_Procedures": $('#ddlCathProcedures').val() || "",
                         "invNumber": invNumber,
                         "Panel_Id": $('#ddlpanel').val()
                     };
@@ -3600,6 +3618,16 @@
                     <div class="ph-field">
                         <label id="lblBed">Bed No:</label>
                         <input type="text" id="BedName" tabindex="2" autocomplete="off" class="form-control" />
+                    </div>
+                    <div class="ph-field">
+                        <label id="lblCathRemarks">Remarks:</label>
+                        <input type="text" id="txtCathRemarks" tabindex="2" autocomplete="off" class="form-control" />
+                    </div>
+                    <div class="ph-field">
+                        <label id="lblCathProcedures">Cath Procedures:</label>
+                        <select id="ddlCathProcedures" tabindex="2" class="form-control">
+                            <option value="">Please Select</option>
+                        </select>
                     </div>
                 </div>
             </section>
