@@ -855,14 +855,14 @@ namespace PMS
                                                  on pm.Test_ID equals t.Test_ID
                                                  join b in db.Ar_Billing_Details
                                                  on pm.Bill_Details_ID equals b.Bill_Details_ID
-                                                 where b.Is_Group_Category == true && t.Group_Category == DataValue_Name && pm.Lab_Test_ID == LabID && pm.Bill_Details_ID == billDetailID
+                                                 where b.Is_Group_Category == true && t.Group_Category == DataValue_Name && pm.Bill_Details_ID == billDetailID
                                                  orderby t.Group_Order
                                                  select new
                                                  {
                                                      pm.Lab_Test_ID,
                                                      pm.Test_ID,
                                                      t.Test_Name,
-                                                     Lab_Test_Detail_ID = (from lbd in db.Lab_Test_Details where lbd.Lab_Test_ID == Convert.ToInt32(LabID) && lbd.Test_ID == pm.Test_ID && lbd.Bill_Details_ID == billDetailID select lbd.Lab_Test_Detail_ID).FirstOrDefault(),
+                                                     Lab_Test_Detail_ID = (from lbd in db.Lab_Test_Details where lbd.Test_ID == pm.Test_ID && lbd.Bill_Details_ID == billDetailID select lbd.Lab_Test_Detail_ID).FirstOrDefault(),
                                                      Ranges = (from v in db.Test_Values where v.Test_ID == t.Test_ID && v.Patient_Type == patientGender select v.Start_Range + " - " + v.End_Range).FirstOrDefault(),
 
                                                      AllRange = (from v in db.Test_Values
