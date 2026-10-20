@@ -20,7 +20,8 @@
         return v == null || v === '' || v === '0' || v === '-1';
     }
 
-    function attach(branchSel, wareHouseSel) {
+    // opts.onLoaded(items) (optional) runs after each branch's warehouse list has been rendered.
+    function attach(branchSel, wareHouseSel, opts) {
         var $branch = $(branchSel), $wh = $(wareHouseSel);
         if (!$branch.length || !$wh.length || !window.MutationObserver) return;
 
@@ -67,6 +68,7 @@
                     if (loadedBranch !== b) return; // branch changed again meanwhile
                     items = (r && r.items) || [];
                     render();
+                    if (opts && opts.onLoaded) opts.onLoaded(items);
                 });
             }
 

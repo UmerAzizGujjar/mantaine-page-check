@@ -82,6 +82,21 @@
         }
 
         var index = 0;
+        // spLabReportQ stores these lists in tables keyed on the value, so a repeated ID
+        // (e.g. two bills of the same lab order) raises a duplicate-key error. Dedupe and trim them.
+        function uniqueIds(values) {
+            var seen = {};
+            var result = [];
+            values.join(',').split(',').forEach(function (v) {
+                var id = v.trim();
+                if (id && !seen[id]) {
+                    seen[id] = true;
+                    result.push(id);
+                }
+            });
+            return result.join(',');
+        }
+
         function ShowReport() {
 
             var ChkLetterHead = false;
@@ -92,18 +107,16 @@
 
             var CheckUnApprove = 0;
             var selectedRowsCount = 0;
+            var hasInvalidReportCol = false;
 
-            
-            var allTestIDs = [];
-            var allTransIDs = [];
-            var allBillDetailIDs = [];
-            var allLabTDetailsIDs = [];
-            var reportColumns = [];
-            var testWiseIDs = [];
+            // Selected rows are grouped by Report Column. Each column has its own report layout,
+            // so each group is sent to ReportViewer in its own tab.
+            var reportGroups = {};
+            var reportColumnOrder = [];
+
             $("#tblLabTest tbody tr").each(function () {
                 var $row = $(this);
 
-                
                 var $checkbox = $row.find('input[name="chkReport"]');
 
                 if ($checkbox.is(':checked')) {
@@ -112,20 +125,28 @@
                     if (isApproveVal == "false" || isApproveVal == "False" || typeof isApproveVal === 'undefined') {
                         CheckUnApprove += 1;
                     }
-                    var reportCol = $row.find('input[name="Report_Colum"]').val();
-                    if (reportCol) reportColumns.push(reportCol);
+
+                    var reportCol = ($row.find('input[name="Report_Colum"]').val() || '').trim();
+                    if (reportCol === '' || reportCol === 'null') {
+                        hasInvalidReportCol = true;
+                    }
+
+                    if (!reportGroups[reportCol]) {
+                        reportGroups[reportCol] = { testIds: [], transIds: [], billDetailIds: [], labTDetailsIds: [], testWiseIds: [] };
+                        reportColumnOrder.push(reportCol);
+                    }
+                    var group = reportGroups[reportCol];
+
                     var testWiseId = $row.find('input[name="test_wise_id"]').val();
-                    if (testWiseId) testWiseIDs.push(testWiseId);
+                    if (testWiseId) group.testWiseIds.push(testWiseId);
                     var transId = $row.find('td:eq(1)').text().trim();
-                    if (transId) allTransIDs.push(transId);
+                    if (transId) group.transIds.push(transId);
 
-                    
                     var billDetailId = $row.find('input[name="Bill_Details_ID"]').val();
-                    if (billDetailId) allBillDetailIDs.push(billDetailId);
+                    if (billDetailId) group.billDetailIds.push(billDetailId);
                     var labTestDetailId = $row.find('td:eq(2)').text().trim();
-                    if (labTestDetailId) allLabTDetailsIDs.push(labTestDetailId);
+                    if (labTestDetailId) group.labTDetailsIds.push(labTestDetailId);
 
-                    
                     var groupCategory = $row.find('input[name="Group_Category"]').val();
                     var testIds = "";
 
@@ -138,11 +159,10 @@
                         testIds = $row.find('input[name="labtestDID"]').val();
                     }
 
-                    if (testIds) allTestIDs.push(testIds);
+                    if (testIds) group.testIds.push(testIds);
                 }
             });
 
-            
             if (selectedRowsCount === 0) {
                 Swal.fire({
                     icon: 'warning',
@@ -163,16 +183,6 @@
                 return false;
             }
 
-            var hasInvalidReportCol = false;
-            $("#tblLabTest tbody tr").each(function () {
-                if ($(this).find('input[name="chkReport"]').is(':checked')) {
-                    var rc = $(this).find('input[name="Report_Colum"]').val();
-                    if (!rc || rc === "" || rc === "null") {
-                        hasInvalidReportCol = true;
-                    }
-                }
-            });
-
             if (hasInvalidReportCol) {
                 Swal.fire({
                     icon: 'error',
@@ -182,38 +192,39 @@
                 });
                 return false;
             }
-            var strTestIDs = allTestIDs.join(',');
-            var strTransIDs = allTransIDs.join(',');
-            var strBillDetailIDs = allBillDetailIDs.join(',');
-            var strLabTDetailsIDs = allLabTDetailsIDs.join(',');
-            var reportColumnParam = reportColumns.length > 0 ? reportColumns[0] : "";
 
-            
-            var testWiseIdParam = testWiseIDs.length > 0 ? testWiseIDs[0] : "";
+            // Build one ReportViewer URL per Report Column. Nothing opens until every group is valid.
+            var reportUrls = [];
+            for (var i = 0; i < reportColumnOrder.length; i++) {
+                var reportCol = reportColumnOrder[i];
+                var reportGroup = reportGroups[reportCol];
 
-            if (!strTestIDs) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: 'Could not retrieve Test IDs. Please verify the report again.',
-                    timer: 2000
-                });
-                return false;
+                var strTestIDs = uniqueIds(reportGroup.testIds);
+                if (!strTestIDs) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Could not retrieve Test IDs. Please verify the report again.',
+                        timer: 2000
+                    });
+                    return false;
+                }
+
+                reportUrls.push('../../ReportViewer.aspx?ReportName=TestResultQ' +
+                    '&ReportTitle=Department Of Pathalogy' +
+                    '&Test_IDs=' + encodeURIComponent(strTestIDs) +
+                    '&test_wise_ids=' + encodeURIComponent(reportGroup.testWiseIds[0] || '') +
+                    '&TransID=' + encodeURIComponent(uniqueIds(reportGroup.transIds)) +
+                    '&labTDetailsID=' + encodeURIComponent(uniqueIds(reportGroup.labTDetailsIds)) +
+                    '&BillDetailID=' + encodeURIComponent(uniqueIds(reportGroup.billDetailIds)) +
+                    '&ReportColumn=' + encodeURIComponent(reportCol) +
+                    '&ChkLetterHead=' + ChkLetterHead);
             }
 
-            
-            var url = '../../ReportViewer.aspx?ReportName=TestResultQ' +
-                '&ReportTitle=Department Of Pathalogy' +
-                '&Test_IDs=' + encodeURIComponent(strTestIDs) +
-                '&test_wise_ids=' + encodeURIComponent(testWiseIdParam) +
-                '&TransID=' + encodeURIComponent(strTransIDs) +
-                '&labTDetailsID=' + encodeURIComponent(strLabTDetailsIDs) +
-                '&BillDetailID=' + encodeURIComponent(strBillDetailIDs) +
-                '&ReportColumn=' + encodeURIComponent(reportColumnParam) +
-                '&ChkLetterHead=' + ChkLetterHead;
-
-            console.log("Opening Report URL:", url); 
-            window.open(url, '_blank');
+            reportUrls.forEach(function (url) {
+                console.log("Opening Report URL:", url);
+                window.open(url, '_blank');
+            });
         }
         var SharingPolicy;
         function LoadSharingPolicy() {
