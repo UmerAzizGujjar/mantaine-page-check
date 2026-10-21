@@ -197,6 +197,13 @@ html body .sidebar.h-sidebar.mm ul.nav.nav-list ul.mm-empty { display: none !imp
             padding: 0 14px !important;
         }
 
+        /* Ace wraps the list in .nav-wrap-up > .nav-wrap once the window is narrowed and never unwraps it;
+           let the wrappers drop out of the layout so the bar looks the same after the window is widened again */
+        html body .sidebar.h-sidebar.mm .nav-wrap-up,
+        html body .sidebar.h-sidebar.mm .nav-wrap {
+            display: contents !important;
+        }
+
         /* hide button at the left end of the bar */
         html body .sidebar.h-sidebar.mm .mm-desk-toggle {
             display: inline-flex;

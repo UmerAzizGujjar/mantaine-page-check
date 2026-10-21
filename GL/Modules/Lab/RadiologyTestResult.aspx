@@ -5306,4 +5306,23 @@ function cleanPrint() {
             </div>
         </div>
     </div>
+
+    <%-- Responsive layout: widths, offsets and scrolling only. Button classes, colours and sizes are not touched. --%>
+    <style type="text/css">
+        @media screen and (max-width: 1199px) {
+            /* text fields and dropdowns never wider than their column (inline pixel widths) */
+            .main input[type="text"], .main input[type="number"], .main input[type="password"],
+            .main input:not([type]), .main select, .main textarea, .main .select2-container {
+                max-width: 100% !important;
+            }
+        }
+
+        @media screen and (max-width: 995px) {
+            /* Site.Master drops the container gutter here; put it back so the rows' negative margins stay on screen */
+            .main > .container-fluid, .main .modal-content .container-fluid {
+                padding-left: 12px !important;
+                padding-right: 12px !important;
+            }
+        }
+    </style>
 </asp:Content>
