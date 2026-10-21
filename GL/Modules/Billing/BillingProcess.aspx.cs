@@ -1943,6 +1943,15 @@ namespace PMS
             JavaScriptSerializer JSS = new JavaScriptSerializer();
             var data = JSS.Deserialize<Billings>(Parameters);
 
+            if (data.Details == null || data.Details.Count == 0)
+            {
+                return JSS.Serialize(new
+                {
+                    success = false,
+                    message = "Bill has no service details. Please add services and try again."
+                });
+            }
+
             // >>>>>>>>>>>>>>>>>> DETERMINE APPOINTMENT TYPE <<<<<<<<<<<<<<<<<<<<
             string appointmentType = null;
 

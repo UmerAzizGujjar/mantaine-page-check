@@ -2321,6 +2321,7 @@
                             });
                         });
                         var isAmountZero = false;
+                        var isShareInvalid = false;
                         $.each($('#tblDetails tbody tr'), function (key, value) {
 
                             var ParentTrans_ID = $(value).find('input[name="hdnParentTrans_ID"]').val();
@@ -2342,8 +2343,8 @@
                             var RecommendedByDoctor = $(value).find('input[name="hdnRecommendedByDoctor"]').val();
                             var ExcludedFromPayment = false;
                             var SelectedForApproval = $(value).find('input[name="chkApproval"]').is(':checked');
-                            var DisPer = $(value).find('input[name="hdnDisPer"]').val();
-                            var DisAmt = $(value).find('input[name="hdnDisAmount"]').val();
+                            var DisPer = $(value).find('input[name="hdnDisPer"]').val() || 0;
+                            var DisAmt = $(value).find('input[name="hdnDisAmount"]').val() || 0;
                             var isProcedure = $(value).find('input[name="hdnProcedure"]').val();
                             var MainDepartment = $(value).find('input[name="Main_Department"]').val();
                             var Test_CreatedDate = $(value).find('input[name="hdnTestCreatedDate"]').val();
@@ -2372,6 +2373,7 @@
                                 });
                                 $('.billing-save').prop('disabled', false);
                                 document.getElementById("hdnDuplicateCheck").value = "0";
+                                isShareInvalid = true;
                                 return false;
                             }
 
@@ -2418,6 +2420,10 @@
                             Net_Amount = (Qty * Amount) - DisAmt;
                             Details.push({ ParentTrans_ID: ParentTrans_ID, ParentTrans_Name: ParentTrans_Name, ParentTrans_Type: ParentTrans_Type, ItemID: ItemID, CategoryID: Category_ID, ItemName: ItemName, ItemType: ItemType, Amount: Amount, RecommendedByDoctor: RecommendedByDoctor, ExcludedFromPayment: ExcludedFromPayment, SelectedForApproval: SelectedForApproval, DisPer: DisPer, DisAmt: DisAmt, Net_Amount: Net_Amount, Qty: Qty, Remarks: Remarks, MainDepartment: MainDepartment, Consumed_Lab: Consumed_Lab, Consumed_Ultra_Sound: Consumed_Ultra_Sound, Consumed_Xray: Consumed_Xray, Consumed_Scan: Consumed_Scan, Consumed_Blood: Consumed_Blood, Consumed_Item: Consumed_Item, Consumed_Procedure: Consumed_Procedure, Consumed_Package: Consumed_Package, DocShare: DocShare, HosShare: HosShare, Doctor_id: Doctor_id, Test_CreatedDate: Test_CreatedDate });
                         });
+                        // return false above only stops $.each; without this the bill saved with partial/empty details
+                        if (isShareInvalid) {
+                            return;
+                        }
 
                         var totalDocShare = 0;
                         var totalHosShare = 0;
@@ -2884,6 +2890,31 @@
             var c_Dis_Amt = 0;
 
 
+            // Doctor/Hospital share follow the row's amount and discount %, from the per-unit shares set by GetDocAgreementValues
+            function RescaleRowShares($row, DisPer) {
+                var Amount = $($row.find('td')[5]).text();
+                var origPerUnitDoc = parseFloat($row.find('input[name="hdnPerUnitDocShare"]').val()) || 0;
+                var origPerUnitHoc = parseFloat($row.find('input[name="hdnPerUnitHocShare"]').val()) || 0;
+                var actualQty = parseFloat($row.find('input[name="txtQty"]').val()) || 1;
+
+                var originalRate = parseFloat($row.find('input[name="txtActualAmount"]').val()) || Amount;
+                if (originalRate > 0 && (origPerUnitDoc > 0 || origPerUnitHoc > 0)) {
+                    var scaleFactor = Amount / originalRate;
+                    var newDocShare = (origPerUnitDoc * actualQty) * scaleFactor;
+                    var newHocShare = (origPerUnitHoc * actualQty) * scaleFactor;
+
+                    var disPerNum = parseFloat(DisPer) || 0;
+                    if (disPerNum > 0) {
+                        var factor = disPerNum / 100;
+                        newDocShare *= (1 - factor);
+                        newHocShare *= (1 - factor);
+                    }
+
+                    $row.find('input[name="DocShare"]').val(newDocShare.toFixed(2));
+                    $row.find('input[name="HocShare"]').val(newHocShare.toFixed(2));
+                }
+            }
+
             function CalculateSummarieDiscountPerWise(rowIndex) {
                 Special = 0;
                 AssignValue(txtDisPer, 0);
@@ -2915,27 +2946,7 @@
                         Amount = $($(value).find('td')[5]).text();
                         DisPer = $(value).find('input[name="DisPer"]').val();
                         // --- Recompute Doctor & Hospital Share based on editable amount ---
-                        var $row = $(value);
-                        var origPerUnitDoc = parseFloat($row.find('input[name="hdnPerUnitDocShare"]').val()) || 0;
-                        var origPerUnitHoc = parseFloat($row.find('input[name="hdnPerUnitHocShare"]').val()) || 0;
-                        var actualQty = parseFloat(Qty) || 1;
-
-                        var originalRate = parseFloat($row.find('input[name="txtActualAmount"]').val()) || Amount;
-                        if (originalRate > 0 && (origPerUnitDoc > 0 || origPerUnitHoc > 0)) {
-                            var scaleFactor = Amount / originalRate;
-                            var newDocShare = (origPerUnitDoc * actualQty) * scaleFactor;
-                            var newHocShare = (origPerUnitHoc * actualQty) * scaleFactor;
-
-                            var disPerNum = parseFloat(DisPer) || 0;
-                            if (disPerNum > 0) {
-                                var factor = disPerNum / 100;
-                                newDocShare *= (1 - factor);
-                                newHocShare *= (1 - factor);
-                            }
-
-                            $row.find('input[name="DocShare"]').val(newDocShare.toFixed(2));
-                            $row.find('input[name="HocShare"]').val(newHocShare.toFixed(2));
-                        }
+                        RescaleRowShares($(value), DisPer);
 
                         $(value).find('input[name="hdnDisPer"]').val(DisPer);
                         DisAmt = (Qty * Amount) * DisPer / 100;
@@ -3912,6 +3923,7 @@
                         NetAmount = (Qty * Amount) - DisAmt;
                         $($(value).find('td')[8]).text(NetAmount.toFixed(0));
                         $(value).find('input[name="hdnNet_Amount"]').val(NetAmount.toFixed(6));
+                        RescaleRowShares($(value), DisPer);
                         TotalAmount += parseFloat(Amount);
                         TotalDiscountAmount += parseFloat(DisAmt);
                         TotalNetAmount += parseFloat(NetAmount);
@@ -3949,6 +3961,7 @@
                         $(value).find('input[name="hdnDisAmount"]').val(rowDisAmt.toFixed(6));
                         $($(value).find('td')[8]).text(rowNetAmount.toFixed(0));
                         $(value).find('input[name="hdnNet_Amount"]').val(rowNetAmount.toFixed(6));
+                        RescaleRowShares($(value), currentDisPer);
                     });
                     var AmtReceived = $('#txtAmountReceived').val();
                     if ($('#txtTotalPayable').val() != '') {
