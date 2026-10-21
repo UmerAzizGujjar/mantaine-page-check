@@ -3,7 +3,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/responsive-pages.css?v=<%= ((PMS.SiteMaster)Master).Ver("~/wwwroot/THEME_TIBBIT/CustomCSS/responsive-pages.css") %>" rel="stylesheet" />
 
-    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/PhysiotherapyAssessment.css" rel="stylesheet" />
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/PhysiotherapyAssessment.css?v=<%= ((PMS.SiteMaster)Master).Ver("~/wwwroot/THEME_TIBBIT/CustomCSS/PhysiotherapyAssessment.css") %>" rel="stylesheet" />
 
 </asp:Content> 
 

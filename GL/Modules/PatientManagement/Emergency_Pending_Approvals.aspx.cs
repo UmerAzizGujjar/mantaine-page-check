@@ -103,7 +103,8 @@ namespace PMS.Modules.PatientManagement
             long id = Convert.ToInt64(voucherId);
 
             var lines = DBClass.getDataTable(
-                @"SELECT va.Narration, ga.Account_Code, ga.Account_Name, va.DR, va.CR
+                @"SELECT va.Narration, ga.Account_Code, ga.Account_Name, va.DR, va.CR,
+                         ISNULL(dbo.GetDataValueName('Cost Center', va.Cost_Center), va.Cost_Center) AS CostCenter
                   FROM GL_Voucher_Accounts va
                   LEFT JOIN GL_Accounts ga ON ga.Account_ID = va.Account_ID
                   WHERE va.Voucher_ID = @Voucher_ID
@@ -113,6 +114,8 @@ namespace PMS.Modules.PatientManagement
             var patients = DBClass.getDataTable(
                 @"SELECT e.Emergency_No, ISNULL(e.mr_no_sequence, rg.mr_no_sequence) AS mr_no_sequence, rg.Full_Name,
                          dbo.GetDataValueName('Patient Type', e.Patient_Type) AS Pat_type,
+                         ISNULL(dbo.GetDataValueName('Cost Center', NULLIF(NULLIF(LTRIM(RTRIM(e.Cost_Center)), ''), '0')),
+                                NULLIF(NULLIF(LTRIM(RTRIM(e.Cost_Center)), ''), '0')) AS CostCenter,
                          ISNULL(e.Actual_amount, 0) AS Actual_Amount, ISNULL(e.Receipt_Amount, 0) AS Receipt_Amount,
                          ISNULL(e.Actual_amount, 0) - ISNULL(e.Receipt_Amount, 0) AS Discount_Amount
                   FROM Emergency e

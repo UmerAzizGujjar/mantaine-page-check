@@ -6,7 +6,8 @@
         /* below laptop width the fixed-layout grid would squeeze every column to a few pixels:
            keep it readable and scroll it sideways inside its own box instead */
         @media screen and (max-width: 1199px) {
-            .main div:has(> .custom-gridview) {
+            /* .po-grid-scroll is set on the GridView's own outer <div> by the script below */
+            .main .po-grid-scroll {
                 overflow-x: auto;
             }
 
@@ -308,7 +309,10 @@
         // and the approve / reject / save code above all keep working on the same rows and cells.
         $(document).ready(function () {
             var tbl = document.getElementById('<%= GridView1.ClientID %>');
-            if (!tbl || !$.fn.DataTable || $.fn.DataTable.isDataTable(tbl)) return;
+            if (!tbl) return;
+            // the GridView's outer <div> is the sideways-scroll box on small screens (works in every browser)
+            $(tbl.parentNode).addClass('po-grid-scroll');
+            if (!$.fn.DataTable || $.fn.DataTable.isDataTable(tbl)) return;
 
             // GridView writes its header row into <tbody>; DataTables needs it in <thead>
             var body = tbl.tBodies[0];

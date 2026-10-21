@@ -486,6 +486,7 @@
                     var patRows = (d.patients || []).map(function (p) {
                         return '<tr><td>' + pEsc(p.Emergency_No) + '</td><td>' + pEsc(p.mr_no_sequence) + '</td>' +
                                '<td>' + pEsc(p.Full_Name) + '</td><td>' + pEsc(p.Pat_type) + '</td>' +
+                               '<td>' + pEsc(p.CostCenter || '-') + '</td>' +
                                '<td style="text-align:right;">' + pMoney(p.Actual_Amount) + '</td>' +
                                '<td style="text-align:right;">' + pMoney(p.Discount_Amount) + '</td>' +
                                '<td style="text-align:right;">' + pMoney(p.Receipt_Amount) + '</td></tr>';
@@ -493,7 +494,7 @@
 
                     var lineRows = (d.lines || []).map(function (l) {
                         return '<tr><td>' + pEsc(l.Account_Code) + '</td><td>' + pEsc(l.Account_Name) + '</td>' +
-                               '<td>' + pEsc(l.Narration) + '</td>' +
+                               '<td>' + pEsc(l.Narration) + '</td><td>' + pEsc(l.CostCenter || '-') + '</td>' +
                                '<td style="text-align:right;">' + pMoney(l.DR) + '</td>' +
                                '<td style="text-align:right;">' + pMoney(l.CR) + '</td></tr>';
                     }).join('');
@@ -501,12 +502,12 @@
                     var html =
                         '<h4 style="text-align:left;">Patients in this voucher</h4>' +
                         '<table class="table table-bordered table-condensed"><thead><tr><th>ER No</th><th>MR No</th>' +
-                        '<th>Patient Name</th><th>Patient Type</th><th style="text-align:right;">Actual</th>' +
+                        '<th>Patient Name</th><th>Patient Type</th><th>Cost Center</th><th style="text-align:right;">Actual</th>' +
                         '<th style="text-align:right;">Discount</th><th style="text-align:right;">Receipt</th></tr></thead>' +
                         '<tbody>' + patRows + '</tbody></table>' +
                         '<h4 style="text-align:left;">GL lines</h4>' +
                         '<table class="table table-bordered table-condensed"><thead><tr><th>Account Code</th><th>Account</th>' +
-                        '<th>Narration</th><th style="text-align:right;">DR</th><th style="text-align:right;">CR</th></tr></thead>' +
+                        '<th>Narration</th><th>Cost Center</th><th style="text-align:right;">DR</th><th style="text-align:right;">CR</th></tr></thead>' +
                         '<tbody>' + lineRows + '</tbody></table>';
 
                     Swal.fire({ title: 'Voucher No ' + no, html: html, width: 960, confirmButtonText: 'Close' });
