@@ -1,6 +1,16 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="NewOutPatient.aspx.cs" Inherits="PMS.Modules.PatientManagement.NewOutPatient" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/responsive-pages.css?v=<%= ((PMS.SiteMaster)Master).Ver("~/wwwroot/THEME_TIBBIT/CustomCSS/responsive-pages.css") %>" rel="stylesheet" />
+    <style type="text/css">
+        /* tablet/laptop: .card-bodyy has no padding to absorb the negative margins of the row inside it */
+        @media screen and (max-width: 1199px) {
+            .main .card-bodyy > .row {
+                margin-left: 0;
+                margin-right: 0;
+            }
+        }
+    </style>
 
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/NewOutPatient.css" rel="stylesheet" />
 
