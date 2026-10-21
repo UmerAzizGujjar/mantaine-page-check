@@ -97,6 +97,7 @@
                 $('#ctl00_lbl1').text('Journal Voucher');
             }
             $('#ddl_brnch').select2();
+            loadUserBranch();
             var voucher_type = '<% =Request.QueryString["VoucherType"] %>';
             $('#txt_vcher_type').val(voucher_type);
             var date = '<%= DateTime.Now%>';
@@ -154,9 +155,10 @@
                 var data = JSON.parse(resp);
                 var txtdate = new Date(parseInt(data.Voucher_Date.substr(6)));
                 txtdate = moment(txtdate).format('L');
-                setTimeout(function () {
-                    $('#ddl_brnch').val(data.Branch_DDL).trigger('change');
-                }, 1000);
+                savedBranch = data.Branch_Id;
+                if (savedBranch) {
+                    $('#ddl_brnch').val(savedBranch).trigger('change');
+                }
                 setTimeout(function () {
                     $('#ddlVendor').val(data.Vendor_ID).trigger('change');
                 }, 1000);
@@ -182,6 +184,29 @@
                 function (error) {
                     alert(error.get_message());
                 })
+        }
+        var savedBranch = null;
+        function loadUserBranch() {
+            PageMethods.GetUserBranch(function (result) {
+                if (!result || result === "null") {
+                    $('#ddl_brnch').empty().append('<option value="0">No Branch Assigned</option>');
+                    return;
+                }
+                var branches = JSON.parse(result);
+                $('#ddl_brnch').empty();
+                branches.forEach(function (branch) {
+                    $('#ddl_brnch').append('<option value="' + branch.branch_ID + '">' + branch.branch_Name + '</option>');
+                });
+                if (branches.length === 1) {
+                    $('#ddl_brnch').val(branches[0].branch_ID);
+                } else {
+                    $('#ddl_brnch').prepend('<option value="0">Please Select</option>').val('0');
+                }
+                if (savedBranch) {
+                    $('#ddl_brnch').val(savedBranch);
+                }
+                $('#ddl_brnch').trigger('change');
+            });
         }
         function FillVendors() {
             PageMethods.getVendorDDLlist(function (Tests) {
@@ -497,6 +522,24 @@
             var totalcredit = $('#txt_credit').val();
             var difference = $('#txt_diff').val();
             var vendorID = $('#ddlVendor').val();
+            var branchID = $('#ddl_brnch').val() || 0;
+            if (branchID == 0 && $('#ddl_brnch option[value!="0"]').length > 0) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Please Select Branch',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    customClass: {
+                        popup: 'swal-big-popup',
+                        title: 'swal-big-title',
+                        htmlContainer: 'swal-big-text'
+                    }
+                });
+
+                $('#btnsave').attr('disabled', false);
+                return false;
+            }
             if (difference > 0 || difference < 0) {
                 Swal.fire({
                     icon: 'error',
@@ -532,7 +575,7 @@
                     'txtaccountname': $(value).find('td input[name=txtaccountname]').val(),
                 });
             });
-            var AllItemDetail = { 'Item_list': Item_list, 'editmode_voucherID': editmode_voucherID, 'voucherno': voucherno, 'type': type, 'txtdate': txtdate, 'txtptn': txtptn, 'descriptionmaster': descriptionmaster, 'refnum': refnum, 'totaldebit': totaldebit, 'totalcredit': totalcredit, 'status': status, 'vendorID': vendorID };
+            var AllItemDetail = { 'Item_list': Item_list, 'editmode_voucherID': editmode_voucherID, 'voucherno': voucherno, 'type': type, 'txtdate': txtdate, 'txtptn': txtptn, 'descriptionmaster': descriptionmaster, 'refnum': refnum, 'totaldebit': totaldebit, 'totalcredit': totalcredit, 'status': status, 'vendorID': vendorID, 'branchID': branchID };
             PageMethods.Savealldata(btnSave, JSON.stringify(AllItemDetail), function (res) {
                 if (res == "Period closed for this month. You cannot add or edit Voucher.") {
                     Swal.fire({
@@ -711,7 +754,13 @@
                             <input class="form-control" type="text" id="txtstatus" readonly="readonly" />
                         </div>
                     </div>
-                    <div class="vch-grid vch-cols-3">
+                    <div class="vch-grid vch-cols-4">
+                        <div class="vch-field">
+                            <label>Branch</label>
+                            <select id="ddl_brnch" class="form-control form-control-sm">
+                                <option value="0">Please Select</option>
+                            </select>
+                        </div>
                         <div class="vch-field">
                             <label>Vendor Name</label>
                             <select id="ddlVendor" class="form-control form-control-sm">

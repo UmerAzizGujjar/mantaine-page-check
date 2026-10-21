@@ -101,6 +101,7 @@ namespace PMS
                               a.Pay_To_Name,
                               a.Remarks,
                               a.Vendor_ID,
+                              a.Branch_Id,
                               a.Ref_Num,
                               a.Total_Debit,
                               a.Total_Credit,
@@ -197,6 +198,7 @@ namespace PMS
                     lstItem.Ref_Num = record.refnum;
                     lstItem.Pay_To_Name = record.txtptn;
                     lstItem.Vendor_ID = record.vendorID;
+                    lstItem.Branch_Id = record.branchID > 0 ? (int?)record.branchID : null;
                     lstItem.Total_Credit = Convert.ToDecimal(record.totalcredit);
                     lstItem.Total_Debit = Convert.ToDecimal(record.totaldebit);
                     lstItem.Updated_By = AppConfig.UserID;
@@ -277,6 +279,7 @@ namespace PMS
                     gv.Ref_Num = record.refnum;
                     gv.Pay_To_Name = record.txtptn;
                     gv.Vendor_ID = record.vendorID;
+                    gv.Branch_Id = record.branchID > 0 ? (int?)record.branchID : null;
                     gv.Total_Credit = Convert.ToDecimal(record.totalcredit);
                     gv.Total_Debit = Convert.ToDecimal(record.totaldebit);
                     gv.Created_By = AppConfig.UserID;
@@ -372,6 +375,38 @@ namespace PMS
             return voucherId.ToString();
         }
         [WebMethod]
+        public static string GetUserBranch()
+        {
+            using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+            {
+                var branchIds = (from bwd in db.Branch_Wise_User_Details
+                                 where bwd.User_Id == AppConfig.UserID
+                                 select bwd.Brancg).ToList();
+
+                if (!branchIds.Any())
+                    return "null";
+
+                var validBranches = new List<object>();
+
+                foreach (var brancg in branchIds)
+                {
+                    if (int.TryParse(brancg, out int branchId))
+                    {
+                        var branch = db.Branches.FirstOrDefault(b => b.branch_ID == branchId);
+                        if (branch != null)
+                        {
+                            validBranches.Add(new { branch_ID = branchId, branch_Name = branch.branch_Name });
+                        }
+                    }
+                }
+
+                if (!validBranches.Any())
+                    return "null";
+
+                return new JavaScriptSerializer().Serialize(validBranches);
+            }
+        }
+        [WebMethod]
         public static string getVendorDDLlist()
         {
             DataBaseDataContext db = new DataBaseDataContext();
@@ -398,6 +433,7 @@ namespace PMS
             public string totaldebit { get; set; }
             public string totalcredit { get; set; }
             public int vendorID { get; set; }
+            public int branchID { get; set; }
             public List<DetailList> Item_List { get; set; }
         }
         public class DetailList

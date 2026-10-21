@@ -661,6 +661,8 @@
     <Content Include="Modules\Inventory\StoreStockTransfer.aspx" />
     <Content Include="Modules\Inventory\StoreStockTransferView.aspx" />
     <Content Include="upload\InvItemsUpload.aspx" />
+    <Content Include="upload\VendorsUpload.aspx" />
+    <Content Include="upload\UsersUpload.aspx" />
     <Content Include="Modules\GL\Inv_OriginatorTempelates.aspx" />
     <Content Include="Modules\PatientManagement\In_PatientsStatus.aspx" />
     <Content Include="Modules\Billing\IssueMedicine.aspx" />
@@ -5475,6 +5477,21 @@
     <Compile Include="upload\InvItemsUpload.aspx.designer.cs">
       <DependentUpon>InvItemsUpload.aspx</DependentUpon>
     </Compile>
+    <Compile Include="upload\VendorsUpload.aspx.cs">
+      <DependentUpon>VendorsUpload.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="upload\VendorsUpload.aspx.designer.cs">
+      <DependentUpon>VendorsUpload.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="upload\UsersUpload.aspx.cs">
+      <DependentUpon>UsersUpload.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="upload\UsersUpload.aspx.designer.cs">
+      <DependentUpon>UsersUpload.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="upload\ExcelUploadHelper.cs" />
     <Compile Include="Modules\GL\Inv_OriginatorTempelates.aspx.cs">
       <DependentUpon>Inv_OriginatorTempelates.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

@@ -4246,6 +4246,7 @@
       <Column Name="Vendor_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="Cost_Center" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
       <Column Name="Department" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Branch_Id" Type="System.Int32" DbType="Int" CanBeNull="true" />
     </Type>
   </Table>
   <Table Name="dbo.Store_Issue" Member="Store_Issues">
