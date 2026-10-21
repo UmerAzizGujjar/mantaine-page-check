@@ -2745,11 +2745,9 @@
     <Content Include="wwwroot\THEME_TIBBIT\images\bootstrap-colorpicker\hue-horizontal.png" />
     <Content Include="wwwroot\THEME_TIBBIT\images\bootstrap-colorpicker\hue.png" />
     <Content Include="wwwroot\THEME_TIBBIT\images\bootstrap-colorpicker\saturation.png" />
-    <Content Include="wwwroot\THEME_TIBBIT\images\CompanyImages\companyImage20.png" />
     <Content Include="wwwroot\THEME_TIBBIT\images\LOGOS\Icon.png" />
     <Content Include="wwwroot\THEME_TIBBIT\images\LOGOS\LoginBackground.jpg" />
     <Content Include="wwwroot\THEME_TIBBIT\images\LOGOS\LoginIllustration.jpg" />
-    <Content Include="wwwroot\THEME_TIBBIT\images\LOGOS\logo-16x9.png" />
     <Content Include="wwwroot\THEME_TIBBIT\images\CompanyImages\logo.png" />
     <Content Include="wwwroot\THEME_TIBBIT\images\Projectimages\Project\11414.png" />
     <Content Include="wwwroot\THEME_TIBBIT\images\StudentImages\1.jpg" />
