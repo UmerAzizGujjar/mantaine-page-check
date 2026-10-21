@@ -12,7 +12,7 @@
             }
 
             .main .custom-gridview {
-                min-width: 1100px;
+                min-width: 1100px !important;
             }
         }
 
