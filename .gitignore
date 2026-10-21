@@ -367,6 +367,9 @@ FodyWeavers.xsd
 GL/upload/*
 !GL/upload/*.ashx
 !GL/upload/*.ashx.cs
+# upload pages and their code are source (GL.csproj compiles them); uploaded files in subfolders stay ignored
+!GL/upload/*.aspx
+!GL/upload/*.cs
 GL/Operation_Booking_Images/
 GL/PatientQRs/
 GL/TempQR/
