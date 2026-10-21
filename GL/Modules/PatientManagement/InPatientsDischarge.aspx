@@ -1,6 +1,24 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="InPatientsDischarge.aspx.cs" Inherits="PMS.InPatientsDischarge" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/responsive-pages.css?v=<%= ((PMS.SiteMaster)Master).Ver("~/wwwroot/THEME_TIBBIT/CustomCSS/responsive-pages.css") %>" rel="stylesheet" />
+    <style type="text/css">
+        /* the patient cards have a fixed desktop height; let them grow once their columns wrap */
+        @media screen and (max-width: 1199px) {
+            .main .card {
+                height: auto !important;
+                min-height: 230px;
+            }
+        }
+
+        /* ipddischarge.css pulls the value column up 11px to line it up with its label; once label and value
+           stack (phones), that pulls the MR No box over its label */
+        @media screen and (max-width: 767px) {
+            .main .card .row > .top {
+                margin-top: 0;
+            }
+        }
+    </style>
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/ipddischarge.css" rel="stylesheet" />
     <style type="text/css">
         .edit-mode .token-input-delete-token {

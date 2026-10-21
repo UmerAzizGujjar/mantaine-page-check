@@ -2,6 +2,15 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/responsive-pages.css?v=<%= ((PMS.SiteMaster)Master).Ver("~/wwwroot/THEME_TIBBIT/CustomCSS/responsive-pages.css") %>" rel="stylesheet" />
+    <style type="text/css">
+        /* the patient cards have a fixed desktop height; let them grow once their columns wrap */
+        @media screen and (max-width: 1199px) {
+            .main .card {
+                height: auto !important;
+                min-height: 240px;
+            }
+        }
+    </style>
 
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/Outpatient.css" rel="stylesheet" />
      <link href="../../wwwroot/lib/sweetalert/swalalert.css" rel="stylesheet" />

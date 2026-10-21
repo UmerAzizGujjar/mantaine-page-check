@@ -5315,6 +5315,12 @@ function cleanPrint() {
             .main input:not([type]), .main select, .main textarea, .main .select2-container {
                 max-width: 100% !important;
             }
+
+            /* the patient cards have a fixed desktop height; let them grow once their columns wrap */
+            .main .card {
+                height: auto !important;
+                min-height: 230px;
+            }
         }
 
         @media screen and (max-width: 995px) {
