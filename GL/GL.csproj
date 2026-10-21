@@ -2235,7 +2235,6 @@
     <Content Include="wwwroot\THEME_IITH\images\bootstrap-colorpicker\hue.png" />
     <Content Include="wwwroot\THEME_IITH\images\bootstrap-colorpicker\saturation.png" />
     <Content Include="wwwroot\THEME_IITH\images\LOGOS\ias.png" />
-    <Content Include="wwwroot\THEME_IITH\images\LOGOS\LoginBackground.jpg" />
     <Content Include="wwwroot\THEME_IITH\images\LOGOS\LoginIllustration.jpg" />
     <Content Include="wwwroot\THEME_IITH\images\LOGOS\logo.png" />
     <Content Include="wwwroot\THEME_IITH\images\Projectimages\Project\11414.png" />
@@ -6662,4 +6661,3 @@
   </Target>
   -->
 </Project>
-
