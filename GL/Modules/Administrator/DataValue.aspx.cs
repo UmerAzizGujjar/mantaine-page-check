@@ -52,9 +52,9 @@ namespace PMS
 
             if (Value == "9")
             {
-                GRD.Columns[6].HeaderText = "Room No";
+                GRD.Columns[5].HeaderText = "Room No";
             }
-            else { GRD.Columns[6].HeaderText = "Segment 2"; }
+            else { GRD.Columns[5].HeaderText = "Segment 2"; }
             //Set max length and data type from selected value
             var valueset = (from v in db.ValueSets
                             where v.ValueSet_ID == Convert.ToInt32(ddlValueSet.SelectedValue)
@@ -191,20 +191,6 @@ namespace PMS
             
             //IDbTransaction dbtrans = db.Connection.BeginTransaction();            
             dt = (DataTable)Session["dtDataValue"];
-            List<int> ids = Session["ids"] as List<int>;
-            if (ids != null)
-            {
-                int count = ids.Count;
-                for (int i = 0; i < count; i++)
-                {
-                    var del = (from data in db.DataValues
-                                 where data.DataValue_ID == ids[i]
-                                 select data).FirstOrDefault();
-                    db.DataValues.DeleteOnSubmit(del);
-                    db.SubmitChanges();
-                }
-            }
-            Session["ids"] = null;
             foreach (DataRow row in dt.Rows)
             {
                 var table = (from data in db.DataValues
@@ -274,65 +260,77 @@ namespace PMS
             txtDataValue_Name.Focus();
         }
 
-        protected void btnDelete_Click(object sender, EventArgs e)
+        protected void GRD_RowCommand(object sender, GridViewCommandEventArgs e)
         {
+            if (e.CommandName != "DeleteRow") return;
+
+            int index;
+            if (!int.TryParse(Convert.ToString(e.CommandArgument), out index)) return;
+
             dt = (DataTable)Session["dtDataValue"];
-            Boolean bol = Convert.ToBoolean(ViewState["check"]);
-            int index = Convert.ToInt32(ViewState["Index"]);
-            int datavalue_Id = Convert.ToInt32(ViewState["datavalue_id"]);
-
-
-            DataTable record = new DataTable();
-            record = DBClass.getDataTable("select Trans_Type,Trans_Name from vw_DataValues_Validation where DataValue_ID='" + txtDataValue_Name.Text + "'");
-            if (record.Rows.Count > 0)
+            if (dt == null)
             {
-                string TransType = record.Rows[0]["Trans_Type"].ToString();
-                string TransName = record.Rows[0]["Trans_Name"].ToString();
-                lblMessage.Text = "This record is in used in form " + TransType + " in " + TransName;
-                ShowSwal("error", "Record in use: " + TransType + " / " + TransName);
+                ShowSwal("warning", "Please select a value set first");
                 return;
             }
 
+            DataRow[] found = dt.Select("Index = " + index);
+            if (found.Length == 0) return;
+            DataRow row = found[0];
 
+            int datavalue_Id = Convert.ToInt32(row["DataValue_ID"]);
             if (datavalue_Id > 0)
             {
-                List<int> ids;
-                if (Session["ids"] == null)
+                DataTable record = DBClass.getDataTable(
+                    // vw_DataValues_Validation.DataValue_ID actually holds Customer/Vendor City text, not the numeric ID
+                    "select Trans_Type, Trans_Name from vw_DataValues_Validation where DataValue_ID = @DataValue_Name",
+                    new SqlParameter("@DataValue_Name", Convert.ToString(row["DataValue_Name"]).Trim()));
+                if (record.Rows.Count > 0)
                 {
-                    ids = new List<int>();
-                    ids.Add(datavalue_Id);
-                    Session.Add("ids", ids);
+                    string TransType = Convert.ToString(record.Rows[0]["Trans_Type"]);
+                    string TransName = Convert.ToString(record.Rows[0]["Trans_Name"]);
+                    lblMessage.Text = "This record is in used in form " + TransType + " in " + TransName;
+                    ShowSwal("error", "Record in use: " + TransType + " / " + TransName);
+                    return;
                 }
-                else
+
+                try
                 {
-                    ids = Session["ids"] as List<int>;
-                    ids.Add(datavalue_Id);
-                    Session.Add("ids", ids);
+                    var del = (from data in db.DataValues
+                               where data.DataValue_ID == datavalue_Id
+                               select data).FirstOrDefault();
+                    if (del != null)
+                    {
+                        db.DataValues.DeleteOnSubmit(del);
+                        db.SubmitChanges();
+                    }
+                }
+                catch (SqlException)
+                {
+                    ShowSwal("error", "Delete failed: this record is still in use");
+                    return;
                 }
             }
-            if (bol == true)
+
+            // Deleted row is loaded in the form: clear it so Update cannot hit a missing row
+            if (string.Equals(Convert.ToString(row["DataValue_Name"]), txtDataValue_Name.Text.Trim(), StringComparison.OrdinalIgnoreCase))
             {
-                bol = false;
-                ViewState.Add("check", bol);
-                DataRow[] row = dt.Select("Index = '" + index + "'");
-                dt.Rows.Remove(row[0]);
-                dt.AcceptChanges();
-                Session["dtDataValue"] = dt;
-                GRD.DataSource = dt;
-                GRD.DataBind();
                 txtDataValue_Name.Text = "";
                 txtDataValue_Description.Text = "";
                 txtSegment1.Text = "";
                 txtSegment2.Text = "";
-                txtDataValue_Name.Focus();
-                lblMessage.Text = "";
+                hfDataValue_ID.Value = "";
+                btnAdd.Text = "Add";
             }
 
-            else
-            {
-                lblMessage.Text = "Select any record before deletion...!";
-                ShowSwal("warning", "Select a record first");
-            }
+            dt.Rows.Remove(row);
+            dt.AcceptChanges();
+            Session["dtDataValue"] = dt;
+
+            GRD.DataSource = dt;
+            GRD.DataBind();
+            lblMessage.Text = "";
+            ShowSwal("success", "Entry deleted");
         }
         private void GetNewValueSetName()
         {
