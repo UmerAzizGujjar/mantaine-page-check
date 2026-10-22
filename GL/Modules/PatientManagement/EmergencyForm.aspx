@@ -9,6 +9,11 @@
             CheckCNICUpdateonCondition();
             CheckEmerDocTokenCondition();
             LoadERAutoDepartment();
+            loadPermissions(function () {
+                for (var fieldId in fieldPermissionMapping) {
+                    showIfAllowed(fieldId, true);
+                }
+            });
             MaskedInput({
                 elm: document.getElementById('txt_mobile'),
                 format: '+92__________',
@@ -203,6 +208,74 @@
 
             $('#ddlCostCenter').select2();
         });
+
+        // Field permissions from Emergency Policy (EmergencyPolicy.aspx); same rules as OPD.aspx:
+        // no policy saved for the company = form keeps its defaults, otherwise only enabled fields show.
+        var permissions = {};
+        var fieldPermissionMapping = {
+            "field_mr_no": "mr_no",
+            "field_Patient_name": "patient_name",
+            "field_Last_name": "last_name",
+            "field_OPD_No": "emergency_no",
+            "Field-CIH": "cash_in_hand",
+            "field_Mode_Reg": "mode_presentation",
+            "field_Mobile": "mobile",
+            "field_CNIC": "cnic",
+            "field_Category": "patient_category",
+            "field_Martial_Status": "marital_status",
+            "field_age": "age",
+            "field_Gender": "gender",
+            "field_Fee": "fee",
+            "field_Address": "address",
+            "remarks": "remarks",
+            "RefferdBy": "RefferedBy",
+            "costcenter": "CostCenter"
+        };
+
+        function loadPermissions(callback) {
+            $.ajax({
+                type: "POST",
+                url: "EmergencyForm.aspx/GetCompanyEmergencyPermissions",
+                data: "{}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    permissions = response.d || {};
+                    if (typeof callback === 'function') {
+                        callback();
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Could not load emergency permissions:", error);
+                }
+            });
+        }
+
+        function showIfAllowed(fieldId, conditionToShow) {
+            var permissionKey = fieldPermissionMapping[fieldId];
+            if (!permissions || $.isEmptyObject(permissions)) {
+                return;
+            }
+
+            if (!permissionKey) {
+                $('#' + fieldId).hide();
+                return;
+            }
+
+            var permissionValue = null;
+            for (var key in permissions) {
+                if (key.toLowerCase() === permissionKey.toLowerCase()) {
+                    permissionValue = permissions[key];
+                    break;
+                }
+            }
+
+            if (permissionValue === true && conditionToShow) {
+                $('#' + fieldId).show();
+            } else {
+                $('#' + fieldId).hide();
+            }
+        }
 
         function loadCostCentersByDepartment(department) {
             var $cc = $('#ddlCostCenter');

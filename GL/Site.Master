@@ -271,7 +271,7 @@
         });
 </script>
 <script type="text/javascript">
-    (function () {
+   <%-- (function () {
         // Pages can opt out by setting window.skipDevToolsCheck = true before the master loads
         if (window.skipDevToolsCheck === true) { return; }
 
@@ -349,7 +349,7 @@
                 e.preventDefault();
                 e.stopImmediatePropagation();
             }
-        }, true);    })();
+        }, true);    })();--%>
 </script>
     <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server"></asp:ContentPlaceHolder>
 

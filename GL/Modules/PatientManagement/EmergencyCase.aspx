@@ -12940,5 +12940,65 @@ function setDropdownText(selector, text) {
          <button class="yes">OK</button>
       </div>
     </div>
+
+    <%-- Responsive layout: widths, offsets and scrolling only. Button classes, colours and sizes are not touched. --%>
+    <style type="text/css">
+        /* the History and Vitals Discharge grids are wider than a laptop screen: scroll them inside the tab */
+        #Tab-8, #Tab-15 {
+            overflow-x: auto;
+        }
+
+        @media screen and (max-width: 1199px) {
+            /* anything wider than the screen scrolls sideways inside its tab, never the page */
+            #tabs > .ui-tabs-panel {
+                overflow-x: auto;
+            }
+
+            /* text fields and dropdowns never wider than their column (inline pixel widths) */
+            .main input[type="text"], .main input[type="number"], .main input[type="password"],
+            .main input:not([type]), .main select, .main textarea, .main .select2-container {
+                max-width: 100% !important;
+            }
+
+            /* the patient cards have a fixed desktop height; let them grow once their columns wrap */
+            .main .card {
+                height: auto !important;
+                min-height: 230px;
+            }
+
+            /* modals: drop the desktop pixel widths/offsets, fit the screen, scroll wide content inside */
+            .main .modal {
+                width: auto !important;
+                margin-left: 0 !important;
+            }
+
+            .main .modal-dialog {
+                width: auto !important;
+                max-width: calc(100% - 20px) !important;
+                margin: 10px auto !important;
+            }
+
+            .main .modal-content {
+                width: auto !important;
+                max-width: 100% !important;
+                height: auto !important;
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+                overflow-x: auto;
+            }
+
+            .main .modal-content > fieldset {
+                padding-right: 14px;
+            }
+        }
+
+        @media screen and (max-width: 995px) {
+            /* Site.Master drops the container gutter here; put it back so the rows' negative margins stay on screen */
+            .main > .container-fluid, .main .modal-content .container-fluid {
+                padding-left: 12px !important;
+                padding-right: 12px !important;
+            }
+        }
+    </style>
 </asp:Content>
 

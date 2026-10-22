@@ -93080,6 +93080,8 @@ namespace PMS
 
         private string _Department;
 
+        private System.Nullable<int> _Branch_Id;
+
         #region Extensibility Method Definitions
         partial void OnLoaded();
         partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -93144,6 +93146,8 @@ namespace PMS
         partial void OnCost_CenterChanged();
         partial void OnDepartmentChanging(string value);
         partial void OnDepartmentChanged();
+        partial void OnBranch_IdChanging(System.Nullable<int> value);
+        partial void OnBranch_IdChanged();
         #endregion
 
         public GL_Voucher()
@@ -93747,6 +93751,26 @@ namespace PMS
                     this._Department = value;
                     this.SendPropertyChanged("Department");
                     this.OnDepartmentChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Branch_Id", DbType = "Int")]
+        public System.Nullable<int> Branch_Id
+        {
+            get
+            {
+                return this._Branch_Id;
+            }
+            set
+            {
+                if ((this._Branch_Id != value))
+                {
+                    this.OnBranch_IdChanging(value);
+                    this.SendPropertyChanging();
+                    this._Branch_Id = value;
+                    this.SendPropertyChanged("Branch_Id");
+                    this.OnBranch_IdChanged();
                 }
             }
         }

@@ -734,3 +734,34 @@
     background: rgba(192, 57, 43, 0.04);
 }
 
+/* Below full-HD the long checkbox labels no longer fit three nowrap columns: let them wrap inside their column */
+@media screen and (max-width: 1599px) {
+    .chk-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .chk-grid .chk-item {
+        white-space: normal;
+        min-width: 0;
+    }
+}
+
+/* Phones: checkbox grids wrap their labels instead of running off the card, wide tables scroll inside it */
+@media screen and (max-width: 575px) {
+    .chk-grid {
+        grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    }
+
+    .chk-grid .chk-item {
+        white-space: normal;
+        min-width: 0;
+    }
+
+    .vitals-horizontal, .diag-table, .grades-table {
+        display: block;
+        max-width: 100%;
+        overflow-x: auto;
+    }
+}
+
+

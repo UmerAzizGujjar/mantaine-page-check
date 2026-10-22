@@ -1849,6 +1849,26 @@ namespace PMS.Modules.PatientManagement
             return (new JavaScriptSerializer()).Serialize(dept);
         }
         [WebMethod]
+        public static Dictionary<string, bool> GetCompanyEmergencyPermissions()
+        {
+            // Field permissions saved by EmergencyPolicy.aspx (table company_emergency_policy)
+            try
+            {
+                int companyId = AppConfig.Company_ID;
+                if (companyId == 0)
+                    return new Dictionary<string, bool>();
+                var dt = DBClass.getDataTable("SELECT field_name, is_enabled FROM company_emergency_policy WHERE company_id = @company_id",
+                    DBClass.Param("@company_id", companyId));
+                return dt.AsEnumerable()
+                         .GroupBy(r => r.Field<string>("field_name").Trim(), StringComparer.OrdinalIgnoreCase)
+                         .ToDictionary(g => g.Key, g => g.First().Field<bool>("is_enabled"));
+            }
+            catch
+            {
+                return new Dictionary<string, bool>();
+            }
+        }
+        [WebMethod]
         public static string EmerDocTokenCondition()
         {
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());

@@ -1,5 +1,15 @@
 ﻿<%@ Page EnableSessionState="ReadOnly" Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="OPD_Pending_Approvals.aspx.cs" Inherits="PMS.Modules.PatientManagement.OPD_Pending_Approvals" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/responsive-pages.css?v=<%= ((PMS.SiteMaster)Master).Ver("~/wwwroot/THEME_TIBBIT/CustomCSS/responsive-pages.css") %>" rel="stylesheet" />
+    <style type="text/css">
+        /* tablet/laptop: the Approve column grows to fit its button instead of the button running past the screen edge */
+        @media screen and (max-width: 1199px) {
+            .main [class*="col-"]:has(> #btnApproved) {
+                width: auto;
+                min-width: 16.66666667%;
+            }
+        }
+    </style>
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/tablestyle.css" rel="stylesheet" />
 
     <script type="text/javascript">

@@ -144,7 +144,15 @@
             $('#ddlMode').select2();
             $('#ddlBranch').select2();
             loadUserBranch();
-            BranchWareHouse.attach('#ddlBranch', '#ddlWarehouse');
+            BranchWareHouse.attach('#ddlBranch', '#ddlWarehouse', {
+                onLoaded: function () {
+                    // restore the saved warehouse once, when the saved branch's warehouse list is in
+                    if (!warehouseRestored && savedWarehouse && savedBranch && String($('#ddlBranch').val()) === String(savedBranch)) {
+                        warehouseRestored = true;
+                        applySavedWarehouse();
+                    }
+                }
+            });
             $('#ctl00_MainContent_ddlGIR').select2();
 
             initSourceToggle();
@@ -535,6 +543,7 @@
         var savedDept = null;
         var savedWarehouse = null;
         var savedBranch = null;
+        var warehouseRestored = false;
 
         function loadUserBranch() {
             PageMethods.GetUserBranch(function (result) {
@@ -614,10 +623,16 @@
                     optionInv += '<option value="' + value.DataValueName + '" >' + value.DataValueDescription + '</option>';
                 });
                 $('#ddlWarehouse').html(optionInv);
-                if (savedWarehouse) {
-                    $('#ddlWarehouse').val(savedWarehouse).trigger('change');
-                }
+                applySavedWarehouse();
             });
+        }
+
+        // Selects the saved warehouse if its option is in the dropdown. The branch-filtered list can arrive later
+        // (BranchWareHouse loads it async), so this is also retried from the branch onLoaded hook.
+        function applySavedWarehouse() {
+            if (savedWarehouse && $('#ddlWarehouse option[value="' + savedWarehouse + '"]').length) {
+                $('#ddlWarehouse').val(savedWarehouse).trigger('change');
+            }
         }
 
         function Delete(row) {
@@ -952,9 +967,7 @@
                     if ($('#ddlMode option[value="' + savedMode + '"]').length) {
                         $('#ddlMode').val(savedMode).trigger('change');
                     }
-                    if ($('#ddlWarehouse option[value="' + savedWarehouse + '"]').length) {
-                        $('#ddlWarehouse').val(savedWarehouse).trigger('change');
-                    }
+                    applySavedWarehouse();
 
                     $('#txtRemarks').val(parse.Remarks);
                     if (parse.GIRNum && parse.GIRNum !== 0 && parse.GIRNum !== "0") {

@@ -4,6 +4,21 @@
 <%@ Register Src="~/LookupControl.ascx" TagName="LookupControl" TagPrefix="uc1" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/responsive-pages.css?v=<%= ((PMS.SiteMaster)Master).Ver("~/wwwroot/THEME_TIBBIT/CustomCSS/responsive-pages.css") %>" rel="stylesheet" />
+    <style type="text/css">
+        /* the Medicine grid is wider than a laptop screen: scroll it inside the tab */
+        #Tab-8 {
+            overflow-x: auto;
+        }
+
+        /* the patient cards have a fixed desktop height; let them grow once their columns wrap */
+        @media screen and (max-width: 1199px) {
+            .main .card {
+                height: auto !important;
+                min-height: 230px;
+            }
+        }
+    </style>
     <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/ipdmonitoring.css" rel="stylesheet" />
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 

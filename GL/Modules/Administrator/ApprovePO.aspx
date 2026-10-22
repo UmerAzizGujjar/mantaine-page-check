@@ -1,7 +1,21 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ApprovePO.aspx.cs" Inherits="PMS.ApprovePO" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
+    <link href="../../wwwroot/THEME_TIBBIT/CustomCSS/responsive-pages.css?v=<%= ((PMS.SiteMaster)Master).Ver("~/wwwroot/THEME_TIBBIT/CustomCSS/responsive-pages.css") %>" rel="stylesheet" />
     <style type="text/css">
+        /* below laptop width the fixed-layout grid would squeeze every column to a few pixels:
+           keep it readable and scroll it sideways inside its own box instead */
+        @media screen and (max-width: 1199px) {
+            /* .po-grid-scroll is set on the GridView's own outer <div> by the script below */
+            .main .po-grid-scroll {
+                overflow-x: auto;
+            }
+
+            .main .custom-gridview {
+                min-width: 1100px !important;
+            }
+        }
+
         .custom-gridview {
             table-layout: fixed;
             word-wrap: break-word;
@@ -289,6 +303,41 @@
                 }
             });
         }
+    </script>
+    <script type="text/javascript">
+        // Show the PO grid as a DataTable. Display only: the GridView, its server paging, the search box
+        // and the approve / reject / save code above all keep working on the same rows and cells.
+        $(document).ready(function () {
+            var tbl = document.getElementById('<%= GridView1.ClientID %>');
+            if (!tbl) return;
+            // the GridView's outer <div> is the sideways-scroll box on small screens (works in every browser)
+            $(tbl.parentNode).addClass('po-grid-scroll');
+            if (!$.fn.DataTable || $.fn.DataTable.isDataTable(tbl)) return;
+
+            // GridView writes its header row into <tbody>; DataTables needs it in <thead>
+            var body = tbl.tBodies[0];
+            if (!tbl.tHead && body && body.rows.length && body.rows[0].cells.length && body.rows[0].cells[0].tagName === 'TH') {
+                tbl.createTHead().appendChild(body.rows[0]);
+            }
+            if (!tbl.tHead) return;
+
+            // the numeric pager is a single colspan row inside the table: move it just below the table (its links still post back)
+            var cols = tbl.tHead.rows[0].cells.length;
+            $(tbl.tBodies[0].rows).filter(function () { return this.cells.length === 1 && this.cells[0].colSpan === cols; }).each(function () {
+                var pager = $('<div class="pager-style"></div>').append($(this.cells[0]).children());
+                $(this).remove();
+                pager.insertAfter(tbl);
+            });
+
+            $(tbl).DataTable({
+                paging: false,      // the GridView pages on the server
+                searching: false,   // the page has its own search box (#txt_search)
+                info: false,
+                autoWidth: false,
+                order: [],          // keep the server's row order until a header is clicked
+                columnDefs: [{ targets: [0, -2, -1], orderable: false }]
+            });
+        });
     </script>
 
 </asp:Content>

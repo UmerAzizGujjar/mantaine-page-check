@@ -492,6 +492,8 @@
     <Content Include="Modules\Administrator\Doctor_Payable.aspx" />
     <Content Include="Modules\PatientManagement\DeathDetailsList.aspx" />
     <Content Include="Modules\PatientManagement\OPD_Pending_Approvals.aspx" />
+    <Content Include="Modules\PatientManagement\Emergency_Pending_Approvals.aspx" />
+    <Content Include="Modules\PatientManagement\EmergencyPolicy.aspx" />
     <Content Include="Modules\PatientManagement\Physiotherapy_Assessment.aspx" />
     <Content Include="Modules\PatientManagement\Birthcertificate.aspx" />
     <Content Include="Modules\PatientManagement\BirthCertificateView.aspx" />
@@ -661,6 +663,8 @@
     <Content Include="Modules\Inventory\StoreStockTransfer.aspx" />
     <Content Include="Modules\Inventory\StoreStockTransferView.aspx" />
     <Content Include="upload\InvItemsUpload.aspx" />
+    <Content Include="upload\VendorsUpload.aspx" />
+    <Content Include="upload\UsersUpload.aspx" />
     <Content Include="Modules\GL\Inv_OriginatorTempelates.aspx" />
     <Content Include="Modules\PatientManagement\In_PatientsStatus.aspx" />
     <Content Include="Modules\Billing\IssueMedicine.aspx" />
@@ -2231,7 +2235,6 @@
     <Content Include="wwwroot\THEME_IITH\images\bootstrap-colorpicker\hue.png" />
     <Content Include="wwwroot\THEME_IITH\images\bootstrap-colorpicker\saturation.png" />
     <Content Include="wwwroot\THEME_IITH\images\LOGOS\ias.png" />
-    <Content Include="wwwroot\THEME_IITH\images\LOGOS\LoginBackground.jpg" />
     <Content Include="wwwroot\THEME_IITH\images\LOGOS\LoginIllustration.jpg" />
     <Content Include="wwwroot\THEME_IITH\images\LOGOS\logo.png" />
     <Content Include="wwwroot\THEME_IITH\images\Projectimages\Project\11414.png" />
@@ -2701,6 +2704,18 @@
     <Content Include="wwwroot\THEME_TIBBIT\CustomCSS\SubjDefinintion.css" />
     <Content Include="wwwroot\THEME_TIBBIT\CustomCSS\swalalert.css" />
     <Content Include="wwwroot\THEME_TIBBIT\CustomCSS\tablestyle.css" />
+    <Content Include="wwwroot\THEME_TIBBIT\CustomCSS\responsive-pages.css" />
+    <Content Include="wwwroot\THEME_ASSIRAAT\CustomCSS\responsive-pages.css" />
+    <Content Include="wwwroot\THEME_CPTH\CustomCSS\responsive-pages.css" />
+    <Content Include="wwwroot\THEME_DEMO\CustomCSS\responsive-pages.css" />
+    <Content Include="wwwroot\THEME_IITH\CustomCSS\responsive-pages.css" />
+    <Content Include="wwwroot\THEME_KALEEM\CustomCSS\responsive-pages.css" />
+    <Content Include="wwwroot\THEME_KHURSHID\CustomCSS\responsive-pages.css" />
+    <Content Include="wwwroot\THEME_NHMC\CustomCSS\responsive-pages.css" />
+    <Content Include="wwwroot\THEME_NOOR\CustomCSS\responsive-pages.css" />
+    <Content Include="wwwroot\THEME_PAKRED\CustomCSS\responsive-pages.css" />
+    <Content Include="wwwroot\THEME_SKINSTUDIO\CustomCSS\responsive-pages.css" />
+    <Content Include="wwwroot\THEME_STANDARD\CustomCSS\responsive-pages.css" />
     <Content Include="wwwroot\THEME_TIBBIT\CustomCSS\TestApproval.css" />
     <Content Include="wwwroot\THEME_TIBBIT\CustomCSS\TestDefinition.css" />
     <Content Include="wwwroot\THEME_TIBBIT\CustomCSS\Toaster.css" />
@@ -2730,11 +2745,9 @@
     <Content Include="wwwroot\THEME_TIBBIT\images\bootstrap-colorpicker\hue-horizontal.png" />
     <Content Include="wwwroot\THEME_TIBBIT\images\bootstrap-colorpicker\hue.png" />
     <Content Include="wwwroot\THEME_TIBBIT\images\bootstrap-colorpicker\saturation.png" />
-    <Content Include="wwwroot\THEME_TIBBIT\images\CompanyImages\companyImage20.png" />
     <Content Include="wwwroot\THEME_TIBBIT\images\LOGOS\Icon.png" />
     <Content Include="wwwroot\THEME_TIBBIT\images\LOGOS\LoginBackground.jpg" />
     <Content Include="wwwroot\THEME_TIBBIT\images\LOGOS\LoginIllustration.jpg" />
-    <Content Include="wwwroot\THEME_TIBBIT\images\LOGOS\logo-16x9.png" />
     <Content Include="wwwroot\THEME_TIBBIT\images\CompanyImages\logo.png" />
     <Content Include="wwwroot\THEME_TIBBIT\images\Projectimages\Project\11414.png" />
     <Content Include="wwwroot\THEME_TIBBIT\images\StudentImages\1.jpg" />
@@ -4438,6 +4451,20 @@
     <Compile Include="Modules\PatientManagement\OPD_Pending_Approvals.aspx.designer.cs">
       <DependentUpon>OPD_Pending_Approvals.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Modules\PatientManagement\Emergency_Pending_Approvals.aspx.cs">
+      <DependentUpon>Emergency_Pending_Approvals.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\PatientManagement\Emergency_Pending_Approvals.aspx.designer.cs">
+      <DependentUpon>Emergency_Pending_Approvals.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\PatientManagement\EmergencyPolicy.aspx.cs">
+      <DependentUpon>EmergencyPolicy.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\PatientManagement\EmergencyPolicy.aspx.designer.cs">
+      <DependentUpon>EmergencyPolicy.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Modules\PatientManagement\Physiotherapy_Assessment.aspx.cs">
       <DependentUpon>Physiotherapy_Assessment.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -5475,6 +5502,21 @@
     <Compile Include="upload\InvItemsUpload.aspx.designer.cs">
       <DependentUpon>InvItemsUpload.aspx</DependentUpon>
     </Compile>
+    <Compile Include="upload\VendorsUpload.aspx.cs">
+      <DependentUpon>VendorsUpload.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="upload\VendorsUpload.aspx.designer.cs">
+      <DependentUpon>VendorsUpload.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="upload\UsersUpload.aspx.cs">
+      <DependentUpon>UsersUpload.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="upload\UsersUpload.aspx.designer.cs">
+      <DependentUpon>UsersUpload.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="upload\ExcelUploadHelper.cs" />
     <Compile Include="Modules\GL\Inv_OriginatorTempelates.aspx.cs">
       <DependentUpon>Inv_OriginatorTempelates.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -6617,4 +6659,3 @@
   </Target>
   -->
 </Project>
-
