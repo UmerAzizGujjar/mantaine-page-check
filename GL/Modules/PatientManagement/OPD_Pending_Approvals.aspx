@@ -27,51 +27,16 @@
                 var isChecked = $(this).prop('checked');
                 if (!oTable) return;
 
-                var allMode = ($('#ddlpatientType').val() === '0');
-                var skipped = 0;
                 oTable.rows().every(function () {
-                    var rowNode = $(this.node());
-                    var data = this.data();
-                    var isPrivate = data && data.Patient_Type === '02';
-                    var cb = rowNode.find('.chckrow');
-                    if (isChecked && allMode && isPrivate) {
-                        skipped++;
-                        cb.prop('checked', false).trigger('change');
-                    } else {
-                        cb.prop('checked', isChecked).trigger('change');
-                    }
+                    $(this.node()).find('.chckrow').prop('checked', isChecked).trigger('change');
                 });
                 UpdateHeaderCheck();
-
-                if (isChecked && skipped > 0) {
-                    Swal.fire({
-                        icon: 'info',
-                        title: 'General Only Selected',
-                        text: skipped + ' Private patient(s) excluded. Select Private from Patient Type filter to approve Private.',
-                        timer: 3000,
-                        showConfirmButton: false
-                    });
-                }
             });
 
             $(document).on('change', '.chckrow', function () {
                 var id = $(this).val();
-                var rowData = oTable ? oTable.row($(this).closest('tr')).data() : null;
-                var isPrivate = rowData && rowData.Patient_Type === '02';
-                var allMode = ($('#ddlpatientType').val() === '0');
-
                 if ($(this).is(':checked')) {
-                    if (isPrivate && allMode) {
-                        $(this).prop('checked', false);
-                        Swal.fire({
-                            icon: 'info',
-                            title: 'Private Excluded',
-                            text: 'Select Private from Patient Type filter to approve Private patients.',
-                            timer: 2500,
-                            showConfirmButton: false
-                        });
-                        return;
-                    }
+                    var rowData = oTable ? oTable.row($(this).closest('tr')).data() : null;
                     if (rowData) selectedRows[id] = rowData;
                 } else {
                     delete selectedRows[id];
@@ -112,51 +77,64 @@
                         didOpen: () => { Swal.showLoading(); }
                     });
 
-                    var patMode = $('#ddlpatientType').val();
-                    if (patMode === '02') {
-                        ApprovePrivateSequence(ids, 0, 0);
-                    } else {
-                        PageMethods.ApproveBulkOPD(ids.join(','), function (response) {
-                        try {
-                            var res = JSON.parse(response);
-                            if (res && res.length > 0 && res[0].Voucher_ID > 0) {
-                                var v = res[0];
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Voucher Posted',
-                                    html: 'Voucher No: <strong>' + v.Voucher_ID + '</strong>' +
-                                        '<br/>Patients: ' + v.Patient_Count +
-                                        '<br/>Gross: ' + v.Gross_Amount +
-                                        '<br/>Discount: ' + v.Discount_Amount +
-                                        '<br/>Receipt: ' + v.Receipt_Amount,
-                                    confirmButtonColor: '#28a745'
-                                }).then(function () {
-                                    window.location.href = 'OPD_Pending_Approvals.aspx';
-                                });
-                            } else {
+                    var generalIds = [], privateIds = [];
+                    ids.forEach(function (id) {
+                        var row = selectedRows[id];
+                        if (row && row.Patient_Type === '02') privateIds.push(id);
+                        else generalIds.push(id);
+                    });
+
+                    function approvePrivate() {
+                        if (privateIds.length > 0) {
+                            ApprovePrivateSequence(privateIds, 0, 0);
+                        } else {
+                            window.location.href = 'OPD_Pending_Approvals.aspx';
+                        }
+                    }
+
+                    function showApproveError(error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Approval Failed',
+                            text: (error && error.get_message) ? error.get_message() : 'An error occurred',
+                            confirmButtonColor: '#d33'
+                        });
+                    }
+
+                    if (generalIds.length > 0) {
+                        PageMethods.ApproveBulkOPD(generalIds.join(','), function (response) {
+                            try {
+                                var res = JSON.parse(response);
+                                if (res && res.length > 0 && res[0].Voucher_ID > 0) {
+                                    var v = res[0];
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'General Patients Approved',
+                                        html: 'Voucher No: <strong>' + v.Voucher_ID + '</strong>' +
+                                            '<br/>General Patients: ' + v.Patient_Count +
+                                            '<br/>Gross: ' + v.Gross_Amount +
+                                            '<br/>Discount: ' + v.Discount_Amount,
+                                        confirmButtonColor: '#28a745'
+                                    }).then(approvePrivate);
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Approval Failed',
+                                        text: (res && res.length > 0 ? res[0].Message : '') || 'Unknown error',
+                                        confirmButtonColor: '#d33'
+                                    });
+                                }
+                            } catch (e) {
                                 Swal.fire({
                                     icon: 'error',
-                                    title: 'Approval Failed',
-                                    text: res[0].Message || 'Unknown error',
+                                    title: 'Error',
+                                    text: 'Invalid response from server.',
                                     confirmButtonColor: '#d33'
                                 });
                             }
-                        } catch (e) {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error',
-                                text: 'Invalid response from server.',
-                                confirmButtonColor: '#d33'
-                            });
-                        }
-                    }, function (error) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: error.get_message ? error.get_message() : 'An error occurred',
-                            confirmButtonColor: '#d33'
-                        });
-                    });
+                        }, showApproveError);
+                    } else {
+                        approvePrivate();
                     }
                 });
             });
