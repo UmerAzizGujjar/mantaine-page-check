@@ -670,6 +670,7 @@
     <Content Include="Modules\Billing\IssueMedicine.aspx" />
     <Content Include="Modules\Billing\IssueMedicineList.aspx" />
     <Content Include="Modules\Billing\PharmacyPendingApprovals.aspx" />
+    <Content Include="Modules\Billing\BillPendingApprovals.aspx" />
     <Content Include="Modules\Billing\IssueMedicineView.aspx" />
     <Content Include="Modules\Others\IssueToLaundary.aspx" />
     <Content Include="Modules\Others\IssueToLaundaryView.aspx" />
@@ -5544,6 +5545,13 @@
     </Compile>
     <Compile Include="Modules\Billing\PharmacyPendingApprovals.aspx.designer.cs">
       <DependentUpon>PharmacyPendingApprovals.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Billing\BillPendingApprovals.aspx.cs">
+      <DependentUpon>BillPendingApprovals.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Billing\BillPendingApprovals.aspx.designer.cs">
+      <DependentUpon>BillPendingApprovals.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\Billing\IssueMedicineList.aspx.cs">
       <DependentUpon>IssueMedicineList.aspx</DependentUpon>

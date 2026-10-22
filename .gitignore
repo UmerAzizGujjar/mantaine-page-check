@@ -378,3 +378,4 @@ GL/*.rar
 GL/web.config.backup
 GL/*- Backup.rdlc
 packages/
+/GL/Modules/Billing/BillPendingApprovals.sql

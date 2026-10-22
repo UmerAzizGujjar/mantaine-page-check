@@ -200,15 +200,23 @@
             }
         }
 
-        function applyPharmacyLabels() {
-            if (_type !== 'PH') return;
-            var labels = ['Sr No', 'Bill No', 'Date', 'Customer', '', 'Type', 'Warehouse', 'Cash Received', 'Bill Total'];
+        function applyTypeLabels() {
+            var labels;
+            if (_type === 'PH') {
+                labels = ['Sr No', 'Bill No', 'Date', 'Customer', '', 'Type', 'Warehouse', 'Cash Received', 'Bill Total'];
+            } else if (_type === 'ER') {
+                labels = ['Sr No', 'ER No', 'Date', 'Patient Name', 'Doctor', 'Patient Type', 'Cost Center', 'Cash Received', 'Bill Total'];
+            } else if (_type === 'BL') {
+                labels = ['Sr No', 'Bill No', 'Date', 'Patient Name', 'Doctor', 'Patient Type', 'Bulk Voucher', 'Cash Received', 'Bill Total'];
+            } else {
+                return;
+            }
             $('#detailHead th').each(function (i) { $(this).text(labels[i] || ''); });
             $('#lbl_TotalCaption').text('Total Cash Received');
         }
 
         function LoadPage() {
-            applyPharmacyLabels();
+            applyTypeLabels();
             var stDate = $('#txt_datefrom').val();
             var endDate = $('#txt_dateto').val();
 

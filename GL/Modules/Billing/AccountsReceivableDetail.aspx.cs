@@ -23,15 +23,23 @@ namespace PMS.Modules.Billing
         {
             var rows = new List<Dictionary<string, object>>();
             bool isPharmacy = rtype == "PH";
+            bool isEmergency = rtype == "ER";
+            bool isBill = rtype == "BL";
 
             using (DataBaseDataContext db = new DataBaseDataContext())
             using (SqlConnection con = new SqlConnection(db.Connection.ConnectionString))
-            using (SqlCommand cmd = new SqlCommand(isPharmacy ? "dbo.sp_Load_Pharmacy_Receivable_Detail" : "dbo.sp_Load_HospitalShare_Receivable_Detail", con))
+            using (SqlCommand cmd = new SqlCommand(isPharmacy ? "dbo.sp_Load_Pharmacy_Receivable_Detail" : isEmergency ? "dbo.sp_Load_Emergency_Receivable_Detail" : isBill ? "dbo.sp_Load_Bill_Receivable_Detail" : "dbo.sp_Load_HospitalShare_Receivable_Detail", con))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
                 if (isPharmacy)
                 {
                     cmd.Parameters.AddWithValue("@Company_ID", AppConfig.Company_ID);
+                }
+                else if (isEmergency || isBill)
+                {
+                    cmd.Parameters.AddWithValue("@Company_ID", AppConfig.Company_ID);
+                    cmd.Parameters.AddWithValue("@startDate", startDate ?? "");
+                    cmd.Parameters.AddWithValue("@endDate", endDate ?? "");
                 }
                 else
                 {
@@ -95,14 +103,24 @@ namespace PMS.Modules.Billing
             {
                 var rows = new List<Dictionary<string, object>>();
                 bool isPharmacy = rtype == "PH";
+                bool isEmergency = rtype == "ER";
+                bool isBill = rtype == "BL";
 
                 using (DataBaseDataContext db = new DataBaseDataContext())
                 using (SqlConnection con = new SqlConnection(db.Connection.ConnectionString))
-                using (SqlCommand cmd = new SqlCommand(isPharmacy ? "dbo.SpTransfer_Pharmacy_Receivable" : "dbo.SpTransfer_HospitalShare_Receivable", con))
+                using (SqlCommand cmd = new SqlCommand(isPharmacy ? "dbo.SpTransfer_Pharmacy_Receivable" : isEmergency ? "dbo.SpTransfer_Emergency_Receivable" : isBill ? "dbo.SpTransfer_Bill_Receivable" : "dbo.SpTransfer_HospitalShare_Receivable", con))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
                     if (isPharmacy)
                     {
+                        cmd.Parameters.AddWithValue("@RecvAccount", accountID);
+                        cmd.Parameters.AddWithValue("@Company_ID", AppConfig.Company_ID);
+                        cmd.Parameters.AddWithValue("@user_id", AppConfig.UserID);
+                    }
+                    else if (isEmergency || isBill)
+                    {
+                        cmd.Parameters.AddWithValue("@startDate", startDate ?? "");
+                        cmd.Parameters.AddWithValue("@endDate", endDate ?? "");
                         cmd.Parameters.AddWithValue("@RecvAccount", accountID);
                         cmd.Parameters.AddWithValue("@Company_ID", AppConfig.Company_ID);
                         cmd.Parameters.AddWithValue("@user_id", AppConfig.UserID);

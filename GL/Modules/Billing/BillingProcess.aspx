@@ -2686,6 +2686,21 @@
                     }, function (error) { alert(error.get_message()); })
                 }
             }
+            // Rows still in the table with no doctor and no hospital share yet; rows that
+            // already carry a saved or agreed share are left as they are.
+            function FillMissingShares(trs) {
+                $.each(trs, function (i, tr) {
+                    var $row = $(tr);
+                    if (!$.contains(document, tr)) return;
+                    if ($row.find('input[name="HocShare"]').length === 0) return;
+                    if (!$row.find('input[name="hdnItemID"]').val()) return;
+                    var hoc = parseFloat($row.find('input[name="HocShare"]').val()) || 0;
+                    var doc = parseFloat($row.find('input[name="DocShare"]').val()) || 0;
+                    if (hoc > 0 || doc > 0) return;
+                    GetDocAgreementValuess(tr);
+                });
+            }
+
             function GetDocAgreementValuess(rows) {
                 var PanelId = $("#ddlpanel").val();
 
@@ -2722,11 +2737,16 @@
                         dataType: "json",
                         success: function (data) {
                             var result = JSON.parse(data.d);
-                            var hos_share = parseFloat(result["hos_share"]) || 0;
-                            var doc_share = parseFloat(result["doc_share"]) || 0;
 
                             // ?? Find the <tr> from 'rows'
                             var $row = $(rows).closest('tr');
+
+                            // no agreement and no rate found: the whole row amount is hospital share
+                            if (!result) {
+                                result = { doc_share: 0, hos_share: parseFloat($row.find('td:eq(5)').text()) || 0 };
+                            }
+                            var hos_share = parseFloat(result["hos_share"]) || 0;
+                            var doc_share = parseFloat(result["doc_share"]) || 0;
 
                             // ? Read DisPer from *this row* (not 'value')
                             var disPerStr = $row.find('input[name="DisPer"]').val();
@@ -7842,9 +7862,11 @@
                     if (!tbody || tbody.getAttribute('data-approval-obs')) return;
                     tbody.setAttribute('data-approval-obs', '1');
                     new MutationObserver(function (mutations) {
+                        var addedRows = [];
                         mutations.forEach(function (mutation) {
                             mutation.addedNodes.forEach(function (node) {
                                 if (node.nodeType !== 1 || node.tagName !== 'TR') return;
+                                addedRows.push(node);
                                 var $tr = $(node);
                                 if ($tr.find('input[name="chkApproval"]').length > 0) return;
                                 var hdnApproval = $tr.find('input[name="hdnApproval"]').val();
@@ -7864,6 +7886,12 @@
                         // Keep the Appr. column visible/hidden per the user's right.
                         if (typeof applyApprovalPermission === 'function') {
                             applyApprovalPermission();
+                        }
+                        // Rows added from any path (MR no, discharge queue, previous bill, packages...)
+                        // get their doctor/hospital share like a doctor change does; wait so the
+                        // adding code has filled the row's amount and discount first.
+                        if (addedRows.length > 0) {
+                            setTimeout(function () { FillMissingShares(addedRows); }, 300);
                         }
                     }).observe(tbody, { childList: true });
                 }
