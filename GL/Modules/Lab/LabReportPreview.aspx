@@ -565,6 +565,9 @@
                         $('#saveTest').val('Update').show();
                         $('#btnApprove').show();
                         $('#btnReject').hide();
+                        // Unlock result fields that were locked when the test was approved
+                        $('#tblgroupTestlist .editable-div').attr('contenteditable', 'true');
+                        $('#txtvaluetype').prop('readonly', false);
                         refreshAfterSaveKeepOpen();
                     }, function (onfailure) {
                         alert(onfailure);
