@@ -189,6 +189,91 @@ namespace PMS
             db.SubmitChanges();
         }
 
+        // ---- All Parameters tab: generic grid over sys_Parms ----
+        // Liability / Income rows have their own tabs (they are deleted and re-inserted by those saves), so they are not listed here.
+        public class ParamRow
+        {
+            public int ID { get; set; }
+            public string Name { get; set; }
+            public string Code { get; set; }
+            public string Segment1 { get; set; }
+            public string Segment2 { get; set; }
+            public string Segment3 { get; set; }
+            public string Segment4 { get; set; }
+        }
+
+        [WebMethod]
+        public static List<ParamRow> GetAllParameters()
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                return db.sys_Parms
+                    .Where(p => p.Company_ID == AppConfig.Company_ID
+                             && (p.Segment3 == null || (p.Segment3 != "Is Liability Account" && p.Segment3 != "Is Income Account")))
+                    .OrderBy(p => p.Name)
+                    .Select(p => new ParamRow { ID = p.ID, Name = p.Name, Code = p.Code, Segment1 = p.Segment1, Segment2 = p.Segment2, Segment3 = p.Segment3, Segment4 = p.Segment4 })
+                    .ToList();
+            }
+        }
+
+        // Errors come back in Error (not thrown): the site's custom error page would turn an exception into a 200 HTML reply.
+        public class ParamSaveResult
+        {
+            public int ID { get; set; }
+            public string Error { get; set; }
+        }
+
+        // ID = 0 adds a new parameter
+        [WebMethod]
+        public static ParamSaveResult SaveParameterRow(int ID, string Name, string Code, string Segment1, string Segment2, string Segment3, string Segment4)
+        {
+            if (string.IsNullOrWhiteSpace(Name))
+                return new ParamSaveResult { ID = ID, Error = "Parameter name is required." };
+            Name = Name.Trim();
+
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                if (db.sys_Parms.Any(x => x.Name == Name && x.Company_ID == AppConfig.Company_ID && x.ID != ID))
+                    return new ParamSaveResult { ID = ID, Error = "A parameter named '" + Name + "' already exists." };
+
+                sys_Parm p;
+                if (ID == 0)
+                {
+                    p = new sys_Parm();
+                    p.Company_ID = AppConfig.Company_ID;
+                    db.sys_Parms.InsertOnSubmit(p);
+                }
+                else
+                {
+                    p = db.sys_Parms.FirstOrDefault(x => x.ID == ID && x.Company_ID == AppConfig.Company_ID);
+                    if (p == null)
+                        return new ParamSaveResult { ID = ID, Error = "Parameter not found; reload the page." };
+                }
+                p.Name = Name;
+                p.Code = Code;
+                p.Segment1 = Segment1;
+                p.Segment2 = Segment2;
+                p.Segment3 = Segment3;
+                p.Segment4 = Segment4;
+                db.SubmitChanges();
+                return new ParamSaveResult { ID = p.ID };
+            }
+        }
+
+        [WebMethod]
+        public static void DeleteParameterRow(int ID)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var p = db.sys_Parms.FirstOrDefault(x => x.ID == ID && x.Company_ID == AppConfig.Company_ID);
+                if (p != null)
+                {
+                    db.sys_Parms.DeleteOnSubmit(p);
+                    db.SubmitChanges();
+                }
+            }
+        }
+
         public class AccountsList
         {
             public string Department { get; set; }

@@ -738,9 +738,39 @@ namespace PMS.Modules.Lab
             listObj.Add(data[0].Result_Type_Image.ToString());
             listObj.Add(data[0].Is_Result.ToString()); //28
             listObj.Add(data[0].Refer_Doctor ?? "");
+
+            // referring doctor: the one saved on this test, else the bill's (same source as the report's "Referring Doctor")
+            var savedRef = DBClass.getDataTable("SELECT Referred_Doctor_ID FROM Lab_Test_Detail WHERE Lab_Test_Detail_ID = @id",
+                DBClass.Param("@id", Convert.ToInt32(TestDetailID)));
+            string referredBy = savedRef.Rows.Count > 0 && savedRef.Rows[0][0] != DBNull.Value ? savedRef.Rows[0][0].ToString() : null;
+            if (string.IsNullOrEmpty(referredBy))
+            {
+                int labId = Convert.ToInt32(LabID);
+                referredBy = (from l in db.Laboratory_Tests
+                              from b in db.Ar_Billings
+                              where l.Lab_Test_ID == labId && (long?)b.Bill_ID == l.Bill_ID
+                              select b.Referred_By).FirstOrDefault();
+            }
+            listObj.Add(referredBy ?? ""); //29
             return (new JavaScriptSerializer().Serialize(listObj));
         }
 
+
+        // Saves the "Referred Doctor" dropdown on the given tests; empty doctor clears it.
+        [WebMethod]
+        public static string SaveReferredDoctor(List<string> TestDetailIDs, string ReferredDoctorID)
+        {
+            int docId;
+            object docValue = int.TryParse(ReferredDoctorID, out docId) && docId > 0 ? (object)docId : DBNull.Value;
+            foreach (var idText in TestDetailIDs ?? new List<string>())
+            {
+                int id;
+                if (!int.TryParse((idText ?? "").Trim(), out id)) continue;
+                DBClass.exectueQueryWithParms(new[] { DBClass.Param("@doc", docValue), DBClass.Param("@id", id) },
+                    "UPDATE Lab_Test_Detail SET Referred_Doctor_ID = @doc WHERE Lab_Test_Detail_ID = @id");
+            }
+            return "Successfull";
+        }
 
         public class TestValues
         {

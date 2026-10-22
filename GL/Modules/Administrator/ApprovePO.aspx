@@ -108,9 +108,12 @@
       }
 
 
+        /* pending POs: colour the cells too, so the shared zebra striping (table-modern.css) can't cover every other row */
+        html:root body table[id$="GridView1"] > tbody > tr.po-pending.po-pending > td { background: #ffe066 !important; }
+
     </style>
-    <script type="text/javascript">        
- 
+    <script type="text/javascript">
+
             $(document).ready(function () {
             // Call highlight function when page loads
             setTimeout(function () {
@@ -155,7 +158,9 @@
                     // Re-apply highlighting after search
                     if (status === 'pending') {
                         row.style.backgroundColor = "#ffe066";
+                        row.classList.add('po-pending');
                     } else {
+                        row.classList.remove('po-pending');
                         // Reset background for non-pending rows
                         if (row.style.backgroundColor === "rgb(255, 224, 102)" || row.style.backgroundColor === "#ffe066") {
                             row.style.backgroundColor = "";
@@ -184,10 +189,12 @@
             // Check for "pending" (case-insensitive)
             if (statusText === "pending") {
                 row.style.backgroundColor = "#ffe066";
+                row.classList.add('po-pending');
             console.log("Row " + i + " highlighted as pending");
                     } else {
                 // Reset background for rows that are not pending
                 row.style.backgroundColor = "";
+                row.classList.remove('po-pending');
                     }
                 }
             }

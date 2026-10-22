@@ -1,0 +1,320 @@
+/* ==========================================================================
+   MODERN CONTROLS  -  one look for the everyday form controls on every screen
+   buttons (.btn-primry .btn-yellow .btn-gray .btn-danger .btn-primary), text boxes,
+   dropdowns (native + Select2), text areas, labels and fieldsets.
+
+   Loaded from Site.Master after page-form-modern.css. Applies under body.ui-modern, which
+   Site.Master puts on every page; remove that class from the <body> tag to switch it off.
+
+   Look only: no widths, ids, names or behaviour change. Colours come from the theme
+   tokens in theme-colors.css (--theme-*) and from dark-theme.css (--dk-*) in dark mode.
+   "html:root body.ui-modern" + !important on purpose: styleMaster.css styles these
+   controls with !important.
+   ========================================================================== */
+
+html {
+    --cm-ink: var(--theme-ink, #1b2a41);
+    --cm-label: #4a5568;
+    --cm-muted: #7a8699;
+    --cm-field-bg: #ffffff;
+    --cm-field-bg-off: #f3f5f8;
+    --cm-line: #cfd6e0;
+    --cm-line-soft: #e3e8ee;
+    --cm-card: #ffffff;
+    --cm-accent: var(--theme-accent, #EFA63E);
+    --cm-on-accent: var(--theme-on-accent, #1b2a41);
+    --cm-accent-soft: var(--theme-accent-soft, #fff1d6);
+    --cm-accent-ink: var(--theme-accent-ink, #8a4b00);
+    --cm-ring: var(--theme-accent-ring, rgba(239, 166, 62, .25));
+    --cm-danger: #d64545;
+    --cm-radius: 6px;
+    --cm-h: 34px;
+}
+html[data-theme="dark"] {
+    --cm-ink: var(--dk-text, #e6e9ef);
+    --cm-label: var(--dk-text-dim, #b6bfcc);
+    --cm-muted: var(--dk-text-mute, #8b95a5);
+    --cm-field-bg: var(--dk-surface-2, #1f2633);
+    --cm-field-bg-off: var(--dk-surface-3, #262e3d);
+    --cm-line: var(--dk-border-2, #3a4456);
+    --cm-line-soft: var(--dk-border, #2e3746);
+    --cm-card: var(--dk-surface, #1a202b);
+    --cm-accent: var(--dk-accent, var(--theme-accent, #EFA63E));
+    --cm-on-accent: var(--dk-on-accent, #1b2a41);
+    --cm-accent-soft: var(--dk-accent-soft, rgba(239, 166, 62, .15));
+    --cm-accent-ink: var(--dk-accent-text, #f4c27a);
+}
+
+/* ---------- buttons ---------- */
+html:root body.ui-modern .btn-primry,
+html:root body.ui-modern .btn-primary,
+html:root body.ui-modern .btn-yellow,
+html:root body.ui-modern .btn-gray,
+html:root body.ui-modern .btn-danger {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px;
+    min-height: var(--cm-h) !important;
+    height: auto !important;
+    padding: 0 18px !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    line-height: 1.2 !important;
+    letter-spacing: .01em;
+    text-shadow: none !important;
+    white-space: nowrap;
+    border-radius: 8px !important;
+    border: 1px solid transparent !important;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, .08) !important;
+    background-image: none !important;
+    cursor: pointer;
+    transition: background-color .15s ease, border-color .15s ease, color .15s ease, box-shadow .15s ease, filter .15s ease !important;
+}
+/* main action */
+html:root body.ui-modern .btn-primry,
+html:root body.ui-modern .btn-primary {
+    background-color: var(--cm-accent) !important;
+    color: var(--cm-on-accent) !important;
+}
+/* secondary action */
+html:root body.ui-modern .btn-yellow {
+    background-color: var(--cm-accent-soft) !important;
+    border-color: var(--cm-accent) !important;
+    color: var(--cm-accent-ink) !important;
+}
+/* quiet action (View, Close, New ...) */
+html:root body.ui-modern .btn-gray {
+    background-color: var(--cm-card) !important;
+    border-color: var(--cm-line) !important;
+    color: var(--cm-ink) !important;
+}
+html:root body.ui-modern .btn-danger {
+    background-color: var(--cm-danger) !important;
+    color: #fff !important;
+}
+/* hover / press: a shade of the same colour, never black or red */
+html:root body.ui-modern .btn-primry:hover,
+html:root body.ui-modern .btn-primary:hover,
+html:root body.ui-modern .btn-yellow:hover,
+html:root body.ui-modern .btn-danger:hover {
+    filter: brightness(.94);
+    box-shadow: 0 2px 6px rgba(16, 24, 40, .14) !important;
+}
+html:root body.ui-modern .btn-primry:hover,
+html:root body.ui-modern .btn-primary:hover { background-color: var(--cm-accent) !important; color: var(--cm-on-accent) !important; }
+html:root body.ui-modern .btn-yellow:hover { background-color: var(--cm-accent-soft) !important; color: var(--cm-accent-ink) !important; }
+html:root body.ui-modern .btn-danger:hover { background-color: var(--cm-danger) !important; color: #fff !important; }
+html:root body.ui-modern .btn-gray:hover {
+    background-color: var(--cm-accent-soft) !important;
+    border-color: var(--cm-accent) !important;
+    color: var(--cm-accent-ink) !important;
+}
+html:root body.ui-modern .btn-primry:active,
+html:root body.ui-modern .btn-primary:active,
+html:root body.ui-modern .btn-yellow:active,
+html:root body.ui-modern .btn-gray:active,
+html:root body.ui-modern .btn-danger:active { filter: brightness(.88); box-shadow: none !important; }
+html:root body.ui-modern .btn-primry:focus-visible,
+html:root body.ui-modern .btn-primary:focus-visible,
+html:root body.ui-modern .btn-yellow:focus-visible,
+html:root body.ui-modern .btn-gray:focus-visible,
+html:root body.ui-modern .btn-danger:focus-visible { outline: none !important; box-shadow: 0 0 0 3px var(--cm-ring) !important; }
+html:root body.ui-modern .btn-primry:disabled, html:root body.ui-modern .btn-primry.disabled,
+html:root body.ui-modern .btn-primary:disabled, html:root body.ui-modern .btn-primary.disabled,
+html:root body.ui-modern .btn-yellow:disabled, html:root body.ui-modern .btn-gray:disabled,
+html:root body.ui-modern .btn-danger:disabled {
+    opacity: .55 !important;
+    filter: none;
+    cursor: not-allowed !important;
+    box-shadow: none !important;
+}
+html:root body.ui-modern .btn-primry .fa, html:root body.ui-modern .btn-gray .fa,
+html:root body.ui-modern .btn-yellow .fa, html:root body.ui-modern .btn-danger .fa { margin: 0 !important; font-size: 13px !important; color: inherit !important; }
+
+/* ---------- text boxes, dropdowns, text areas ---------- */
+html:root body.ui-modern .main-content .main input[type="text"]:not([class*="btn"]),
+html:root body.ui-modern .main-content .main input[type="number"],
+html:root body.ui-modern .main-content .main input[type="email"],
+html:root body.ui-modern .main-content .main input[type="tel"],
+html:root body.ui-modern .main-content .main input[type="password"],
+html:root body.ui-modern .main-content .main input[type="date"],
+html:root body.ui-modern .main-content .main input[type="time"],
+html:root body.ui-modern .main-content .main input[type="datetime-local"],
+html:root body.ui-modern .main-content .main input:not([type]):not([class*="btn"]),
+html:root body.ui-modern .main-content .main select:not([multiple]):not(.select2-hidden-accessible),
+html:root body.ui-modern .main-content .main textarea,
+html:root body.ui-modern .modal input[type="text"]:not([class*="btn"]),
+html:root body.ui-modern .modal input[type="number"],
+html:root body.ui-modern .modal input[type="date"],
+html:root body.ui-modern .modal select:not([multiple]):not(.select2-hidden-accessible),
+html:root body.ui-modern .modal textarea {
+    min-height: var(--cm-h);
+    padding: 5px 10px !important;
+    font-size: 13px !important;
+    font-weight: 500;
+    color: var(--cm-ink) !important;
+    background-color: var(--cm-field-bg) !important;
+    background-image: none;
+    border: 1px solid var(--cm-line) !important;
+    border-radius: var(--cm-radius) !important;
+    box-shadow: none !important;
+    box-sizing: border-box;
+    transition: border-color .15s ease, box-shadow .15s ease;
+}
+/* native dropdowns keep a clear arrow */
+html:root body.ui-modern .main-content .main select:not([multiple]):not(.select2-hidden-accessible),
+html:root body.ui-modern .modal select:not([multiple]):not(.select2-hidden-accessible) {
+    padding-right: 28px !important;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%237a8699' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 10px center !important;
+}
+html:root body.ui-modern .main-content .main textarea,
+html:root body.ui-modern .modal textarea { min-height: 64px; line-height: 1.45; }
+html:root body.ui-modern .main-content .main input::placeholder,
+html:root body.ui-modern .main-content .main textarea::placeholder { color: var(--cm-muted) !important; font-weight: 400; opacity: 1; }
+
+/* (buttons drawn as <input> keep their own focus / disabled look) */
+html:root body.ui-modern .main-content .main input:not([type="button"]):not([type="submit"]):not([type="checkbox"]):not([type="radio"]):not([class*="btn"]):focus,
+html:root body.ui-modern .main-content .main select:focus,
+html:root body.ui-modern .main-content .main textarea:focus,
+html:root body.ui-modern .modal input:not([type="button"]):not([type="submit"]):not([type="checkbox"]):not([type="radio"]):not([class*="btn"]):focus,
+html:root body.ui-modern .modal select:focus,
+html:root body.ui-modern .modal textarea:focus {
+    border-color: var(--cm-accent) !important;
+    box-shadow: 0 0 0 3px var(--cm-ring) !important;
+    outline: none !important;
+}
+html:root body.ui-modern .main-content .main input:not([type="button"]):not([type="submit"]):not([type="checkbox"]):not([type="radio"]):not([class*="btn"]):disabled,
+html:root body.ui-modern .main-content .main input:not([type="button"]):not([type="submit"]):not([class*="btn"])[readonly],
+html:root body.ui-modern .main-content .main select:disabled,
+html:root body.ui-modern .main-content .main textarea:disabled,
+html:root body.ui-modern .main-content .main textarea[readonly],
+html:root body.ui-modern .modal input:not([type="button"]):not([type="submit"]):not([type="checkbox"]):not([type="radio"]):not([class*="btn"]):disabled,
+html:root body.ui-modern .modal input:not([type="button"]):not([type="submit"]):not([class*="btn"])[readonly],
+html:root body.ui-modern .modal select:disabled {
+    background-color: var(--cm-field-bg-off) !important;
+    color: var(--cm-label) !important;
+    cursor: not-allowed;
+}
+/* leave buttons, pickers and DataTables' own boxes to their own styles */
+html:root body.ui-modern .select2-search__field {
+    min-height: 0;
+}
+
+/* ---------- Bootstrap input groups (icon / button glued to a field): square the joined sides ---------- */
+html:root body.ui-modern .input-group > .form-control:not(:first-child),
+html:root body.ui-modern .input-group > input:not(:first-child),
+html:root body.ui-modern .input-group > select:not(:first-child) {
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+}
+html:root body.ui-modern .input-group > .form-control:not(:last-child),
+html:root body.ui-modern .input-group > input:not(:last-child),
+html:root body.ui-modern .input-group > select:not(:last-child) {
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+
+/* ---------- token input (MR No / bill search boxes): the list is the field, its inner box is bare ---------- */
+html:root body.ui-modern ul.token-input-list {
+    min-height: var(--cm-h) !important;
+    height: auto !important;
+    padding: 0 6px !important;
+    display: flex !important;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+    background-color: var(--cm-field-bg) !important;
+    border: 1px solid var(--cm-line) !important;
+    border-radius: var(--cm-radius) !important;
+    box-shadow: none !important;
+    box-sizing: border-box;
+}
+html:root body.ui-modern ul.token-input-list:focus-within {
+    border-color: var(--cm-accent) !important;
+    box-shadow: 0 0 0 3px var(--cm-ring) !important;
+}
+html:root body.ui-modern ul.token-input-list li { float: none !important; margin: 0 !important; }
+/* ":not(#cm-x)" lifts these above the general text-box rule */
+html:root body.ui-modern ul.token-input-list input:not(#cm-x) {
+    min-height: 0 !important;
+    height: calc(var(--cm-h) - 4px) !important;
+    margin: 0 !important;
+    padding: 0 4px !important;
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+html:root body.ui-modern ul.token-input-list li.token-input-token {
+    padding: 2px 8px !important;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--cm-accent-ink) !important;
+    background: var(--cm-accent-soft) !important;
+    border: 1px solid var(--cm-accent) !important;
+    border-radius: 999px !important;
+}
+
+/* ---------- Select2 (single) ---------- */
+html:root body.ui-modern .select2-container--default .select2-selection--single {
+    height: var(--cm-h) !important;
+    padding: 0 !important;
+    background-color: var(--cm-field-bg) !important;
+    border: 1px solid var(--cm-line) !important;
+    border-radius: var(--cm-radius) !important;
+    box-shadow: none !important;
+    background-image: none !important;
+}
+html:root body.ui-modern .select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: calc(var(--cm-h) - 2px) !important;
+    padding-left: 10px !important;
+    font-size: 13px !important;
+    font-weight: 500;
+    color: var(--cm-ink) !important;
+}
+html:root body.ui-modern .select2-container--default .select2-selection--single .select2-selection__placeholder { color: var(--cm-muted) !important; }
+html:root body.ui-modern .select2-container--default .select2-selection--single .select2-selection__arrow { height: calc(var(--cm-h) - 2px) !important; }
+html:root body.ui-modern .select2-container--default.select2-container--focus .select2-selection--single,
+html:root body.ui-modern .select2-container--default.select2-container--open .select2-selection--single {
+    border-color: var(--cm-accent) !important;
+    box-shadow: 0 0 0 3px var(--cm-ring) !important;
+}
+html:root body.ui-modern .select2-container--default.select2-container--disabled .select2-selection--single { background-color: var(--cm-field-bg-off) !important; }
+html:root body.ui-modern .select2-dropdown { border-color: var(--cm-line) !important; border-radius: var(--cm-radius) !important; box-shadow: 0 8px 24px rgba(16, 24, 40, .12); overflow: hidden; }
+html:root body.ui-modern .select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: var(--cm-accent-soft) !important;
+    color: var(--cm-accent-ink) !important;
+}
+
+/* ---------- labels ---------- */
+html:root body.ui-modern .main-content .main label:not(.switch):not([class*="toggle"]):not(.radio-inline):not(.checkbox-inline),
+html:root body.ui-modern .modal label:not(.switch):not([class*="toggle"]) {
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    letter-spacing: .01em;
+    color: var(--cm-label) !important;
+    margin-bottom: 4px;
+}
+
+/* ---------- fieldsets read as cards ---------- */
+html:root body.ui-modern .main-content .main fieldset {
+    margin: 0 0 14px !important;
+    padding: 12px 14px 14px !important;
+    background: var(--cm-card) !important;
+    border: 1px solid var(--cm-line-soft) !important;
+    border-radius: 8px !important;
+}
+html:root body.ui-modern .main-content .main fieldset > legend {
+    width: auto !important;
+    margin: 0 !important;
+    padding: 0 6px !important;
+    font-size: 13px !important;
+    font-weight: 800 !important;
+    color: var(--cm-ink) !important;
+    border: 0 !important;
+}

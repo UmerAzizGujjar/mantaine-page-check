@@ -1932,7 +1932,7 @@
                             var amount = n(value.Amount);
                             var qty = n(value.Qty);
 
-                            rows = '<tr>' +
+                            rows = '<tr data-skip-share="1">' +
                                 '<td style="text-align:left;">' + (rowIndex + 1) + '</td>' +
                                 '<td id="btndeletes">' +
                                 '<a href="javascript:void(0)" onclick="ExcludeFromPayment(this)" id="btnDelete" name="btndelBill">' +
@@ -2689,14 +2689,36 @@
             // Rows still in the table with no doctor and no hospital share yet; rows that
             // already carry a saved or agreed share are left as they are.
             function FillMissingShares(trs) {
+                // Bill edit mode keeps the saved shares untouched.
+                if ('<%= Request.QueryString["Bill_ID"] %>' !== '') return;
                 $.each(trs, function (i, tr) {
                     var $row = $(tr);
                     if (!$.contains(document, tr)) return;
+                    // Previous bills pulled into an IPD final bill keep their own shares.
+                    if ($row.attr('data-skip-share') === '1') return;
                     if ($row.find('input[name="HocShare"]').length === 0) return;
                     if (!$row.find('input[name="hdnItemID"]').val()) return;
                     var hoc = parseFloat($row.find('input[name="HocShare"]').val()) || 0;
                     var doc = parseFloat($row.find('input[name="DocShare"]').val()) || 0;
                     if (hoc > 0 || doc > 0) return;
+
+                    var docId = $row.find('select[name="ddlDoctor"]').val();
+                    if ((!docId || docId === '0') && $("#ddlpanel").val() == "0") {
+                        // no doctor selected: the row's actual amount is all hospital share
+                        // per-unit share is kept undiscounted at the original rate so RescaleRowShares
+                        // follows later amount / qty / discount edits
+                        var unitHos = parseFloat($row.find('td:eq(5)').text()) || 0;
+                        var qty = parseFloat($row.find('input[name="txtQty"]').val()) || 1;
+                        var disPer = parseFloat($row.find('input[name="DisPer"]').val()) || 0;
+                        var hos = unitHos * qty * (1 - disPer / 100);
+                        $row.find('input[name="HocShare"]').val(hos.toFixed(2));
+                        $row.find('input[name="DocShare"]').val("0.00");
+                        $row.find('input[name="hdnPerUnitDocShare"]').remove();
+                        $row.find('input[name="hdnPerUnitHocShare"]').remove();
+                        $row.append('<input type="hidden" name="hdnPerUnitDocShare" value="0.00" />');
+                        $row.append('<input type="hidden" name="hdnPerUnitHocShare" value="' + unitHos.toFixed(6) + '" />');
+                        return;
+                    }
                     GetDocAgreementValuess(tr);
                 });
             }
@@ -7896,6 +7918,13 @@
                     }).observe(tbody, { childList: true });
                 }
                 initApprovalCheckbox();
+
+                // The amount cell's own onkeypress runs before the typed digit lands, so also
+                // recompute the row (and its doctor/hospital share) once the edit is in the cell.
+                $(document).on('input', '#tblDetails tbody td[name="amnt"]', function () {
+                    var idx = $(this).closest('tr').index();
+                    if (idx >= 0) CalculateSummarieDiscountPerWise(idx);
+                });
 
                 getAllowApprovalitem();
 

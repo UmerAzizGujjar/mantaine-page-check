@@ -123930,6 +123930,8 @@ namespace PMS
 
         private string _Refer_Doctor;
 
+        private System.Nullable<int> _Referred_Doctor_ID;
+
         private string _Close_Status;
 
         private System.Nullable<bool> _is_Closed;
@@ -124078,6 +124080,8 @@ namespace PMS
         partial void OnDoctorIDChanged();
         partial void OnRefer_DoctorChanging(string value);
         partial void OnRefer_DoctorChanged();
+        partial void OnReferred_Doctor_IDChanging(System.Nullable<int> value);
+        partial void OnReferred_Doctor_IDChanged();
         partial void OnClose_StatusChanging(string value);
         partial void OnClose_StatusChanged();
         partial void Onis_ClosedChanging(System.Nullable<bool> value);
@@ -125413,6 +125417,26 @@ namespace PMS
                     this._Refer_Doctor = value;
                     this.SendPropertyChanged("Refer_Doctor");
                     this.OnRefer_DoctorChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Referred_Doctor_ID", DbType = "Int")]
+        public System.Nullable<int> Referred_Doctor_ID
+        {
+            get
+            {
+                return this._Referred_Doctor_ID;
+            }
+            set
+            {
+                if ((this._Referred_Doctor_ID != value))
+                {
+                    this.OnReferred_Doctor_IDChanging(value);
+                    this.SendPropertyChanging();
+                    this._Referred_Doctor_ID = value;
+                    this.SendPropertyChanged("Referred_Doctor_ID");
+                    this.OnReferred_Doctor_IDChanged();
                 }
             }
         }

@@ -681,13 +681,18 @@
                     test_list: test_list
                 };
 
+                // Approve & Print: open the report tab now (inside the click, so it is not blocked as a pop-up)
+                var printRow = (typeof currentlyEditingElement !== 'undefined') ? currentlyEditingElement : null;
+                var printWin = printRow ? window.open('', '_blank') : null;
+
                 PageMethods.ApproveTestDetailCat(
                     Lab_ID,
                     JSON.stringify(TesttDetails),
                     selectedDoctorId,
                     function (response) {
 
-                        if (typeof currentlyEditingElement !== 'undefined') {
+                        // (not reopened when printing: Approve & Print closes the modal below)
+                        if (!printRow && typeof currentlyEditingElement !== 'undefined') {
                             EditData(currentlyEditingElement);
                         }
 
@@ -698,8 +703,24 @@
                             loadPatientDataUsingBillId();
                         }
 
+                        // Approve & Print: close the result modal and show this test's report in the tab opened above
+                        if (printRow) {
+                            $('#myModal').modal('hide');
+                            if (printWin) {
+                                var openWindow = window.open;
+                                window.open = function (url) {
+                                    if (url) printWin.location.href = url;
+                                    return printWin;
+                                };
+                                try { PreviewReport(printRow); } finally { window.open = openWindow; }
+                            } else {
+                                Swal.fire({ icon: 'info', title: 'Approved', text: 'The report tab was blocked by the browser. Allow pop-ups for this site, then use Preview to print.' });
+                            }
+                        }
+
                     },
                     function (err) {
+                        if (printWin) printWin.close();
                         alert(err.get_message ? err.get_message() : err);
                     });
 
@@ -932,6 +953,7 @@
                         }
 
                     });
+                    SaveReferredDoctor($.map(test_list, function (t) { return t.lab_test_Detail_id; }));
                 }
                 else //Save Single Test
                 {
@@ -1028,6 +1050,7 @@
                         "Levels": level,
                         "referDocId": $("#ddlReferDoctor").val()
                     });
+                    SaveReferredDoctor([testDetailID]);
 
                     $.ajax({
                         type: "POST",
@@ -1202,6 +1225,18 @@
 
 
 
+            // stores the "Referred Doctor" dropdown on the saved test(s)
+            window.SaveReferredDoctor = function (ids) {
+                $.ajax({
+                    type: "POST",
+                    url: "RadiologyTestResult.aspx/SaveReferredDoctor",
+                    data: JSON.stringify({ TestDetailIDs: $.map(ids, function (x) { return String(x); }), ReferredDoctorID: $("#ddlReferredByDoctor").val() || "" }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    error: function (xhr) { console.error("Referred doctor not saved", xhr.status); }
+                });
+            };
+
             //$("#ddlReferDoctor").select2({
             //    placeholder: "Select Doctor",
             //    allowClear: true,
@@ -1225,6 +1260,17 @@
                         placeholder: "Select Doctor",
                         allowClear: true,
                         width: '100%'
+                    });
+                    $("#ddlReferredByDoctor").html(options);
+                    $("#ddlReferredByDoctor").select2({
+                        placeholder: "Select Doctor",
+                        allowClear: true,
+                        width: '100%'
+                    });
+                    $('#ddlReferredByDoctor').on('select2:open', function () {
+                        setTimeout(function () {
+                            $('.select2-container--open .select2-search__field').focus();
+                        }, 100);
                     });
 
                     // Auto-focus search field when select2 opens
@@ -3169,6 +3215,16 @@ ${data.Addendum_Template ? `
                                 }, 100);
                             }
 
+                            // doctor who referred the patient on the bill
+                            var referredById = data[29];
+                            setTimeout(function () {
+                                if (referredById && referredById != "0" && $("#ddlReferredByDoctor option[value='" + referredById + "']").length) {
+                                    $("#ddlReferredByDoctor").val(referredById).trigger('change');
+                                } else {
+                                    $("#ddlReferredByDoctor").val(null).trigger('change');
+                                }
+                            }, 100);
+
                             var MainDept = data[2];
                             currentMainDept = MainDept;
 
@@ -5056,6 +5112,10 @@ function cleanPrint() {
                             <label style="display: block; text-align: left;">Performing Doctor:</label>
                             <select id="ddlReferDoctor" class="form-control"></select>
                         </div>
+                        <div class="col-lg-3">
+                            <label style="display: block; text-align: left;">Referred Doctor:</label>
+                            <select id="ddlReferredByDoctor" class="form-control"></select>
+                        </div>
                     </div>
                     <div class="row" id="radiologyFooterButtons" style="width: 100%;">
                         <div class="col-lg-2 col-md-6 col-sm-12">
@@ -5068,7 +5128,7 @@ function cleanPrint() {
                             <input type="button" class="btn btn-primry" id="btnSaveTemplate" value="Save Result & Template" />
                         </div>
                         <div class="col-lg-2 col-md-6 col-sm-12">
-                            <input type="button" id="btnApprove" class="btn btn-primry" name="btnApprove" value="Approve" />
+                            <input type="button" id="btnApprove" class="btn btn-primry" name="btnApprove" value="Approve &amp; Print" />
                         </div>
                         <div class="col-lg-2 col-md-6 col-sm-12">
                             <input type="button" id="btnAddendum" class="btn btn-primry" name="btnAddendum" value="Addendum"
