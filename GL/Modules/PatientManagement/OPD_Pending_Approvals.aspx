@@ -17,17 +17,9 @@
         var selectedRows = {};
 
         $(document).ready(function () {
-            FillPatientType();
             FillCostCenter();
             InitDateFilters();
             GetOPDToApproveList();
-
-            $('#ddlpatientType').on('change', function () {
-                GetOPDToApproveList();
-                if ($(this).val() !== '0') {
-                    DisablePatientType();
-                }
-            });
 
             $('#ddlCostCenter').on('change', function () {
                 GetOPDToApproveList();
@@ -87,21 +79,6 @@
                         didOpen: () => { Swal.showLoading(); }
                     });
 
-                    var generalIds = [], privateIds = [];
-                    ids.forEach(function (id) {
-                        var row = selectedRows[id];
-                        if (row && row.Patient_Type === '02') privateIds.push(id);
-                        else generalIds.push(id);
-                    });
-
-                    function approvePrivate() {
-                        if (privateIds.length > 0) {
-                            ApprovePrivateSequence(privateIds, 0, 0);
-                        } else {
-                            window.location.href = 'OPD_Pending_Approvals.aspx';
-                        }
-                    }
-
                     function showApproveError(error) {
                         Swal.fire({
                             icon: 'error',
@@ -111,21 +88,23 @@
                         });
                     }
 
-                    if (generalIds.length > 0) {
-                        PageMethods.ApproveBulkOPD(generalIds.join(','), function (response) {
+                    {
+                        PageMethods.ApproveBulkOPD(ids.join(','), function (response) {
                             try {
                                 var res = JSON.parse(response);
                                 if (res && res.length > 0 && res[0].Voucher_ID > 0) {
                                     var v = res[0];
                                     Swal.fire({
                                         icon: 'success',
-                                        title: 'General Patients Approved',
+                                        title: 'Patients Approved',
                                         html: 'Voucher No: <strong>' + v.Voucher_ID + '</strong>' +
-                                            '<br/>General Patients: ' + v.Patient_Count +
+                                            '<br/>Patients: ' + v.Patient_Count +
                                             '<br/>Gross: ' + v.Gross_Amount +
                                             '<br/>Discount: ' + v.Discount_Amount,
                                         confirmButtonColor: '#28a745'
-                                    }).then(approvePrivate);
+                                    }).then(function () {
+                                        window.location.href = 'OPD_Pending_Approvals.aspx';
+                                    });
                                 } else {
                                     Swal.fire({
                                         icon: 'error',
@@ -143,53 +122,10 @@
                                 });
                             }
                         }, showApproveError);
-                    } else {
-                        approvePrivate();
                     }
                 });
             });
         });
-
-        function ApprovePrivateSequence(ids, idx, successCount) {
-            if (idx >= ids.length) {
-                Swal.fire({
-                    icon: successCount > 0 ? 'success' : 'error',
-                    title: successCount > 0 ? 'Vouchers Posted' : 'Approval Failed',
-                    text: successCount + ' of ' + ids.length + ' Private patient voucher(s) posted successfully.',
-                    confirmButtonColor: successCount > 0 ? '#28a745' : '#d33'
-                }).then(function () {
-                    window.location.href = 'OPD_Pending_Approvals.aspx';
-                });
-                return;
-            }
-
-            PageMethods.ApproveSingleOPD(ids[idx], '02', function (response) {
-                try {
-                    var res = JSON.parse(response);
-                    if (res && res.length > 0 && res[0].Voucher_ID > 0) {
-                        successCount++;
-                    }
-                } catch (e) {
-                }
-                ApprovePrivateSequence(ids, idx + 1, successCount);
-            }, function (error) {
-                ApprovePrivateSequence(ids, idx + 1, successCount);
-            });
-        }
-
-        function DisablePatientType() {
-            var $ddl = $('#ddlpatientType');
-            $ddl.prop('disabled', true);
-            var $container = $ddl.data('select2') ? $ddl.data('select2').$container : $ddl.next('.select2-container');
-            if ($container && $container.length) {
-                $container.addClass('select2-container--disabled');
-                $container.find('.select2-selection').css({
-                    'background-color': '#e9ecef',
-                    'pointer-events': 'none',
-                    'cursor': 'not-allowed'
-                });
-            }
-        }
 
         function pad2(n) { return n < 10 ? '0' + n : '' + n; }
 
@@ -217,8 +153,6 @@
         }
 
         function GetOPDToApproveList() {
-            var pat_type = $('#ddlpatientType').val();
-            if (!pat_type) pat_type = '0';
             var cost_center = $('#ddlCostCenter').val();
             if (!cost_center) cost_center = '0';
             var start_date = $('#txtStartDate').val() || '';
@@ -239,7 +173,7 @@
                 type: 'post',
                 contentType: 'application/json;charset=utf-8',
                 dataType: 'json',
-                data: JSON.stringify({ "pat_type": pat_type, "search": "", "cost_center": cost_center, "start_date": start_date, "end_date": end_date }),
+                data: JSON.stringify({ "search": "", "cost_center": cost_center, "start_date": start_date, "end_date": end_date }),
                 success: function (_data) {
                     var data = JSON.parse(_data.d);
                     selectedRows = {};
@@ -380,27 +314,6 @@
             $('#txtTotalDiscount').val(discTotal.toFixed(2));
         }
 
-        function FillPatientType() {
-            var options = '<option value="0">Please Select</option>';
-
-            $.ajax({
-                url: 'OPD_Pending_Approvals.aspx/PatientType',
-                type: 'POST',
-                contentType: 'application/json; charset=utf-8',
-                dataType: 'json',
-                success: function (response) {
-                    var data = response.d ? JSON.parse(response.d) : response;
-                    $.each(data, function (key, value) {
-                        options += '<option value="' + value.DataValue_Name + '">' + value.DataValue_Description + '</option>';
-                    });
-                    $('#ddlpatientType').html(options).select2();
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error fetching area data:', error);
-                }
-            });
-        }
-
         function FillCostCenter() {
             var options = '<option value="0">All Cost Centers</option>';
 
@@ -437,10 +350,6 @@
     </div>
 
     <div class="row" style="margin-bottom: 10px;">
-        <div class="col-lg-2 col-md-2 col-sm-4">
-            <label>Patient Type</label>
-            <select id="ddlpatientType"></select>
-        </div>
         <div class="col-lg-2 col-md-2 col-sm-4">
             <label>Cost Center</label>
             <select id="ddlCostCenter"></select>
