@@ -4796,6 +4796,7 @@
       <Column Name="end_day" Type="System.DateTime" DbType="Date" CanBeNull="true" />
       <Column Name="Block_category" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="PMDC" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="Ismanual" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
     </Type>
   </Table>
   <Table Name="dbo.Sales_Tax" Member="Sales_Taxes">
@@ -8600,6 +8601,7 @@
       <Column Name="Charged_by" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
       <Column Name="charge_time" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Column Name="Remarks" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="Is_Camp_Patient" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Association Name="Reg_patient_Birth_Certificate" Member="Birth_Certificates" ThisKey="pat_id" OtherKey="Patient_ID" Type="Birth_Certificate" />
     </Type>
   </Table>

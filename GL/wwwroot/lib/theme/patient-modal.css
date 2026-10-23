@@ -1,0 +1,274 @@
+/* ============================================
+   Patient registration modal (shared look for OPD, Billing, Emergency, IPD,
+   Dialysis, Appointment). Add class="pm-modal" to the .modal element.
+   ============================================ */
+.pm-modal {
+    /* per-client accent comes from each theme's theme-colors.css */
+    --pm-accent: var(--theme-accent, #EFA63E);
+    --pm-accent-soft: var(--theme-accent-soft, rgba(239, 166, 62, 0.08));
+    --pm-accent-border: var(--theme-accent-ring, rgba(239, 166, 62, 0.25));
+    --pm-surface: #ffffff;
+    --pm-section-bg: #fafbfd;
+    --pm-border: #e6eaf0;
+    --pm-text: #2c3e50;
+    --pm-muted: #7b8390;
+}
+
+/* toggle-style checkbox row (e.g. Camp Patient) */
+.pm-modal .pm-check {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    margin: 0;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--pm-text);
+}
+
+html[data-theme="dark"] .pm-modal {
+    --pm-accent: var(--dk-accent-text, #6ee0d2);
+    --pm-accent-soft: var(--dk-accent-soft, #123c3a);
+    --pm-accent-border: var(--dk-border-2, #3a475c);
+    --pm-surface: var(--dk-surface, #151b25);
+    --pm-section-bg: var(--dk-surface-2, #1c2431);
+    --pm-border: var(--dk-border, #2a3547);
+    --pm-text: var(--dk-text, #e6ebf2);
+    --pm-muted: var(--dk-text-dim, #a9b4c4);
+}
+
+.pm-modal .modal-content {
+    border: 0;
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--pm-surface);
+}
+
+.pm-modal .pm-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 18px;
+    border-bottom: 1px solid var(--pm-border);
+    background: var(--pm-surface);
+}
+
+.pm-modal .pm-header-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.pm-modal .pm-header-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--pm-accent-soft);
+    color: var(--pm-accent);
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+.pm-modal .pm-header .modal-title {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--pm-text);
+    line-height: 1.2;
+}
+
+.pm-modal .pm-header small {
+    font-size: 11px;
+    color: var(--pm-muted);
+}
+
+.pm-modal .pm-header .close {
+    margin: 0;
+    padding: 4px 8px;
+    float: none;
+}
+
+.pm-modal .pm-body {
+    padding: 14px 18px 6px;
+}
+
+.pm-modal .pm-req {
+    color: #dc3545;
+    margin-left: 2px;
+}
+
+/* sections */
+.pm-modal .pm-section {
+    border: 1px solid var(--pm-border);
+    border-radius: 8px;
+    background: var(--pm-section-bg);
+    padding: 10px 14px 12px;
+    margin-bottom: 12px;
+}
+
+.pm-modal .pm-section-title {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--pm-accent);
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px dashed var(--pm-accent-border);
+}
+
+.pm-modal .pm-section-title i {
+    font-size: 13px;
+}
+
+/* 12-column grid */
+.pm-modal .pm-grid {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 8px 12px;
+}
+
+.pm-modal .pm-col-2 { grid-column: span 2; }
+.pm-modal .pm-col-3 { grid-column: span 3; }
+.pm-modal .pm-col-4 { grid-column: span 4; }
+.pm-modal .pm-col-5 { grid-column: span 5; }
+.pm-modal .pm-col-6 { grid-column: span 6; }
+.pm-modal .pm-col-12 { grid-column: span 12; }
+
+.pm-modal .pm-grid label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--pm-muted);
+    margin-bottom: 3px;
+}
+
+.pm-modal .pm-grid .form-control:not(.select2-hidden-accessible) {
+    width: 100% !important;
+    margin: 0;
+}
+
+/* optional cell (e.g. walk-in Fees) takes no space while its input is hidden by the page script */
+.pm-modal .pm-grid > .pm-optional:has(> input[style*="display: none"]),
+.pm-modal .pm-grid > .pm-optional:has(> input[style*="display:none"]) {
+    display: none;
+}
+
+/* pages that turn these selects into select2 */
+.pm-modal .pm-grid .select2-container {
+    width: 100% !important;
+}
+
+.pm-modal .pm-grid .pm-combo .select2-container {
+    width: 90px !important;
+    flex: 0 0 90px;
+}
+
+/* prefix select + input joined into one control */
+.pm-modal .pm-combo {
+    display: flex;
+    align-items: stretch;
+}
+
+/* selectors carry .pm-grid + :not() so they outrank the full-width .pm-grid .form-control rule */
+.pm-modal .pm-grid .pm-combo select.form-control:not(.select2-hidden-accessible) {
+    flex: 0 0 90px;
+    width: 90px !important;
+    min-width: 90px;
+    padding-right: 22px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-right: 0;
+}
+
+.pm-modal .pm-grid .pm-combo input.form-control:not(.select2-hidden-accessible) {
+    flex: 1 1 auto;
+    width: auto !important;
+    min-width: 0;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+/* camp patient strip */
+.pm-modal .pm-camp {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px 16px;
+    padding: 10px 14px;
+    margin-bottom: 8px;
+    border: 1px dashed var(--pm-accent-border);
+    border-radius: 8px;
+    background: var(--pm-accent-soft);
+}
+
+.pm-modal .pm-camp .opd-check-label {
+    color: var(--pm-text);
+    font-weight: 600;
+}
+
+.pm-modal .pm-camp-hint {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--pm-muted);
+}
+
+.pm-modal .pm-footer {
+    padding: 10px 18px;
+    border-top: 1px solid var(--pm-border);
+    gap: 8px;
+}
+
+.pm-modal .pm-footer .btn {
+    min-width: 110px;
+}
+
+/* Footer buttons in one right-aligned row. Some pages use <input type="button">, which
+   styleMaster.css stretches to width:100% !important; controls-modern.css also forces
+   display:inline-flex !important on .btn-primry/.btn-gray, which beats jQuery .hide(). */
+html:root body .pm-modal .pm-footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+html:root body .pm-modal .pm-footer > .btn,
+html:root body .pm-modal .pm-footer > input[type="button"],
+html:root body .pm-modal .pm-footer > button {
+    width: auto !important;
+    min-width: 110px;
+    flex: 0 0 auto;
+    margin: 0 !important;
+}
+
+html:root body .pm-modal .pm-footer > [style*="display: none"],
+html:root body .pm-modal .pm-footer > [style*="display:none"] {
+    display: none !important;
+}
+
+@media (max-width: 991px) {
+    .pm-modal .pm-col-2,
+    .pm-modal .pm-col-3,
+    .pm-modal .pm-col-4,
+    .pm-modal .pm-col-5 { grid-column: span 6; }
+}
+
+@media (max-width: 575px) {
+    .pm-modal .pm-body { padding: 12px 12px 4px; }
+    .pm-modal .pm-section { padding: 10px 10px 12px; }
+    .pm-modal .pm-col-2,
+    .pm-modal .pm-col-3,
+    .pm-modal .pm-col-4,
+    .pm-modal .pm-col-5,
+    .pm-modal .pm-col-6 { grid-column: span 12; }
+    .pm-modal .pm-footer .btn { min-width: 0; flex: 1 1 0; }
+}

@@ -301,6 +301,24 @@ html:root body.ui-modern .modal label:not(.switch):not([class*="toggle"]) {
     margin-bottom: 4px;
 }
 
+/* ---------- DataTables search: the pill label (table-modern.css) is the field, its inner box is bare ---------- */
+/* ":not(#cm-x)" lifts these above the general text-box / label rules, which otherwise draw a second border and bring back "Search:" */
+html:root body.ui-modern .dataTables_wrapper .dataTables_filter label:not(#cm-x) {
+    font-size: 0 !important;
+    margin: 0 !important;
+}
+html:root body.ui-modern .dataTables_wrapper .dataTables_filter input:not(#cm-x),
+html:root body.ui-modern .dataTables_wrapper .dataTables_filter input:not(#cm-x):focus {
+    min-height: 0;
+    padding: 0 8px !important;
+    font-size: 12.5px !important;
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 999px !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
 /* ---------- fieldsets read as cards ---------- */
 html:root body.ui-modern .main-content .main fieldset {
     margin: 0 0 14px !important;

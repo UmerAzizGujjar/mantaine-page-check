@@ -40,7 +40,18 @@
                 }, 1000);
             } else {
                 generateNewDialysisId();
+                setCurrentStartTime();
             }
+        }
+
+        // New dialysis starts now; user can still change it
+        function setCurrentStartTime() {
+            $('#txtStartTime').val(currentTimeHHMM());
+        }
+
+        function currentTimeHHMM() {
+            var now = new Date();
+            return ('0' + now.getHours()).slice(-2) + ':' + ('0' + now.getMinutes()).slice(-2);
         }
 
         function generateNewDialysisId() {
@@ -187,6 +198,7 @@
             $('#txtPostStartTime').val(data.Start_Time);
             $('#txtPostEndTime').val(data.End_Time);
             $('#txtPostDuration').val(data.Duration);
+            updateTotalTimeChip();
             $('#txtPostWeight').val(data.Weight);
             $('#txtPostTemp').val(data.Temperature);
             $('#txtPostBPSys').val(data.BP_Systolic);
@@ -219,8 +231,8 @@
         function loadPatientInfo(patientId) {
             $.ajax({
                 type: "POST",
-                url: "DialysisForm.aspx/SearchPatients",
-                data: JSON.stringify({ searchText: patientId }),
+                url: "DialysisForm.aspx/GetPatientById",
+                data: JSON.stringify({ patientId: patientId }),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
@@ -250,6 +262,7 @@
         function initializeForm() {
             $('#btnAddExistingPatient').click(function () {
                 $('#PatientsSearchModel').modal('show');
+                $('#txtPatientSearch').val('');
                 loadPatients();
             });
 
@@ -257,13 +270,18 @@
                 AddNewPatient();
             });
 
-            $('#txtPatientSearch').on('keyup', function () {
+            // Wait for typing to pause so each keystroke doesn't fire its own search
+            var patientSearchTimer;
+            $('#txtPatientSearch').on('input', function () {
                 var searchText = $(this).val();
-                if (searchText.length >= 2) {
-                    searchPatients(searchText);
-                } else if (searchText.length === 0) {
-                    loadPatients();
-                }
+                clearTimeout(patientSearchTimer);
+                patientSearchTimer = setTimeout(function () {
+                    if (searchText.length >= 2) {
+                        searchPatients(searchText);
+                    } else if (searchText.length === 0) {
+                        loadPatients();
+                    }
+                }, 300);
             });
             
             $('#btnSaveStep1').click(function () {
@@ -294,6 +312,14 @@
             $('#txtPostStartTime, #txtPostEndTime').on('change', function () {
                 calculateDuration();
             });
+
+            $('#txtCurrentWeight, #txtLastWeight').on('input change', function () {
+                calculateWeightDiff();
+            });
+
+            initDobPicker();
+            $('#txtAge_yearss').on('change', CalculateAgeFromDob);
+            $('#PrefixAge').on('change', CalculateDateOfBirth);
             fillArea();
             fillCountry();
             fillProvince();
@@ -346,20 +372,33 @@
                 return;
             }
 
-            var finalDate = dob.format("DD/MM/YYYY");
+            initDobPicker();
+            $('#txtAge_yearss').datepicker('setDate', dob.toDate());
+        }
 
+        // DOB picker; picking a date fills Age in the unit chosen in PrefixAge
+        function initDobPicker() {
             var $datepicker = $('#txtAge_yearss');
             if (!$datepicker.hasClass('hasDatepicker')) {
                 $datepicker.datepicker({
                     changeMonth: true,
                     changeYear: true,
                     yearRange: "-100:+0",
-                    dateFormat: "dd/mm/yy"
+                    maxDate: 0,
+                    dateFormat: "dd/mm/yy",
+                    onSelect: CalculateAgeFromDob
                 });
             }
+        }
 
-            $datepicker.datepicker('setDate', dob.toDate());
+        function CalculateAgeFromDob() {
+            var dob = moment($('#txtAge_yearss').val(), "DD/MM/YYYY", true);
+            if (!dob.isValid()) {
+                return;
+            }
 
+            var unit = { Year: 'years', Month: 'months', Day: 'days' }[$('#PrefixAge').val()] || 'years';
+            $('#txt_dob').val(moment().diff(dob, unit));
         }
 
         function loadVascularAccess(callback) {
@@ -502,13 +541,18 @@
             });
         }
 
+        // Only the latest list request may fill the table; slower older ones are dropped
+        var patientListRequest = 0;
+
         function loadPatients() {
+            var requestNo = ++patientListRequest;
             $.ajax({
                 type: "POST",
                 url: "DialysisForm.aspx/GetPatients",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
+                    if (requestNo !== patientListRequest) return;
                     var data = JSON.parse(response.d);
                     bindPatientTable(data);
                 },
@@ -519,6 +563,7 @@
         }
 
         function searchPatients(searchText) {
+            var requestNo = ++patientListRequest;
             $.ajax({
                 type: "POST",
                 url: "DialysisForm.aspx/SearchPatients",
@@ -526,6 +571,7 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
+                    if (requestNo !== patientListRequest) return;
                     var data = JSON.parse(response.d);
                     bindPatientTable(data);
                 },
@@ -575,8 +621,26 @@
             
             $('#hdfStep1Saved').val('false');
             $('#hdfStep2Saved').val('false');
-            
+
             navigateToStep(1);
+            loadLastWeight(id);
+        }
+
+        // Last Weight = final weight of the previous dialysis; first visit stays empty for manual entry
+        function loadLastWeight(patientId) {
+            $.ajax({
+                type: "POST",
+                url: "DialysisForm.aspx/GetLastPostWeight",
+                data: JSON.stringify({ patientId: patientId }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    if (response.d && $('#hdfPatientId').val() == patientId) {
+                        $('#txtLastWeight').val(response.d);
+                        calculateWeightDiff();
+                    }
+                }
+            });
         }
 
         function AddNewPatient() {
@@ -915,8 +979,8 @@
             // Load patient info and select them
             $.ajax({
                 type: "POST",
-                url: "DialysisForm.aspx/SearchPatients",
-                data: JSON.stringify({ searchText: ini_patientID }),
+                url: "DialysisForm.aspx/GetPatientById",
+                data: JSON.stringify({ patientId: ini_patientID }),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
@@ -1016,8 +1080,10 @@
 
             $('#ddlPostStaff').val('');
             $('#txtPostStartTime, #txtPostEndTime, #txtPostDuration, #txtPostWeight, #txtPostTemp, #txtPostBPSys, #txtPostBPDias, #txtPostPulse, #txtPostComments').val('');
+            updateTotalTimeChip();
 
             generateNewDialysisId();
+            setCurrentStartTime();
 
             $('.step-item').removeClass('active completed').addClass('disabled');
             $('#step1Nav').removeClass('disabled').addClass('active');
@@ -1055,6 +1121,15 @@
             $('#section' + stepNumber).addClass('active');
             $('#step' + stepNumber + 'Nav').addClass('active');
             $('#hdfCurrentStep').val(stepNumber);
+
+            // Post-dialysis start is locked to the pre-dialysis start time, end defaults to now
+            if (stepNumber === 3) {
+                $('#txtPostStartTime').val($('#txtStartTime').val());
+                if (!$('#txtPostEndTime').val()) {
+                    $('#txtPostEndTime').val(currentTimeHHMM());
+                }
+                calculateDuration();
+            }
         }
 
         function saveStep1() {
@@ -1073,6 +1148,7 @@
             }
 
             var data = {
+                IsNew: !isEditMode && $('#hdfStep1Saved').val() !== 'true',
                 DialysisId: currentDialysisId,
                 PatientId: patientId,
                 VascularAccess: $('#ddlVascularAccess').val(),
@@ -1113,6 +1189,7 @@
                     if (response.d && response.d.indexOf('error') === -1) {
                         currentDialysisId = response.d;
                         $('#hdfDialysisId').val(currentDialysisId);
+                        $('#txtDialysisNo').val(currentDialysisId);
                         $('#hdfStep1Saved').val('true');
                         $('#step1Nav').addClass('completed');
                         $('#step2Nav').removeClass('disabled');
@@ -1256,6 +1333,26 @@
 
                 $('#txtPostDuration').val(hours + ' hour(s) ' + minutes + ' minute(s)');
             }
+            updateTotalTimeChip();
+        }
+
+        // Diff. in Weight = Current Weight - Last Weight
+        function calculateWeightDiff() {
+            var current = parseFloat($('#txtCurrentWeight').val());
+            var last = parseFloat($('#txtLastWeight').val());
+
+            if (isNaN(current) || isNaN(last)) {
+                $('#txtWeightDiff').val('');
+                return;
+            }
+
+            $('#txtWeightDiff').val(parseFloat((current - last).toFixed(2)));
+        }
+
+        function updateTotalTimeChip() {
+            var duration = $('#txtPostDuration').val();
+            $('#infoTotalTime').text(duration || '-');
+            $('#chipTotalTime').toggle(!!duration);
         }
 
         function saveStep3() {
@@ -1358,6 +1455,10 @@
     .dl-chips { display: flex; flex-wrap: wrap; gap: 6px 8px; margin-top: 6px; }
     .dl-chip { display: inline-flex; align-items: center; gap: 6px; padding: 3px 11px; font-size: 12px; font-weight: 600; color: #2d3748; background: #eef1f5; border-radius: 999px; }
     .dl-chip b { font-weight: 700; color: #6b7686; }
+    .dl-chip.dl-chip-time { gap: 8px; padding: 7px 18px; font-size: 15px; font-weight: 700; color: var(--theme-on-accent, #fff); background: var(--theme-accent, #438eb9); border: 2px solid var(--theme-accent-ink, #2b6a90); box-shadow: 0 0 0 4px var(--theme-accent-ring, rgba(67, 142, 185, .25)), 0 4px 10px rgba(0, 0, 0, .15); }
+    .dl-chip.dl-chip-time i { font-size: 17px; }
+    .dl-chip.dl-chip-time b { font-size: 12px; text-transform: uppercase; letter-spacing: .5px; color: var(--theme-on-accent, #fff); opacity: .9; }
+    .dl-chip.dl-chip-time #infoTotalTime { font-size: 17px; font-weight: 800; }
 
     .dl-steps { display: flex; align-items: flex-start; justify-content: center; padding: 4px 0; }
     .step-item { position: relative; flex: 0 0 auto; display: flex; flex-direction: column; align-items: center; gap: 6px; width: 84px; cursor: pointer; }
@@ -1425,17 +1526,17 @@
     .dl-state i { display: block; margin-bottom: 6px; font-size: 26px; opacity: .6; }
 
     /* ---------- modals (existing patient search + new patient) ---------- */
-    .dl-page .modal-content { overflow: hidden; border: 0; border-radius: 10px; box-shadow: 0 20px 50px rgba(16, 24, 40, .3); }
-    .dl-page .modal-header {
+    .dl-page .modal:not(.pm-modal) .modal-content { overflow: hidden; border: 0; border-radius: 10px; box-shadow: 0 20px 50px rgba(16, 24, 40, .3); }
+    .dl-page .modal:not(.pm-modal) .modal-header {
         display: flex; align-items: center; justify-content: space-between; padding: 12px 18px;
         color: var(--theme-on-accent, #fff); border-bottom: 1px solid var(--theme-accent-ink, #2b6a90);
         background: linear-gradient(180deg, var(--theme-accent-light, #438eb9) 0%, var(--theme-accent, #438eb9) 100%) !important;
     }
     .dl-page .modal-header::before, .dl-page .modal-header::after { display: none; }
-    .dl-page .modal-title { margin: 0; font-size: 15px; font-weight: 800; letter-spacing: .03em; text-transform: uppercase; }
-    .dl-page .modal-header .close { float: none; margin: 0 !important; padding: 0; line-height: 1; font-size: 26px; color: inherit; opacity: .9; text-shadow: none; }
-    .dl-page .modal-body { max-height: 68vh; padding: 16px 18px; overflow-y: auto; }
-    .dl-page .modal-footer { display: flex; justify-content: flex-end; gap: 8px; padding: 12px 18px; background: #f8fafc; border-top: 1px solid #e3e8ee; }
+    .dl-page .modal:not(.pm-modal) .modal-title { margin: 0; font-size: 15px; font-weight: 800; letter-spacing: .03em; text-transform: uppercase; }
+    .dl-page .modal:not(.pm-modal) .modal-header .close { float: none; margin: 0 !important; padding: 0; line-height: 1; font-size: 26px; color: inherit; opacity: .9; text-shadow: none; }
+    .dl-page .modal:not(.pm-modal) .modal-body { max-height: 68vh; padding: 16px 18px; overflow-y: auto; }
+    .dl-page .modal:not(.pm-modal) .modal-footer { display: flex; justify-content: flex-end; gap: 8px; padding: 12px 18px; background: #f8fafc; border-top: 1px solid #e3e8ee; }
 
     .dl-modal label { display: block; margin: 0 0 4px; font-size: 11.5px; font-weight: 700; letter-spacing: .02em; color: #4a5568; }
     .dl-modal input.form-control, .dl-modal select.form-control {
@@ -1445,6 +1546,7 @@
     .dl-modal input.form-control:focus, .dl-modal select.form-control:focus { border-color: var(--theme-accent, #438eb9); box-shadow: 0 0 0 3px var(--theme-accent-ring, rgba(67, 142, 185, .25)); outline: none; }
     .dl-modal input[disabled], .dl-modal input[readonly] { background: #f3f5f8; cursor: not-allowed; }
     .dl-modal .select2-container { width: 100% !important; display: block; }
+    .dl-modal .pm-combo .select2-container { width: 90px !important; flex: 0 0 auto; }
     .dl-modal .select2-container .select2-selection--single { height: 34px; border: 1px solid #cfd6e0; border-radius: 6px; }
     .dl-modal .select2-container .select2-selection--single .select2-selection__rendered { line-height: 32px; padding-left: 10px; font-size: 13px; font-weight: 600; }
     .dl-modal .select2-container .select2-selection--single .select2-selection__arrow { height: 32px; }
@@ -1476,6 +1578,7 @@
     html[data-theme="dark"] .dl-btn-outline, html[data-theme="dark"] .dl-btn-quiet { background: var(--dk-surface-3, #232d3d); color: var(--dk-text, #e6e9ef); border-color: var(--dk-border, #2d3748) !important; }
     html[data-theme="dark"] .dl-patient-name { color: var(--dk-text, #e6e9ef); }
     html[data-theme="dark"] .dl-chip { background: var(--dk-surface-3, #232d3d); color: var(--dk-text, #e6e9ef); }
+    html[data-theme="dark"] .dl-chip.dl-chip-time { color: var(--theme-on-accent, #fff); background: var(--theme-accent, #438eb9); }
     html[data-theme="dark"] .step-icon { background: var(--dk-surface-3, #232d3d); color: var(--dk-muted, #9aa6b8); }
     html[data-theme="dark"] .step-label { color: var(--dk-muted, #9aa6b8); }
     html[data-theme="dark"] .step-arrow { background: var(--dk-border, #2d3748); }
@@ -1527,6 +1630,7 @@
                         <span class="dl-chip"><b>Age</b> <span id="infoAge">-</span></span>
                         <span class="dl-chip"><b>Gender</b> <span id="infoGender">-</span></span>
                         <span class="dl-chip"><b>Contact</b> <span id="infoContact">-</span></span>
+                        <span class="dl-chip dl-chip-time" id="chipTotalTime" style="display: none;"><i class="fa fa-clock"></i> <b>Total Time</b> <span id="infoTotalTime">-</span></span>
                     </div>
                 </div>
             </div>
@@ -1628,7 +1732,7 @@
                     </div>
                     <div class="ph-field dialysis-field">
                         <label for="txtWeightDiff">Diff. in Weight (kg)</label>
-                        <input type="text" id="txtWeightDiff" class="form-control" placeholder="Weight" />
+                        <input type="text" id="txtWeightDiff" class="form-control" placeholder="Auto calculated" readonly />
                     </div>
                     <div class="ph-field dialysis-field">
                         <label for="txtUF">UF: ml</label>
@@ -1640,9 +1744,9 @@
                     </div>
                     <div class="ph-field dialysis-field">
                         <label for="txtStartTime">Start Time<span class="required">*</span></label>
-                        <input type="time" id="txtStartTime" class="form-control" value="04:00" />
+                        <input type="time" id="txtStartTime" class="form-control" />
                     </div>
-                    <div class="ph-field dialysis-field">
+                    <div class="ph-field dialysis-field" style="display: none;">
                         <label for="txtFinishTime">Finish Time</label>
                         <input type="time" id="txtFinishTime" class="form-control" value="04:00" />
                     </div>
@@ -1743,7 +1847,7 @@
                 <div class="ph-grid dl-grid">
                     <div class="ph-field dialysis-field">
                         <label for="txtPostStartTime">Start Time<span class="required">*</span></label>
-                        <input type="time" id="txtPostStartTime" class="form-control" />
+                        <input type="time" id="txtPostStartTime" class="form-control" disabled />
                     </div>
                     <div class="ph-field dialysis-field">
                         <label for="txtPostEndTime">End Time<span class="required">*</span></label>
@@ -1841,123 +1945,143 @@
         </div>
 
         <!-- New Patient Registration Modal -->
-        <div id="PatientModel" class="modal fade dl-modal" tabindex="-1" role="dialog">
+        <div id="PatientModel" class="modal fade dl-modal pm-modal" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Patient Details</h5>
+                    <div class="modal-header pm-header">
+                        <div class="pm-header-title">
+                            <span class="pm-header-icon"><i class="fa fa-user-plus"></i></span>
+                            <div>
+                                <h5 class="modal-title">Patient Details</h5>
+                                <small>Fields marked <span class="pm-req">*</span> are required</small>
+                            </div>
+                        </div>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
 
-                    <div class="modal-body">
-                        <div class="ph-grid">
-                            <div class="ph-field">
-                                <label for="txt_Mrno">MR No</label>
-                                <input type="text" id="txt_Mrno" class="form-control" disabled />
-                            </div>
-                            <div class="ph-field">
-                                <label for="ddl_name">Title<span class="required">*</span></label>
-                                <select id="ddl_name" class="form-control">
-                                    <option value="Mr.">Mr.</option>
-                                    <option value="Mrs.">Mrs.</option>
-                                    <option value="Ms.">Ms.</option>
-                                    <option value="B/O.">B/O.</option>
-                                </select>
-                            </div>
-                            <div class="ph-field ph-span-2">
-                                <label for="txt_name">Patient Name<span class="required">*</span></label>
-                                <input name="dob" type="text" id="txt_name" class="form-control" placeholder="First Name" />
-                            </div>
+                    <div class="modal-body pm-body">
+                        <%-- Personal information --%>
+                        <div class="pm-section">
+                            <div class="pm-section-title"><i class="fa fa-id-card-o"></i>Personal Information</div>
+                            <div class="pm-grid">
+                                <div class="pm-col-2">
+                                    <label for="txt_Mrno">MR No</label>
+                                    <input type="text" id="txt_Mrno" class="form-control" disabled />
+                                </div>
+                                <div class="pm-col-5">
+                                    <label for="txt_name">Name<span class="pm-req">*</span></label>
+                                    <div class="pm-combo">
+                                        <select id="ddl_name" class="form-control" aria-label="Name prefix">
+                                            <option value="Mr.">Mr.</option>
+                                            <option value="Mrs.">Mrs.</option>
+                                            <option value="Ms.">Ms.</option>
+                                            <option value="B/O.">B/O.</option>
+                                        </select>
+                                        <input name="dob" type="text" id="txt_name" class="form-control" placeholder="First Name" />
+                                    </div>
+                                </div>
+                                <div class="pm-col-5">
+                                    <label for="txt_relation">Relation<span class="pm-req">*</span></label>
+                                    <div class="pm-combo">
+                                        <select id="ddlRelation" class="form-control" aria-label="Relation type">
+                                            <option value="S/O">S/O</option>
+                                            <option value="W/O">W/O</option>
+                                            <option value="D/O">D/O</option>
+                                        </select>
+                                        <input type="text" id="txt_relation" class="form-control" placeholder="Relation Name" />
+                                    </div>
+                                </div>
 
-                            <div class="ph-field">
-                                <label for="ddlRelation">Relation<span class="required">*</span></label>
-                                <select id="ddlRelation" class="form-control">
-                                    <option value="S/O">S/O</option>
-                                    <option value="W/O">W/O</option>
-                                    <option value="D/O">D/O</option>
-                                </select>
+                                <%-- txtAge_yearss holds the DOB date and txt_dob the age number; the ids are swapped but the save code relies on them --%>
+                                <div class="pm-col-3">
+                                    <label for="txt_dob">Age<span class="pm-req">*</span></label>
+                                    <div class="pm-combo">
+                                        <select id="PrefixAge" class="form-control" aria-label="Age unit">
+                                            <option value="Year">Year</option>
+                                            <option value="Month">Month</option>
+                                            <option value="Day">Day</option>
+                                        </select>
+                                        <input type="text" id="txt_dob" class="form-control" placeholder="Age" onchange="CalculateDateOfBirth();" />
+                                    </div>
+                                </div>
+                                <div class="pm-col-3">
+                                    <label for="txtAge_yearss">Date of Birth</label>
+                                    <input type="text" id="txtAge_yearss" class="form-control" placeholder="dd/mm/yyyy" autocomplete="off" />
+                                </div>
+                                <div class="pm-col-3">
+                                    <label for="ddl_Gender">Gender<span class="pm-req">*</span></label>
+                                    <select id="ddl_Gender" class="form-control">
+                                        <option value="0">Select Gender</option>
+                                    </select>
+                                </div>
+                                <div class="pm-col-3">
+                                    <label for="ddl_status">Marital Status<span class="pm-req">*</span></label>
+                                    <select id="ddl_status" class="form-control">
+                                        <option value="0">Select Marial</option>
+                                    </select>
+                                </div>
                             </div>
-                            <div class="ph-field ph-span-2">
-                                <label for="txt_relation">Relation Name</label>
-                                <input type="text" id="txt_relation" class="form-control" placeholder="Relation Name" />
-                            </div>
-                            <div class="ph-field">
-                                <label for="ddl_Gender">Gender<span class="required">*</span></label>
-                                <select id="ddl_Gender" class="form-control">
-                                    <option value="0">Select Gender</option>
-                                </select>
-                            </div>
+                        </div>
 
-                            <div class="ph-field">
-                                <label for="PrefixAge">Age / DOB<span class="required">*</span></label>
-                                <select id="PrefixAge" class="form-control">
-                                    <option value="Year">Year</option>
-                                    <option value="Month">Month</option>
-                                    <option value="Day">Day</option>
-                                </select>
+                        <%-- Contact & identity --%>
+                        <div class="pm-section">
+                            <div class="pm-section-title"><i class="fa fa-phone"></i>Contact &amp; Identity</div>
+                            <div class="pm-grid">
+                                <div class="pm-col-6">
+                                    <label for="txt_mobile">Mobile<span class="pm-req">*</span></label>
+                                    <input type="text" id="txt_mobile" class="form-control" />
+                                </div>
+                                <div class="pm-col-6">
+                                    <label for="txt_cnic">CNIC<span class="pm-req">*</span></label>
+                                    <input type="text" id="txt_cnic" class="form-control" />
+                                </div>
                             </div>
-                            <div class="ph-field">
-                                <label for="txt_dob">Date of Birth</label>
-                                <input type="text" id="txt_dob" class="form-control" placeholder="DOB" onchange="CalculateDateOfBirth();" />
-                            </div>
-                            <div class="ph-field">
-                                <label for="txtAge_yearss">Age</label>
-                                <input type="text" id="txtAge_yearss" class="form-control" placeholder="dd mmyy" />
-                            </div>
-                            <div class="ph-field">
-                                <label for="ddl_status">Marital Status<span class="required">*</span></label>
-                                <select id="ddl_status" class="form-control">
-                                    <option value="0">Select Marial</option>
-                                </select>
-                            </div>
+                        </div>
 
-                            <div class="ph-field">
-                                <label for="txt_cnic">CNIC<span class="required">*</span></label>
-                                <input type="text" id="txt_cnic" class="form-control" />
+                        <%-- Address --%>
+                        <div class="pm-section">
+                            <div class="pm-section-title"><i class="fa fa-map-marker"></i>Address</div>
+                            <div class="pm-grid">
+                                <div class="pm-col-3">
+                                    <label for="ddlCountry">Country</label>
+                                    <select id="ddlCountry" class="form-control">
+                                        <option value="0">Select Country</option>
+                                    </select>
+                                </div>
+                                <div class="pm-col-3">
+                                    <label for="ddl_Province">Province</label>
+                                    <select id="ddl_Province" class="form-control">
+                                        <option value="0">Select Province</option>
+                                    </select>
+                                </div>
+                                <div class="pm-col-3">
+                                    <label for="txtcity">City</label>
+                                    <select id="txtcity" class="form-control">
+                                        <option value="0">Select City</option>
+                                    </select>
+                                </div>
+                                <div class="pm-col-3">
+                                    <label for="txtarea">Area</label>
+                                    <select id="txtarea" class="form-control">
+                                        <option value="0">Select Area</option>
+                                    </select>
+                                </div>
+                                <div class="pm-col-12">
+                                    <label for="txt_house">Address</label>
+                                    <input type="text" id="txt_house" class="form-control" placeholder="House / street / mohalla" />
+                                </div>
                             </div>
-                            <div class="ph-field">
-                                <label for="txt_mobile">Mobile<span class="required">*</span></label>
-                                <input type="text" id="txt_mobile" class="form-control" />
-                            </div>
-                            <div class="ph-field">
-                                <label for="ddlCountry">Country</label>
-                                <select id="ddlCountry" class="form-control">
-                                    <option value="0">Select Country</option>
-                                </select>
-                            </div>
-                            <div class="ph-field">
-                                <label for="ddl_Province">Province</label>
-                                <select id="ddl_Province" class="form-control">
-                                    <option value="0">Select Province</option>
-                                </select>
-                            </div>
+                        </div>
 
-                            <div class="ph-field">
-                                <label for="txtcity">City</label>
-                                <select id="txtcity" class="form-control">
-                                    <option value="0">Select City</option>
-                                </select>
-                            </div>
-                            <div class="ph-field">
-                                <label for="txtarea">Area</label>
-                                <select id="txtarea" class="form-control">
-                                    <option value="0">Select Area</option>
-                                </select>
-                            </div>
-                            <div class="ph-field ph-span-2">
-                                <label for="txt_house">Address</label>
-                                <input type="text" id="txt_house" class="form-control" />
-                            </div>
-                            <div class="ph-field" style="display: none">
-                                <label for="txtCardFee">Fee<span class="required">*</span></label>
-                                <input type="text" tabindex="17" id="txtCardFee" class="form-control" />
-                            </div>
+                        <div style="display: none">
+                            <label for="txtCardFee">Fee<span class="pm-req">*</span></label>
+                            <input type="text" tabindex="17" id="txtCardFee" class="form-control" />
                         </div>
                     </div>
 
-                    <div class="modal-footer">
+                    <div class="modal-footer pm-footer">
                         <button type="button" class="dl-btn dl-btn-quiet" data-dismiss="modal">Close</button>
                         <button type="button" class="dl-btn dl-btn-outline" id="updatePatient_Data" onclick="SavePatient();">Update</button>
                         <button type="button" class="dl-btn dl-btn-primary" id="SavePatient_Data" onclick="SavePatient();">Save</button>

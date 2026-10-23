@@ -451,6 +451,8 @@ function Get_Pat_Info_Apt(reg_id, apt_Id) {
             $('#hdn_regid').val(data.Reg_PatientID);
             $('#hdn_aptid').val(apt_Id);
             $('#hdnAppointmentType').val(data.AppointmentType);
+            // same card fee check as "Search an existing patient"
+            if (typeof checkcardvalidation === 'function') { checkcardvalidation(); }
             $('#ctl00_MainContent_lblNoOfDays').html(data.DaysSinceLatestVisit);
             $('#ctl00_MainContent_lblNoOfDays2').html(data.DaysSinceSecondLatestVisit);
 
@@ -789,6 +791,7 @@ function clearPatient() {
     $('#txt_dob').val("");
     $('#txt_cnic').val("");
     $('#txt_Address').val('');
+    $('#chkCampPatient').prop('checked', false);
 
     $('#updatePatient_Data').hide();
     $('#RevistPat').hide();
@@ -1240,6 +1243,7 @@ function SavePatient() {
     var Country = $('#ddlCountry :selected').val();
     var Province = $('#ddl_Province :selected').val();
     var cardfee = $('#txtCardFee').val();
+    var isCampPatient = $('#divCampPatient').is(':visible') && $('#chkCampPatient').is(':checked');
 
     if ((PatientName == "" || Mobile == "" || Age == "" || martail_status == "0" || Gender == "0" || Relation == "" || CNIC == "_____-_______-_" || city_val == "0")) {
         Swal.fire({
@@ -1326,6 +1330,7 @@ function SavePatient() {
         "Province": Province,
         "OtherCNIC": OtherCNIC,
         "cardfee": cardfee,
+        "isCampPatient": isCampPatient,
     };
 
 
@@ -1454,7 +1459,16 @@ function SaveData() {
     var bank_cash = $('#ddlbankcash').val();
     var bank_account_id = $('#ddlbank').val();
 
-    if (discount < 100.0 && Fees == 0.0) {
+    // Medical Camp (91): no fee is charged, receipt and actual fee are saved as 0
+    if (pat_category === "91") {
+        Fees = 0;
+        Actual_Fees = 0;
+        discount = 0;
+        Doc_Share = 0;
+        Hosp_share = 0;
+    }
+
+    if (pat_category !== "91" && discount < 100.0 && Fees == 0.0) {
 
         Swal.fire({
             icon: 'error',
@@ -1539,7 +1553,7 @@ function SaveData() {
         });
         return;
     }
-    if ((pat_category === "01" || ["02", "04", "05"].includes(pat_category)) && (!Department || Department === "0")) {
+    if ((pat_category === "01" || ["02", "04", "05", "91"].includes(pat_category)) && (!Department || Department === "0")) {
         Swal.fire({
             icon: 'error',
             title: 'Error!',
@@ -1555,7 +1569,7 @@ function SaveData() {
         return;
     }
 
-    if (["02", "03"].includes(pat_category) && (!doctor || doctor === "0")) {
+    if (["02", "03", "91"].includes(pat_category) && (!doctor || doctor === "0")) {
         Swal.fire({
             icon: 'error',
             title: 'Error!',
