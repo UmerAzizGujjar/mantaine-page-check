@@ -75442,6 +75442,50 @@ namespace PMS
 
         private System.Nullable<System.DateTime> _CancelledTime;
 
+        private string _OpN_Bed_Room_No;
+
+        private System.Nullable<System.DateTime> _OpN_Op_Date;
+
+        private string _OpN_Op_Time;
+
+        private string _OpN_PreOp_Dx;
+
+        private string _OpN_PostOp_Dx;
+
+        private System.Nullable<int> _OpN_Surgeon_ID;
+
+        private string _OpN_Assistants;
+
+        private System.Nullable<int> _OpN_Anaesthetist_ID;
+
+        private string _OpN_Type_Of_Anaesthesia;
+
+        private string _OpN_Procedure_Name;
+
+        private string _OpN_Duration;
+
+        private string _OpN_Thread_Catgut;
+
+        private string _OpN_Thread_Vicryl;
+
+        private string _OpN_Thread_Proline;
+
+        private string _OpN_Thread_Silk;
+
+        private string _OpN_Procedure_Notes;
+
+        private string _OpN_Blood_Loss;
+
+        private string _OpN_IV_Fluids;
+
+        private string _OpN_Blood_Transfused;
+
+        private string _OpN_Urine_Output;
+
+        private string _OpN_Swab_Instrument_Count;
+
+        private System.Nullable<int> _OpN_Scrub_Nurse_ID;
+
         #region Extensibility Method Definitions
         partial void OnLoaded();
         partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -75608,6 +75652,50 @@ namespace PMS
         partial void OnCancelledByChanged();
         partial void OnCancelledTimeChanging(System.Nullable<System.DateTime> value);
         partial void OnCancelledTimeChanged();
+        partial void OnOpN_Bed_Room_NoChanging(string value);
+        partial void OnOpN_Bed_Room_NoChanged();
+        partial void OnOpN_Op_DateChanging(System.Nullable<System.DateTime> value);
+        partial void OnOpN_Op_DateChanged();
+        partial void OnOpN_Op_TimeChanging(string value);
+        partial void OnOpN_Op_TimeChanged();
+        partial void OnOpN_PreOp_DxChanging(string value);
+        partial void OnOpN_PreOp_DxChanged();
+        partial void OnOpN_PostOp_DxChanging(string value);
+        partial void OnOpN_PostOp_DxChanged();
+        partial void OnOpN_Surgeon_IDChanging(System.Nullable<int> value);
+        partial void OnOpN_Surgeon_IDChanged();
+        partial void OnOpN_AssistantsChanging(string value);
+        partial void OnOpN_AssistantsChanged();
+        partial void OnOpN_Anaesthetist_IDChanging(System.Nullable<int> value);
+        partial void OnOpN_Anaesthetist_IDChanged();
+        partial void OnOpN_Type_Of_AnaesthesiaChanging(string value);
+        partial void OnOpN_Type_Of_AnaesthesiaChanged();
+        partial void OnOpN_Procedure_NameChanging(string value);
+        partial void OnOpN_Procedure_NameChanged();
+        partial void OnOpN_DurationChanging(string value);
+        partial void OnOpN_DurationChanged();
+        partial void OnOpN_Thread_CatgutChanging(string value);
+        partial void OnOpN_Thread_CatgutChanged();
+        partial void OnOpN_Thread_VicrylChanging(string value);
+        partial void OnOpN_Thread_VicrylChanged();
+        partial void OnOpN_Thread_ProlineChanging(string value);
+        partial void OnOpN_Thread_ProlineChanged();
+        partial void OnOpN_Thread_SilkChanging(string value);
+        partial void OnOpN_Thread_SilkChanged();
+        partial void OnOpN_Procedure_NotesChanging(string value);
+        partial void OnOpN_Procedure_NotesChanged();
+        partial void OnOpN_Blood_LossChanging(string value);
+        partial void OnOpN_Blood_LossChanged();
+        partial void OnOpN_IV_FluidsChanging(string value);
+        partial void OnOpN_IV_FluidsChanged();
+        partial void OnOpN_Blood_TransfusedChanging(string value);
+        partial void OnOpN_Blood_TransfusedChanged();
+        partial void OnOpN_Urine_OutputChanging(string value);
+        partial void OnOpN_Urine_OutputChanged();
+        partial void OnOpN_Swab_Instrument_CountChanging(string value);
+        partial void OnOpN_Swab_Instrument_CountChanged();
+        partial void OnOpN_Scrub_Nurse_IDChanging(System.Nullable<int> value);
+        partial void OnOpN_Scrub_Nurse_IDChanged();
         #endregion
 
         public Operation_Booking()
@@ -77231,6 +77319,446 @@ namespace PMS
                     this._CancelledTime = value;
                     this.SendPropertyChanged("CancelledTime");
                     this.OnCancelledTimeChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_OpN_Bed_Room_No", DbType = "NVarChar(120)")]
+        public string OpN_Bed_Room_No
+        {
+            get
+            {
+                return this._OpN_Bed_Room_No;
+            }
+            set
+            {
+                if ((this._OpN_Bed_Room_No != value))
+                {
+                    this.OnOpN_Bed_Room_NoChanging(value);
+                    this.SendPropertyChanging();
+                    this._OpN_Bed_Room_No = value;
+                    this.SendPropertyChanged("OpN_Bed_Room_No");
+                    this.OnOpN_Bed_Room_NoChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_OpN_Op_Date", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> OpN_Op_Date
+        {
+            get
+            {
+                return this._OpN_Op_Date;
+            }
+            set
+            {
+                if ((this._OpN_Op_Date != value))
+                {
+                    this.OnOpN_Op_DateChanging(value);
+                    this.SendPropertyChanging();
+                    this._OpN_Op_Date = value;
+                    this.SendPropertyChanged("OpN_Op_Date");
+                    this.OnOpN_Op_DateChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_OpN_Op_Time", DbType = "NVarChar(20)")]
+        public string OpN_Op_Time
+        {
+            get
+            {
+                return this._OpN_Op_Time;
+            }
+            set
+            {
+                if ((this._OpN_Op_Time != value))
+                {
+                    this.OnOpN_Op_TimeChanging(value);
+                    this.SendPropertyChanging();
+                    this._OpN_Op_Time = value;
+                    this.SendPropertyChanged("OpN_Op_Time");
+                    this.OnOpN_Op_TimeChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_OpN_PreOp_Dx", DbType = "NVarChar(600)")]
+        public string OpN_PreOp_Dx
+        {
+            get
+            {
+                return this._OpN_PreOp_Dx;
+            }
+            set
+            {
+                if ((this._OpN_PreOp_Dx != value))
+                {
+                    this.OnOpN_PreOp_DxChanging(value);
+                    this.SendPropertyChanging();
+                    this._OpN_PreOp_Dx = value;
+                    this.SendPropertyChanged("OpN_PreOp_Dx");
+                    this.OnOpN_PreOp_DxChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_OpN_PostOp_Dx", DbType = "NVarChar(600)")]
+        public string OpN_PostOp_Dx
+        {
+            get
+            {
+                return this._OpN_PostOp_Dx;
+            }
+            set
+            {
+                if ((this._OpN_PostOp_Dx != value))
+                {
+                    this.OnOpN_PostOp_DxChanging(value);
+                    this.SendPropertyChanging();
+                    this._OpN_PostOp_Dx = value;
+                    this.SendPropertyChanged("OpN_PostOp_Dx");
+                    this.OnOpN_PostOp_DxChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_OpN_Surgeon_ID", DbType = "Int")]
+        public System.Nullable<int> OpN_Surgeon_ID
+        {
+            get
+            {
+                return this._OpN_Surgeon_ID;
+            }
+            set
+            {
+                if ((this._OpN_Surgeon_ID != value))
+                {
+                    this.OnOpN_Surgeon_IDChanging(value);
+                    this.SendPropertyChanging();
+                    this._OpN_Surgeon_ID = value;
+                    this.SendPropertyChanged("OpN_Surgeon_ID");
+                    this.OnOpN_Surgeon_IDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_OpN_Assistants", DbType = "NVarChar(400)")]
+        public string OpN_Assistants
+        {
+            get
+            {
+                return this._OpN_Assistants;
+            }
+            set
+            {
+                if ((this._OpN_Assistants != value))
+                {
+                    this.OnOpN_AssistantsChanging(value);
+                    this.SendPropertyChanging();
+                    this._OpN_Assistants = value;
+                    this.SendPropertyChanged("OpN_Assistants");
+                    this.OnOpN_AssistantsChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_OpN_Anaesthetist_ID", DbType = "Int")]
+        public System.Nullable<int> OpN_Anaesthetist_ID
+        {
+            get
+            {
+                return this._OpN_Anaesthetist_ID;
+            }
+            set
+            {
+                if ((this._OpN_Anaesthetist_ID != value))
+                {
+                    this.OnOpN_Anaesthetist_IDChanging(value);
+                    this.SendPropertyChanging();
+                    this._OpN_Anaesthetist_ID = value;
+                    this.SendPropertyChanged("OpN_Anaesthetist_ID");
+                    this.OnOpN_Anaesthetist_IDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_OpN_Type_Of_Anaesthesia", DbType = "NVarChar(200)")]
+        public string OpN_Type_Of_Anaesthesia
+        {
+            get
+            {
+                return this._OpN_Type_Of_Anaesthesia;
+            }
+            set
+            {
+                if ((this._OpN_Type_Of_Anaesthesia != value))
+                {
+                    this.OnOpN_Type_Of_AnaesthesiaChanging(value);
+                    this.SendPropertyChanging();
+                    this._OpN_Type_Of_Anaesthesia = value;
+                    this.SendPropertyChanged("OpN_Type_Of_Anaesthesia");
+                    this.OnOpN_Type_Of_AnaesthesiaChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_OpN_Procedure_Name", DbType = "NVarChar(500)")]
+        public string OpN_Procedure_Name
+        {
+            get
+            {
+                return this._OpN_Procedure_Name;
+            }
+            set
+            {
+                if ((this._OpN_Procedure_Name != value))
+                {
+                    this.OnOpN_Procedure_NameChanging(value);
+                    this.SendPropertyChanging();
+                    this._OpN_Procedure_Name = value;
+                    this.SendPropertyChanged("OpN_Procedure_Name");
+                    this.OnOpN_Procedure_NameChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_OpN_Duration", DbType = "NVarChar(100)")]
+        public string OpN_Duration
+        {
+            get
+            {
+                return this._OpN_Duration;
+            }
+            set
+            {
+                if ((this._OpN_Duration != value))
+                {
+                    this.OnOpN_DurationChanging(value);
+                    this.SendPropertyChanging();
+                    this._OpN_Duration = value;
+                    this.SendPropertyChanged("OpN_Duration");
+                    this.OnOpN_DurationChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_OpN_Thread_Catgut", DbType = "NVarChar(100)")]
+        public string OpN_Thread_Catgut
+        {
+            get
+            {
+                return this._OpN_Thread_Catgut;
+            }
+            set
+            {
+                if ((this._OpN_Thread_Catgut != value))
+                {
+                    this.OnOpN_Thread_CatgutChanging(value);
+                    this.SendPropertyChanging();
+                    this._OpN_Thread_Catgut = value;
+                    this.SendPropertyChanged("OpN_Thread_Catgut");
+                    this.OnOpN_Thread_CatgutChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_OpN_Thread_Vicryl", DbType = "NVarChar(100)")]
+        public string OpN_Thread_Vicryl
+        {
+            get
+            {
+                return this._OpN_Thread_Vicryl;
+            }
+            set
+            {
+                if ((this._OpN_Thread_Vicryl != value))
+                {
+                    this.OnOpN_Thread_VicrylChanging(value);
+                    this.SendPropertyChanging();
+                    this._OpN_Thread_Vicryl = value;
+                    this.SendPropertyChanged("OpN_Thread_Vicryl");
+                    this.OnOpN_Thread_VicrylChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_OpN_Thread_Proline", DbType = "NVarChar(100)")]
+        public string OpN_Thread_Proline
+        {
+            get
+            {
+                return this._OpN_Thread_Proline;
+            }
+            set
+            {
+                if ((this._OpN_Thread_Proline != value))
+                {
+                    this.OnOpN_Thread_ProlineChanging(value);
+                    this.SendPropertyChanging();
+                    this._OpN_Thread_Proline = value;
+                    this.SendPropertyChanged("OpN_Thread_Proline");
+                    this.OnOpN_Thread_ProlineChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_OpN_Thread_Silk", DbType = "NVarChar(100)")]
+        public string OpN_Thread_Silk
+        {
+            get
+            {
+                return this._OpN_Thread_Silk;
+            }
+            set
+            {
+                if ((this._OpN_Thread_Silk != value))
+                {
+                    this.OnOpN_Thread_SilkChanging(value);
+                    this.SendPropertyChanging();
+                    this._OpN_Thread_Silk = value;
+                    this.SendPropertyChanged("OpN_Thread_Silk");
+                    this.OnOpN_Thread_SilkChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_OpN_Procedure_Notes", DbType = "NVarChar(MAX)")]
+        public string OpN_Procedure_Notes
+        {
+            get
+            {
+                return this._OpN_Procedure_Notes;
+            }
+            set
+            {
+                if ((this._OpN_Procedure_Notes != value))
+                {
+                    this.OnOpN_Procedure_NotesChanging(value);
+                    this.SendPropertyChanging();
+                    this._OpN_Procedure_Notes = value;
+                    this.SendPropertyChanged("OpN_Procedure_Notes");
+                    this.OnOpN_Procedure_NotesChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_OpN_Blood_Loss", DbType = "NVarChar(60)")]
+        public string OpN_Blood_Loss
+        {
+            get
+            {
+                return this._OpN_Blood_Loss;
+            }
+            set
+            {
+                if ((this._OpN_Blood_Loss != value))
+                {
+                    this.OnOpN_Blood_LossChanging(value);
+                    this.SendPropertyChanging();
+                    this._OpN_Blood_Loss = value;
+                    this.SendPropertyChanged("OpN_Blood_Loss");
+                    this.OnOpN_Blood_LossChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_OpN_IV_Fluids", DbType = "NVarChar(60)")]
+        public string OpN_IV_Fluids
+        {
+            get
+            {
+                return this._OpN_IV_Fluids;
+            }
+            set
+            {
+                if ((this._OpN_IV_Fluids != value))
+                {
+                    this.OnOpN_IV_FluidsChanging(value);
+                    this.SendPropertyChanging();
+                    this._OpN_IV_Fluids = value;
+                    this.SendPropertyChanged("OpN_IV_Fluids");
+                    this.OnOpN_IV_FluidsChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_OpN_Blood_Transfused", DbType = "NVarChar(60)")]
+        public string OpN_Blood_Transfused
+        {
+            get
+            {
+                return this._OpN_Blood_Transfused;
+            }
+            set
+            {
+                if ((this._OpN_Blood_Transfused != value))
+                {
+                    this.OnOpN_Blood_TransfusedChanging(value);
+                    this.SendPropertyChanging();
+                    this._OpN_Blood_Transfused = value;
+                    this.SendPropertyChanged("OpN_Blood_Transfused");
+                    this.OnOpN_Blood_TransfusedChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_OpN_Urine_Output", DbType = "NVarChar(60)")]
+        public string OpN_Urine_Output
+        {
+            get
+            {
+                return this._OpN_Urine_Output;
+            }
+            set
+            {
+                if ((this._OpN_Urine_Output != value))
+                {
+                    this.OnOpN_Urine_OutputChanging(value);
+                    this.SendPropertyChanging();
+                    this._OpN_Urine_Output = value;
+                    this.SendPropertyChanged("OpN_Urine_Output");
+                    this.OnOpN_Urine_OutputChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_OpN_Swab_Instrument_Count", DbType = "NVarChar(120)")]
+        public string OpN_Swab_Instrument_Count
+        {
+            get
+            {
+                return this._OpN_Swab_Instrument_Count;
+            }
+            set
+            {
+                if ((this._OpN_Swab_Instrument_Count != value))
+                {
+                    this.OnOpN_Swab_Instrument_CountChanging(value);
+                    this.SendPropertyChanging();
+                    this._OpN_Swab_Instrument_Count = value;
+                    this.SendPropertyChanged("OpN_Swab_Instrument_Count");
+                    this.OnOpN_Swab_Instrument_CountChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_OpN_Scrub_Nurse_ID", DbType = "Int")]
+        public System.Nullable<int> OpN_Scrub_Nurse_ID
+        {
+            get
+            {
+                return this._OpN_Scrub_Nurse_ID;
+            }
+            set
+            {
+                if ((this._OpN_Scrub_Nurse_ID != value))
+                {
+                    this.OnOpN_Scrub_Nurse_IDChanging(value);
+                    this.SendPropertyChanging();
+                    this._OpN_Scrub_Nurse_ID = value;
+                    this.SendPropertyChanged("OpN_Scrub_Nurse_ID");
+                    this.OnOpN_Scrub_Nurse_IDChanged();
                 }
             }
         }
@@ -99632,6 +100160,18 @@ namespace PMS
 
         private string _Airway_Pressure;
 
+        private string _Ctrl_Vt;
+
+        private string _Ctrl_Rate;
+
+        private string _Ctrl_IE_Ratio;
+
+        private string _Ctrl_PEEP;
+
+        private string _Ctrl_FiO2;
+
+        private string _Ctrl_Others;
+
         private string _Recovery_Notes;
 
         private string _Comments_OT_To_RR;
@@ -99738,6 +100278,18 @@ namespace PMS
         partial void OnMaint_RRChanged();
         partial void OnAirway_PressureChanging(string value);
         partial void OnAirway_PressureChanged();
+        partial void OnCtrl_VtChanging(string value);
+        partial void OnCtrl_VtChanged();
+        partial void OnCtrl_RateChanging(string value);
+        partial void OnCtrl_RateChanged();
+        partial void OnCtrl_IE_RatioChanging(string value);
+        partial void OnCtrl_IE_RatioChanged();
+        partial void OnCtrl_PEEPChanging(string value);
+        partial void OnCtrl_PEEPChanged();
+        partial void OnCtrl_FiO2Changing(string value);
+        partial void OnCtrl_FiO2Changed();
+        partial void OnCtrl_OthersChanging(string value);
+        partial void OnCtrl_OthersChanged();
         partial void OnRecovery_NotesChanging(string value);
         partial void OnRecovery_NotesChanged();
         partial void OnComments_OT_To_RRChanging(string value);
@@ -100563,6 +101115,126 @@ namespace PMS
                     this._Airway_Pressure = value;
                     this.SendPropertyChanged("Airway_Pressure");
                     this.OnAirway_PressureChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Ctrl_Vt", DbType = "NVarChar(30)")]
+        public string Ctrl_Vt
+        {
+            get
+            {
+                return this._Ctrl_Vt;
+            }
+            set
+            {
+                if ((this._Ctrl_Vt != value))
+                {
+                    this.OnCtrl_VtChanging(value);
+                    this.SendPropertyChanging();
+                    this._Ctrl_Vt = value;
+                    this.SendPropertyChanged("Ctrl_Vt");
+                    this.OnCtrl_VtChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Ctrl_Rate", DbType = "NVarChar(30)")]
+        public string Ctrl_Rate
+        {
+            get
+            {
+                return this._Ctrl_Rate;
+            }
+            set
+            {
+                if ((this._Ctrl_Rate != value))
+                {
+                    this.OnCtrl_RateChanging(value);
+                    this.SendPropertyChanging();
+                    this._Ctrl_Rate = value;
+                    this.SendPropertyChanged("Ctrl_Rate");
+                    this.OnCtrl_RateChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Ctrl_IE_Ratio", DbType = "NVarChar(30)")]
+        public string Ctrl_IE_Ratio
+        {
+            get
+            {
+                return this._Ctrl_IE_Ratio;
+            }
+            set
+            {
+                if ((this._Ctrl_IE_Ratio != value))
+                {
+                    this.OnCtrl_IE_RatioChanging(value);
+                    this.SendPropertyChanging();
+                    this._Ctrl_IE_Ratio = value;
+                    this.SendPropertyChanged("Ctrl_IE_Ratio");
+                    this.OnCtrl_IE_RatioChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Ctrl_PEEP", DbType = "NVarChar(30)")]
+        public string Ctrl_PEEP
+        {
+            get
+            {
+                return this._Ctrl_PEEP;
+            }
+            set
+            {
+                if ((this._Ctrl_PEEP != value))
+                {
+                    this.OnCtrl_PEEPChanging(value);
+                    this.SendPropertyChanging();
+                    this._Ctrl_PEEP = value;
+                    this.SendPropertyChanged("Ctrl_PEEP");
+                    this.OnCtrl_PEEPChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Ctrl_FiO2", DbType = "NVarChar(30)")]
+        public string Ctrl_FiO2
+        {
+            get
+            {
+                return this._Ctrl_FiO2;
+            }
+            set
+            {
+                if ((this._Ctrl_FiO2 != value))
+                {
+                    this.OnCtrl_FiO2Changing(value);
+                    this.SendPropertyChanging();
+                    this._Ctrl_FiO2 = value;
+                    this.SendPropertyChanged("Ctrl_FiO2");
+                    this.OnCtrl_FiO2Changed();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Ctrl_Others", DbType = "NVarChar(500)")]
+        public string Ctrl_Others
+        {
+            get
+            {
+                return this._Ctrl_Others;
+            }
+            set
+            {
+                if ((this._Ctrl_Others != value))
+                {
+                    this.OnCtrl_OthersChanging(value);
+                    this.SendPropertyChanging();
+                    this._Ctrl_Others = value;
+                    this.SendPropertyChanged("Ctrl_Others");
+                    this.OnCtrl_OthersChanged();
                 }
             }
         }
