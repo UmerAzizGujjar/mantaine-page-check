@@ -224,6 +224,44 @@ namespace PMS.Modules.PatientManagement
                 return "0";
             }
         }
+
+        // A camp patient skips the card fee only on the camp visit itself: registered today,
+        // no card fee charged yet and no OPD visit saved. Any later visit pays the card fee.
+        private static bool IsCampFeeExempt(DataBaseDataContext db, int pat_id)
+        {
+            var p = db.Reg_patients
+                      .Where(x => x.pat_id == pat_id)
+                      .Select(x => new { x.Is_Camp_Patient, x.Card_fee, x.Created_time })
+                      .FirstOrDefault();
+            if (p == null || p.Is_Camp_Patient != true)
+                return false;
+            if (p.Card_fee.HasValue && p.Card_fee.Value > 0)
+                return false;
+            if (!p.Created_time.HasValue || p.Created_time.Value.Date != DateTime.Today)
+                return false;
+            return !db.Patients.Any(v => v.Reg_PatId == pat_id && v.isCancel != true);
+        }
+
+        [WebMethod]
+        public static string AllowCampPatient()
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var camp = (from tbl in db.sys_Parms
+                                where tbl.Name == "Camp Patient"
+                                select tbl.Code)
+                              .FirstOrDefault();
+
+                    return camp ?? "0";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "0";
+            }
+        }
         public static class ValidationHelper
         {
             public static bool IsValidMobile(string mobile)
@@ -326,6 +364,11 @@ namespace PMS.Modules.PatientManagement
         {
             var UserId = AppConfig.UserID;
             DataBaseDataContext db = new DataBaseDataContext();
+
+            // Camp visit: no card fee, so no card fee voucher is posted
+            if (IsCampFeeExempt(db, Convert.ToInt32(Pat_Id)))
+                return (new JavaScriptSerializer()).Serialize(new[] { new { Message = "Camp patient registered. No card fee charged." } });
+
             var Details = db.sp_ApprovePatientCardFee(Convert.ToInt32(Pat_Id), UserId);
             return (new JavaScriptSerializer()).Serialize(Details);
         }
@@ -1255,7 +1298,7 @@ namespace PMS.Modules.PatientManagement
             string Mobile, string Date_Of_Birth, string CNIC, string OtherCNIC, string Address,
             string PatientID, string martail_status, string Age,
            string stno, string city, string area,
-            string city_val, string area_val, string Province, string Country, string cardfee)
+            string city_val, string area_val, string Province, string Country, string cardfee, bool isCampPatient)
         {
             Full_Name = SanitizeInput(Full_Name);
             Relation = SanitizeInput(Relation);
@@ -1404,13 +1447,25 @@ namespace PMS.Modules.PatientManagement
                 var company = db.sys_Companies.FirstOrDefault(c => c.Company_ID == AppConfig.Company_ID);
                 string companyCode = company?.CompanyCode ?? "HOSP";
                 pat.mr_no_sequence = string.IsNullOrWhiteSpace(companyCode) ? PatientNumber : $"{companyCode}-{PatientNumber}";
-                pat.Card_fee = Convert.ToDecimal(
-                         (from tbl in db.sys_Parms
-                          where tbl.Name == "OPD Fee"
-                          select tbl.Code).FirstOrDefault());
-                pat.charge_time = DateTime.Now;
-                pat.Charged_by = AppConfig.UserID;
-                pat.Remarks = "Card Fee Charge Via OPD Time";
+
+                // Camp patient flag is honoured only when sys_Parms 'Camp Patient' = '01'
+                bool campAllowed = db.sys_Parms.Any(p => p.Name == "Camp Patient" && p.Code == "01");
+                pat.Is_Camp_Patient = isCampPatient && campAllowed;
+                if (pat.Is_Camp_Patient == true)
+                {
+                    pat.Card_fee = 0;
+                    pat.Remarks = "Camp Patient - No Card Fee";
+                }
+                else
+                {
+                    pat.Card_fee = Convert.ToDecimal(
+                             (from tbl in db.sys_Parms
+                              where tbl.Name == "OPD Fee"
+                              select tbl.Code).FirstOrDefault());
+                    pat.charge_time = DateTime.Now;
+                    pat.Charged_by = AppConfig.UserID;
+                    pat.Remarks = "Card Fee Charge Via OPD Time";
+                }
                 db.Reg_patients.InsertOnSubmit(pat);
                 db.SubmitChanges();
             }
@@ -1436,6 +1491,11 @@ namespace PMS.Modules.PatientManagement
                 using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
                 {
                     var patient = db.Reg_patients.FirstOrDefault(p => p.pat_id == reg_id);
+
+                    if (patient != null && IsCampFeeExempt(db, reg_id))
+                    {
+                        return new JavaScriptSerializer().Serialize(new { success = false, message = "Medical camp patient. No card fee charged." });
+                    }
 
                     if (patient != null)
                     {
@@ -1469,9 +1529,12 @@ namespace PMS.Modules.PatientManagement
             {
                 using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
                 {
-                    var cardFee = (from data in db.Reg_patients
-                                   where data.pat_id == reg_id
-                                   select data.Card_fee).FirstOrDefault();
+                    var pat = (from data in db.Reg_patients
+                               where data.pat_id == reg_id
+                               select new { data.Card_fee, data.Is_Camp_Patient }).FirstOrDefault();
+                    var cardFee = pat?.Card_fee;
+                    bool isCampPatient = pat?.Is_Camp_Patient == true;
+                    bool campExempt = isCampPatient && IsCampFeeExempt(db, reg_id);
 
                     // Handle null or zero
                     bool hasCardFee = cardFee.HasValue && cardFee.Value > 0;
@@ -1479,6 +1542,8 @@ namespace PMS.Modules.PatientManagement
                     var result = new
                     {
                         hasCardFee = hasCardFee,
+                        isCampPatient = isCampPatient,
+                        campExempt = campExempt,
                         cardFee = cardFee ?? 0, // return 0 if null
                         message = !hasCardFee ? "Patient has no card fee." : "Card fee already charged."
                     };
@@ -1528,12 +1593,12 @@ namespace PMS.Modules.PatientManagement
                 errors.Add("Patient category is required.");
 
             var category = data?.pat_category;
-            if (category == "01" || category == "02" || category == "04" || category == "05")
+            if (category == "01" || category == "02" || category == "04" || category == "05" || category == "91")
             {
                 if (string.IsNullOrWhiteSpace(data?.Department) || data.Department == "0")
                     errors.Add("Department is required for this patient category.");
             }
-            if (category == "02" || category == "03")
+            if (category == "02" || category == "03" || category == "91")
             {
                 if (string.IsNullOrWhiteSpace(data?.doctor) || data.doctor == "0")
                     errors.Add("Doctor is required for this patient category.");
@@ -1559,6 +1624,16 @@ namespace PMS.Modules.PatientManagement
 
             if (errors.Any())
                 return "ERROR: " + string.Join("; ", errors);
+
+            // Medical Camp (91): no OPD fee, receipt and actual fee are saved as 0
+            if (category == "91")
+            {
+                data.Fees = 0;
+                data.Actual_Fees = 0;
+                data.discount = "0";
+                data.Hosp_share = 0;
+                data.Doc_Share = 0;
+            }
 
             string lockKey = null;
 

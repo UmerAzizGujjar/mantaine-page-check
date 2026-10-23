@@ -12,7 +12,7 @@
         var isEditMode = false;
         var flags = { 1: false, 2: false, 3: false };      // which steps are saved
         var lookups = { doctors: [], staff: [] };
-        var HISTORY_ITEMS = ['Previous Anesthesia', 'HTN', 'IHD', 'Asthma', 'COPD', 'Hepatic', 'Neurological', 'Renal', 'Epilepsy', 'Other', 'Allergic', 'Physical Activity / APD'];
+        var HISTORY_ITEMS = ['Previous Anesthesia', 'Diabetes', 'HTN', 'IHD', 'Asthma', 'COPD', 'Hepatic', 'Neurological', 'Renal', 'Other', 'Allergic', 'Physical Activity / APD'];
         var P = { s1: 's1_', s2: 's2_', s3: 's3_' };
 
         // ===== field layout (one array per step; rendered into the cards below) =====
@@ -33,7 +33,7 @@
                 { g: 'History', i: 'fa-history', custom: 'history', f: [
                     { c: 'Family_History', l: 'Family History', t: 'area', span: 1 }] },
                 { g: 'Examination', i: 'fa-stethoscope', f: [
-                    { c: 'Phys_Exam', l: 'Phys Exam', t: 'area' },
+                    { c: 'Phys_Exam', l: 'CNS', t: 'area' },
                     { c: 'Resp_Exam', l: 'Resp', t: 'area' },
                     { c: 'CVS_Exam', l: 'CVS', t: 'area' },
                     { c: 'Other_Exam', l: 'Other', t: 'area' }] },
@@ -97,9 +97,12 @@
                     { c: 'Airway_Position', l: 'Position', t: 'text' }] },
                 { g: 'Maintenance', i: 'fa-cogs', f: [
                     { c: 'Maintenance_Mode', l: 'Mode', t: 'pills', o: ['Spontaneous', 'Controlled'] },
-                    { c: 'Maint_O2', l: 'O&#8322;', t: 'text' }, { c: 'Maint_N2O', l: 'N&#8322;O', t: 'text' },
-                    { c: 'Maint_VI', l: 'VI', t: 'text' }, { c: 'Maint_RR', l: 'RR', t: 'text' },
-                    { c: 'Airway_Pressure', l: 'Airway Pressure', t: 'text' }] },
+                    { c: 'Maint_O2', l: 'O&#8322;', t: 'text' }, { c: 'Maint_N2O', l: 'N&#8322;O', t: 'text', hide: 1 },
+                    { c: 'Maint_VI', l: 'VI', t: 'text', hide: 1 }, { c: 'Maint_RR', l: 'RR', t: 'text' },
+                    { c: 'Ctrl_Vt', l: 'Vt', t: 'text' }, { c: 'Ctrl_Rate', l: 'Rate', t: 'text' },
+                    { c: 'Ctrl_IE_Ratio', l: 'I:E Ratio', t: 'text' }, { c: 'Ctrl_PEEP', l: 'PEEP', t: 'text' },
+                    { c: 'Ctrl_FiO2', l: 'FiO&#8322;', t: 'text' }, { c: 'Ctrl_Others', l: 'Others', t: 'text', w: 2 },
+                    { c: 'Airway_Pressure', l: 'Airway Pressure', t: 'text', hide: 1 }] },
                 { g: 'Monitoring Chart', i: 'fa-line-chart', custom: 'vitals', f: [
                     { c: 'Total_Blood_Loss', l: 'Blood Loss', t: 'text' },
                     { c: 'Total_Urine_Output', l: 'Urine Output', t: 'text' }] },
@@ -174,7 +177,7 @@
                     ctl = '<div class="an-pills" data-for="' + id + '">' + f.o.map(function (o) { return '<button type="button" class="an-pill" data-val="' + o + '">' + o + '</button>'; }).join('') +
                         '</div><input type="hidden" ' + base + ' />'; break;
             }
-            return '<div class="' + cls + '">' + lab + ctl + '</div>';
+            return '<div class="' + cls + '"' + (f.hide ? ' style="display:none;"' : '') + '>' + lab + ctl + '</div>';
         }
 
         function renderStep(step) {
@@ -285,8 +288,7 @@
         }
         function syncPills($hidden) {
             var wrap = $('.an-pills[data-for="' + $hidden.attr('id') + '"]');
-            wrap.find('.an-pill').each(function () { $(this).toggleClass('on', $(this).data('val') == $hidden.val()); });
-        }
+            wrap.find('.an-pill').each(function () { $(this).toggleClass('on', $(this).data('val') == $hidden.val()); });        }
         function checkRequired(sel) {
             var bad = [];
             $(sel).find('[data-req="1"]').each(function () {

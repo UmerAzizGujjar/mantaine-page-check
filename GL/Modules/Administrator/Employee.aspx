@@ -6,7 +6,16 @@
       <script type="text/javascript">
 
           var Panels = '';
+          var autoAccountId = '0';
           $(document).ready(function () {
+              $('#ddlAccount').prop("disabled", true);
+              $("#chkmanual").change(function () {
+                  if (this.checked) {
+                      $('#ddlAccount').prop("disabled", false);
+                  } else {
+                      $('#ddlAccount').val(autoAccountId).prop("disabled", true).trigger('change');
+                  }
+              });
               $('#TxtTime_In').ptTimeSelect();
               $("#TxtTime_Out").ptTimeSelect();
               filldepartment();
@@ -33,12 +42,13 @@
 
               var id = '<%= Request.QueryString["ID"] %>';
           if (id !== "") {
-
-              populatedata(id);
-
+              // Accounts first, so the employee's Account_ID can be selected
+              fillAccounts(function () {
+                  populatedata(id);
+              });
           }
           else {
-              loadnewaccountToCreate();
+              fillAccounts();
               $('#TxtTime_In').val(t);
               $("#TxtTime_Out").val(t);
 
@@ -150,6 +160,17 @@
               return options;
           }
 
+          function fillAccounts(callback) {
+              PageMethods.LoadAccounts(function (data) {
+                  var options = '<option value="0">Please Select</option>';
+                  $.each(JSON.parse(data), function (key, value) {
+                      options += '<option value="' + value.Account_ID + '" >' + value.name + '</option>';
+                  });
+                  $('#ddlAccount').html(options).select2({ width: "100%" });
+                  if (callback) callback();
+              });
+          }
+
           function to12Hour(time24) {
               if (!time24) return '';
               const [h, m] = time24.split(':');
@@ -234,24 +255,13 @@
                   }, 2500)
 
 
-                  if (empData.Account_ID != null) {
-                      PageMethods.LoadGLAccount(parseInt(empData.Account_ID), function (data) {
-                          var AccountData = JSON.parse(data);
-
-                          $("#txtAccount_Code_Name").val(AccountData.txtAccount_Code_Name);
-                          $("#hdfAccount_Name").val(AccountData.hdfAccount_Name);
-                          $("#hdfAccount_Code").val(AccountData.hdfAccount_Code);
-                          $("#hdfParent_Code").val(AccountData.hdfParent_Code);
-                          $("#hdfAccount_Serial").val(AccountData.hdfAccount_Serial);
-                          $("#hdfLevel").val(AccountData.hdfLevel);
-                          $("#hdfAccount_ID").val(AccountData.hdfAccount_ID);
-
-
-                      }
-                          , function (err) {
-                              alert("Error: " + err.get_message());
-                          });
+                  // A missing/deleted account just leaves the dropdown on "Please Select"
+                  $("#hdfAccount_ID").val(empData.Account_ID || '');
+                  $("#chkmanual").prop("checked", empData.Ismanual);
+                  if (!empData.Ismanual) {
+                      autoAccountId = empData.Account_ID || '0';
                   }
+                  $("#ddlAccount").val(empData.Account_ID || '0').prop("disabled", !empData.Ismanual).trigger('change');
 
               },
                   function (err) {
@@ -286,25 +296,6 @@
           }
 
 
-          function loadnewaccountToCreate() {
-
-              PageMethods.LoadNewAccountToCreate(function (data) {
-                  var NewAccountData = JSON.parse(data);
-
-                  $("#hdfParent_Code").val(NewAccountData.NewhdfParent_Code);
-                  $("#hdfAccount_Code").val(NewAccountData.NewhdfAccount_Code);
-                  $("#hdfAccount_Serial").val(NewAccountData.NewhdfAccount_Serial);
-                  $("#hdfLevel").val(NewAccountData.NewhdfLevel);
-
-
-
-              }
-                  , function (err) {
-                      alert("Error: " + err.get_message());
-                  });
-
-
-          }
           function to24Hour(timeStr) {
               if (!timeStr) return '';
               const [time, modifier] = timeStr.split(' ');
@@ -377,6 +368,24 @@
               var hdnEmp = $('#hdnEmp').val();
               var lblMessage = $('#lblMessage').val();
               var CustomerJSON = $('#CustomerJSON').val() || '';
+              var Ismanual = $('#chkmanual').prop('checked');
+              var ddlAccount = $('#ddlAccount').val() || '0';
+
+              if (Ismanual == true && ddlAccount == '0') {
+                  Swal.fire({
+                      icon: 'error',
+                      title: 'Error!',
+                      text: 'Please select GL Account',
+                      showConfirmButton: false,
+                      timer: 2000,
+                      customClass: {
+                          popup: 'swal-big-popup',
+                          title: 'swal-big-title',
+                          htmlContainer: 'swal-big-text'
+                      }
+                  });
+                  return;
+              }
 
               //if (!txtEmployee_Date_of_Birth || txtEmployee_Date_of_Birth.trim() === '') {
               //    Swal.fire({
@@ -489,6 +498,8 @@
                   "isDoc": isDoc,
                   "isVisiting": isVisiting,
                   "hdfAccount_ID": hdfAccount_ID,
+                  "Ismanual": Ismanual,
+                  "ddlAccount": ddlAccount,
                   "hdfParent_Code": hdfParent_Code,
                   "hdfAccount_Serial": hdfAccount_Serial,
                   "hdfLevel": hdfLevel,
@@ -791,8 +802,13 @@
             <div class="emp-card-body">
                 <div class="emp-bento emp-bento--3">
                     <div class="emp-field">
-                        <label class="emp-label">GL Account</label>
-                        <input type="text" id="txtAccount_Code_Name" name="txtAccount_Code_Name" readonly class="emp-input emp-input--readonly" />
+                        <label class="emp-label">
+                            GL Account
+                            <span style="float:right; font-weight:normal; cursor:pointer;">
+                                <input type="checkbox" id="chkmanual" name="chkmanual" style="vertical-align:middle; margin:0 3px 0 0; cursor:pointer;" />Manual
+                            </span>
+                        </label>
+                        <select id="ddlAccount" name="ddlAccount" class="emp-select"></select>
                     </div>
                     <div class="emp-field">
                         <label class="emp-label">Building</label>

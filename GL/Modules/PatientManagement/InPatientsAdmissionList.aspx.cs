@@ -399,5 +399,47 @@ namespace PMS
                 return new JavaScriptSerializer().Serialize(new List<object>());
             }
         }
+
+        // Read-only detail of one admission (row click on the list), with its billed services
+        [WebMethod]
+        public static object GetAdmissionDetail(int In_Patient_ID)
+        {
+            DataTable dtAdmission = DBClass.getDataTable(@"
+                SELECT IP.In_Patient_ID, IP.IPD_No, P.Gender, P.Age_years, P.NIC, P.Mobile1, P.Permanent_Address,
+                       FORMAT(IP.Admission_Date, 'dd-MMM-yyyy hh:mm tt') AS Admission_Date,
+                       FORMAT(IP.Expected_Discharge_Date, 'dd-MMM-yyyy') AS Expected_Discharge_Date,
+                       (SELECT TOP 1 hr.Emp_Name FROM HR_Employees hr WHERE CONVERT(varchar(20), hr.Emp_ID) = IP.Doctor) AS Doctor,
+                       (SELECT TOP 1 hr.Emp_Name FROM HR_Employees hr WHERE CONVERT(varchar(20), hr.Emp_ID) = IP.Referred_Doctor) AS Referred_Doctor,
+                       IP.Provisional_Diagnosis, IP.Health_Complaints, IP.packagae_name, IP.Room_Type, IP.Admission_Fees
+                FROM In_Patient IP
+                JOIN Reg_patient P ON P.pat_id = IP.Patient_ID
+                WHERE IP.In_Patient_ID = @In_Patient_ID",
+                DBClass.Param("@In_Patient_ID", In_Patient_ID));
+
+            DataTable dtServices = DBClass.getDataTable(@"
+                SELECT b.Bill_No, d.Item_Name, d.Qty, d.Amount, d.Discount_Amount, d.Net_Amount, ISNULL(b.isCancel, 0) AS isCancel
+                FROM Ar_Billings b
+                JOIN Ar_Billing_Details d ON d.Bill_ID = b.Bill_ID
+                WHERE b.In_Patient_ID = @In_Patient_ID
+                ORDER BY b.Bill_ID, d.Bill_Details_ID",
+                DBClass.Param("@In_Patient_ID", In_Patient_ID));
+
+            return new { admission = ToRows(dtAdmission).FirstOrDefault(), services = ToRows(dtServices) };
+        }
+
+        private static List<Dictionary<string, object>> ToRows(DataTable dt)
+        {
+            var rows = new List<Dictionary<string, object>>();
+            foreach (DataRow dr in dt.Rows)
+            {
+                var row = new Dictionary<string, object>();
+                foreach (DataColumn col in dt.Columns)
+                {
+                    row[col.ColumnName] = dr[col] == DBNull.Value ? null : dr[col];
+                }
+                rows.Add(row);
+            }
+            return rows;
+        }
     }
 }

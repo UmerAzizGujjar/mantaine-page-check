@@ -38,6 +38,23 @@ namespace PMS
                 }
             }
 
+            // Operation Notes shows only after the patient's Anesthesia step 1 and step 2 are saved
+            string patientText = string.IsNullOrEmpty(txtPatient_ID.Text) ? Request.QueryString["ID"] : txtPatient_ID.Text;
+            int patientId;
+            bool stepsSaved = int.TryParse(patientText, out patientId) && AnesthesiaStepsSaved(patientId);
+            liOpNotes.Visible = stepsSaved;
+            phOpNotes.Visible = stepsSaved;
+        }
+
+        /// <summary>True when the patient has an Anesthesia record with Pre-op (step 1) and Intra-op (step 2) saved.</summary>
+        private static bool AnesthesiaStepsSaved(int patientId)
+        {
+            using (var adb = new DataBaseDataContext(DBClass.ConnectionString()))
+            {
+                int companyId = AppConfig.Company_ID;
+                return adb.Anesthesia_PreOps.Any(p => p.Patient_ID == patientId && p.Company_ID == companyId
+                                                   && adb.Anesthesia_IntraOps.Any(i => i.Anesthesia_ID == p.Anesthesia_ID));
+            }
         }
 
         private void ClearService()
@@ -132,6 +149,29 @@ namespace PMS
             ddlDoctors.DataValueField = "Emp_ID";
             ddlDoctors.Items.Add(new ListItem("Please Select", "0"));
             ddlDoctors.DataBind();
+
+            var StaffList = (from st in db.HR_Employees
+                             where st.Resign_Date == null
+                             orderby st.Emp_Name
+                             select st).ToList();
+
+            ddlOpN_Surgeon.DataSource = EmpList;
+            ddlOpN_Surgeon.DataTextField = "Emp_Name";
+            ddlOpN_Surgeon.DataValueField = "Emp_ID";
+            ddlOpN_Surgeon.Items.Add(new ListItem("Please Select", "0"));
+            ddlOpN_Surgeon.DataBind();
+
+            ddlOpN_Anaesthetist.DataSource = EmpList;
+            ddlOpN_Anaesthetist.DataTextField = "Emp_Name";
+            ddlOpN_Anaesthetist.DataValueField = "Emp_ID";
+            ddlOpN_Anaesthetist.Items.Add(new ListItem("Please Select", "0"));
+            ddlOpN_Anaesthetist.DataBind();
+
+            ddlOpN_Scrub_Nurse.DataSource = StaffList;
+            ddlOpN_Scrub_Nurse.DataTextField = "Emp_Name";
+            ddlOpN_Scrub_Nurse.DataValueField = "Emp_ID";
+            ddlOpN_Scrub_Nurse.Items.Add(new ListItem("Please Select", "0"));
+            ddlOpN_Scrub_Nurse.DataBind();
 
             
 
@@ -760,6 +800,19 @@ namespace PMS
             return (new JavaScriptSerializer().Serialize(Routes));
         }
 
+        // Operation Notes tab: a nullable employee id from a dropdown ("0" = Please Select).
+        private static int? OpNId(string value)
+        {
+            int id;
+            return int.TryParse(value, out id) && id > 0 ? (int?)id : null;
+        }
+
+        private static void SelectOpNId(DropDownList ddl, int? id)
+        {
+            ListItem item = id == null ? null : ddl.Items.FindByValue(id.ToString());
+            ddl.SelectedValue = item == null ? "0" : item.Value;
+        }
+
         protected void btnSave_Click(object sender, EventArgs e)
         {
 
@@ -879,6 +932,32 @@ namespace PMS
                 operationBooking.Intra_Operative_Fluid = chk_Bloodtrans.Checked;
                 operationBooking.Intra_Operative_Urine = chk_Urine.Checked;
                 operationBooking.Swab_Instrument = chk_Swab_Instrument.Checked;
+
+                if (AnesthesiaStepsSaved(operationBooking.Patient_ID ?? 0))
+                {
+                    operationBooking.OpN_Bed_Room_No = txtOpN_Bed_Room_No.Text;
+                    operationBooking.OpN_Op_Date = string.IsNullOrEmpty(txtOpN_Op_Date.Text) ? (DateTime?)null : Convert.ToDateTime(txtOpN_Op_Date.Text);
+                    operationBooking.OpN_Op_Time = txtOpN_Op_Time.Text;
+                    operationBooking.OpN_PreOp_Dx = txtOpN_PreOp_Dx.Text;
+                    operationBooking.OpN_PostOp_Dx = txtOpN_PostOp_Dx.Text;
+                    operationBooking.OpN_Surgeon_ID = OpNId(ddlOpN_Surgeon.SelectedValue);
+                    operationBooking.OpN_Assistants = txtOpN_Assistants.Text;
+                    operationBooking.OpN_Anaesthetist_ID = OpNId(ddlOpN_Anaesthetist.SelectedValue);
+                    operationBooking.OpN_Type_Of_Anaesthesia = txtOpN_Type_Of_Anaesthesia.Text;
+                    operationBooking.OpN_Procedure_Name = txtOpN_Procedure_Name.Text;
+                    operationBooking.OpN_Duration = txtOpN_Duration.Text;
+                    operationBooking.OpN_Thread_Catgut = txtOpN_Thread_Catgut.Text;
+                    operationBooking.OpN_Thread_Vicryl = txtOpN_Thread_Vicryl.Text;
+                    operationBooking.OpN_Thread_Proline = txtOpN_Thread_Proline.Text;
+                    operationBooking.OpN_Thread_Silk = txtOpN_Thread_Silk.Text;
+                    operationBooking.OpN_Procedure_Notes = txtOpN_Procedure_Notes.Text;
+                    operationBooking.OpN_Blood_Loss = txtOpN_Blood_Loss.Text;
+                    operationBooking.OpN_IV_Fluids = txtOpN_IV_Fluids.Text;
+                    operationBooking.OpN_Blood_Transfused = txtOpN_Blood_Transfused.Text;
+                    operationBooking.OpN_Urine_Output = txtOpN_Urine_Output.Text;
+                    operationBooking.OpN_Swab_Instrument_Count = txtOpN_Swab_Instrument_Count.Text;
+                    operationBooking.OpN_Scrub_Nurse_ID = OpNId(ddlOpN_Scrub_Nurse.SelectedValue);
+                }
 
                 
 
@@ -1123,6 +1202,28 @@ namespace PMS
                                             pt.Gender,
                                             pt.Age_years,
                                             ob.Operation_Booking_ID,
+                                            ob.OpN_Bed_Room_No,
+                                            ob.OpN_Op_Date,
+                                            ob.OpN_Op_Time,
+                                            ob.OpN_PreOp_Dx,
+                                            ob.OpN_PostOp_Dx,
+                                            ob.OpN_Surgeon_ID,
+                                            ob.OpN_Assistants,
+                                            ob.OpN_Anaesthetist_ID,
+                                            ob.OpN_Type_Of_Anaesthesia,
+                                            ob.OpN_Procedure_Name,
+                                            ob.OpN_Duration,
+                                            ob.OpN_Thread_Catgut,
+                                            ob.OpN_Thread_Vicryl,
+                                            ob.OpN_Thread_Proline,
+                                            ob.OpN_Thread_Silk,
+                                            ob.OpN_Procedure_Notes,
+                                            ob.OpN_Blood_Loss,
+                                            ob.OpN_IV_Fluids,
+                                            ob.OpN_Blood_Transfused,
+                                            ob.OpN_Urine_Output,
+                                            ob.OpN_Swab_Instrument_Count,
+                                            ob.OpN_Scrub_Nurse_ID,
                                             ob.Operation_Name,
                                             ob.Operation_Theater_No,
                                             ob.Operation_Theater_Name,
@@ -1266,6 +1367,29 @@ namespace PMS
                     chk_Bloodtrans.Checked = operationBooking.Intra_Operative_Fluid.Value;
                     chk_Urine.Checked = operationBooking.Intra_Operative_Urine.Value;
                     chk_Swab_Instrument.Checked = operationBooking.Swab_Instrument.Value;
+
+                    txtOpN_Bed_Room_No.Text = operationBooking.OpN_Bed_Room_No;
+                    txtOpN_Op_Date.Text = operationBooking.OpN_Op_Date == null ? "" : operationBooking.OpN_Op_Date.Value.ToString(AppConfig.DateFormat);
+                    txtOpN_Op_Time.Text = operationBooking.OpN_Op_Time;
+                    txtOpN_PreOp_Dx.Text = operationBooking.OpN_PreOp_Dx;
+                    txtOpN_PostOp_Dx.Text = operationBooking.OpN_PostOp_Dx;
+                    SelectOpNId(ddlOpN_Surgeon, operationBooking.OpN_Surgeon_ID);
+                    txtOpN_Assistants.Text = operationBooking.OpN_Assistants;
+                    SelectOpNId(ddlOpN_Anaesthetist, operationBooking.OpN_Anaesthetist_ID);
+                    txtOpN_Type_Of_Anaesthesia.Text = operationBooking.OpN_Type_Of_Anaesthesia;
+                    txtOpN_Procedure_Name.Text = operationBooking.OpN_Procedure_Name;
+                    txtOpN_Duration.Text = operationBooking.OpN_Duration;
+                    txtOpN_Thread_Catgut.Text = operationBooking.OpN_Thread_Catgut;
+                    txtOpN_Thread_Vicryl.Text = operationBooking.OpN_Thread_Vicryl;
+                    txtOpN_Thread_Proline.Text = operationBooking.OpN_Thread_Proline;
+                    txtOpN_Thread_Silk.Text = operationBooking.OpN_Thread_Silk;
+                    txtOpN_Procedure_Notes.Text = operationBooking.OpN_Procedure_Notes;
+                    txtOpN_Blood_Loss.Text = operationBooking.OpN_Blood_Loss;
+                    txtOpN_IV_Fluids.Text = operationBooking.OpN_IV_Fluids;
+                    txtOpN_Blood_Transfused.Text = operationBooking.OpN_Blood_Transfused;
+                    txtOpN_Urine_Output.Text = operationBooking.OpN_Urine_Output;
+                    txtOpN_Swab_Instrument_Count.Text = operationBooking.OpN_Swab_Instrument_Count;
+                    SelectOpNId(ddlOpN_Scrub_Nurse, operationBooking.OpN_Scrub_Nurse_ID);
 
 
                     

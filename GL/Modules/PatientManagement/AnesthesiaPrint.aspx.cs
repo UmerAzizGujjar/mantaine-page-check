@@ -131,14 +131,14 @@ namespace PMS.Modules.PatientManagement
 
             // history
             sb.Append("<div class=\"h\">History</div><table class=\"hx\">");
-            string[] items = { "Previous Anesthesia", "HTN", "IHD", "Asthma", "COPD", "Hepatic", "Neurological", "Renal", "Epilepsy", "Other", "Allergic", "Physical Activity / APD" };
+            string[] items = { "Previous Anesthesia", "Diabetes", "HTN", "IHD", "Asthma", "COPD", "Hepatic", "Neurological", "Renal", "Other", "Allergic", "Physical Activity / APD" };
             foreach (string it in items)
             {
                 var h = hist.FirstOrDefault(x => x.Item_Name == it);
                 bool on = h != null && (h.Is_Present ?? false);
                 sb.Append("<tr><td class=\"cb\">" + (on ? "&#9745;" : "&#9744;") + "</td><td class=\"nm\">" + E(it) + "</td><td class=\"nt\">" + (h == null ? "" : E(h.Notes)) + "</td></tr>");
             }
-            sb.Append("</table><div class=\"grid\">" + FT("Family History", r.Family_History, 12) + FT("Phys Exam", r.Phys_Exam, 12) + FT("Resp", r.Resp_Exam, 12) + FT("CVS", r.CVS_Exam, 12) + FT("Other", r.Other_Exam, 12) + "</div>");
+            sb.Append("</table><div class=\"grid\">" + FT("Family History", r.Family_History, 12) + FT("CNS", r.Phys_Exam, 12) + FT("Resp", r.Resp_Exam, 12) + FT("CVS", r.CVS_Exam, 12) + FT("Other", r.Other_Exam, 12) + "</div>");
 
             sb.Append("<div class=\"h\">Airway Assessment</div><div class=\"grid\">" +
                 F("Mallampati Grade", Pills(r.Mallampati_Grade, "I", "II", "III", "IV"), 12) + F("Mandibular Protrusion", Pills(r.Mandibular_Protrusion, "A", "B", "C"), 12) +

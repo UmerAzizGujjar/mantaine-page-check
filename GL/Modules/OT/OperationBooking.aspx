@@ -621,6 +621,8 @@
             var tokendata = httpGet("../../json.aspx?Table=PatientsFetchByID&q=" + id);
 
             $('#ctl00_MainContent_txtPatient_ID').tokenInput("add", { id: JSON.parse(tokendata)[0].id, name: JSON.parse(tokendata)[0].name, readonly: true });  //
+            // postback so the server re-checks the Anesthesia steps and shows/hides Operation Notes
+            $('#ctl00_MainContent_btnRefreshOpNotes').click();
 
         }
 
@@ -815,6 +817,7 @@
                     $('#ctl00_MainContent_txtPatient_ID').tokenInput("add", { id: JSON.parse(tokendata)[0].id, name: JSON.parse(tokendata)[0].name, readonly: true });
 
                     LoadPatientDetails();
+                    $('#ctl00_MainContent_btnRefreshOpNotes').click();
                 },
                 error: function (response) {
                     alert("Error");
@@ -1518,6 +1521,7 @@
             $("#ctl00_MainContent_txtDate_Operation").datepicker({ dateFormat: 'mm/dd/yy' });
             $("#ctl00_MainContent_txtDate_Of_Approval").datepicker({ dateFormat: 'mm/dd/yy' });
             $("#ctl00_MainContent_txtOperationDate").datepicker({ dateFormat: 'mm/dd/yy' });
+            $("#ctl00_MainContent_txtOpN_Op_Date").datepicker({ dateFormat: 'mm/dd/yy' });
 
             $('#<%=txtTimeOfFinishOperation.ClientID%>').timepicki({
                 show_meridian: false,
@@ -1538,6 +1542,15 @@
             });
 
             $("#<%= txtOperationTime.ClientID%>").timepicki({
+                show_meridian: false,
+                min_hour_value: 0,
+                max_hour_value: 23,
+                overflow_minutes: true,
+                increase_direction: 'up',
+                disable_keyboard_mobile: true
+            });
+
+            $("#<%= txtOpN_Op_Time.ClientID%>").timepicki({
                 show_meridian: false,
                 min_hour_value: 0,
                 max_hour_value: 23,
@@ -1594,7 +1607,16 @@
 
             }
             else {
-                loadtokenInputsDefault();
+                // a patient picked from the Search pop-up is posted back in hdfPatient_ID; show it again in the box
+                var pickedId = $("#hdfPatient_ID").val();
+                if (pickedId) {
+                    loadtokenInputs(JSON.parse(httpGet("../../json.aspx?Table=PatientsFetchByID&q=" + pickedId)));
+                    loadAjax();
+                    loadReferenceInformation();
+                }
+                else {
+                    loadtokenInputsDefault();
+                }
             }
         };
 
@@ -1615,8 +1637,8 @@
                         try {
                             $("#hdfPatient_ID").val(item.id);
 
-                            loadAjax();
-                            loadReferenceInformation();
+                            // reload so the server checks the Anesthesia steps; the reload then loads the patient details
+                            $('#ctl00_MainContent_btnRefreshOpNotes').click();
                         }
                         catch (err) {
                             alert(err.message);
@@ -1874,6 +1896,7 @@
                         <asp:HiddenField ID="hdfPatoentNo" runat="server" ClientIDMode="Static" />
                         <asp:HiddenField ID="hdnFullName" runat="server" ClientIDMode="Static" />
                         <asp:RequiredFieldValidator ID="rfvPatient_ID" runat="server" ErrorMessage="Enter Patient ID" Text="*" ControlToValidate="txtPatient_ID" ForeColor="Red"></asp:RequiredFieldValidator>
+                        <asp:Button ID="btnRefreshOpNotes" runat="server" Style="display: none;" CausesValidation="false" />
                     </div>
                 </div>
                 <dl class="ob-info">
@@ -1913,6 +1936,7 @@
                 <li><a href="#Tab-4">Prepared Patients</a></li>
                 <li><a href="#Tab-2">Relative Approval</a></li>
                 <li><a href="#Tab-1">Operation Details</a></li>
+                <li runat="server" id="liOpNotes"><a href="#Tab-13">Operation Notes</a></li>
                 <li><a href="#Tab-9">Post Of Orders</a> </li>
                 <li><a href="#Tab-10">Recovery</a></li>
                 <li><a href="#Tab-11">Transfer</a></li>
@@ -2075,10 +2099,138 @@
                             <asp:TextBox ID="txtJuniorAssistantStaff" runat="server"></asp:TextBox>
                         </div>
                     </div>
+
+                    <div class="ob-textrow"><label>Findings:</label><asp:TextBox ID="txtFindings" runat="server" Columns="10" Rows="5" Style="width: 60%;" TextMode="MultiLine"></asp:TextBox></div>
+
+                    <div class="ob-textrow"><label>Procedure:</label><asp:TextBox ID="txtProcedure_PO" runat="server" Columns="10" Rows="5" Style="width: 60%;" TextMode="MultiLine"></asp:TextBox></div>
+
+                    <div class="ob-checks">
+                        <h4>Fill By Scrub Nurse:</h4>
+                        <label class="ob-check"><input type="checkbox" runat="server" id="chk_Bloodloose" name="Blood Loose" /><span>Estimated Blood Loose</span></label>
+                        <label class="ob-check"><input type="checkbox" runat="server" id="chk_Bloodtrans" name="Blood Transfused" /><span>Intra Operative IV Fluid / Blood Transfused</span></label>
+                        <label class="ob-check"><input type="checkbox" runat="server" id="chk_Urine" name="Operative Urine" /><span>Intra Operative Urine Output (If Catheterized)</span></label>
+                        <label class="ob-check"><input type="checkbox" runat="server" id="chk_Swab_Instrument" name="swab Instrument" /><span>Whether Swab and Instrument Count was Complete</span></label>
+                    </div>
                 </div>
             </div>
 
 
+
+            <asp:PlaceHolder runat="server" ID="phOpNotes">
+            <div id="Tab-13">
+                <div id="OperationNotes">
+                    <h2>Operation Notes : </h2>
+                    <datalist id="dlOpNAnesType">
+                        <option value="General" /><option value="Spinal" /><option value="Epidural" /><option value="Regional Block" /><option value="Local" /><option value="Sedation" />
+                    </datalist>
+                    <datalist id="dlOpNSwab"><option value="Correct" /><option value="Incorrect" /></datalist>
+
+                    <div class="ob-sub">Operation Details</div>
+                    <div class="ob-grid">
+                        <div>
+                            <label>Bed / Room No.</label>
+                            <asp:TextBox ID="txtOpN_Bed_Room_No" runat="server" MaxLength="120"></asp:TextBox>
+                        </div>
+                        <div>
+                            <label>Date of Operation</label>
+                            <asp:TextBox ID="txtOpN_Op_Date" runat="server"></asp:TextBox>
+                        </div>
+                        <div>
+                            <label>Time</label>
+                            <asp:TextBox ID="txtOpN_Op_Time" runat="server" MaxLength="20"></asp:TextBox>
+                        </div>
+                        <div class="ob-wide2">
+                            <label>Pre-op Diagnosis</label>
+                            <asp:TextBox ID="txtOpN_PreOp_Dx" runat="server" MaxLength="600"></asp:TextBox>
+                        </div>
+                        <div class="ob-wide2">
+                            <label>Post-op Diagnosis</label>
+                            <asp:TextBox ID="txtOpN_PostOp_Dx" runat="server" MaxLength="600"></asp:TextBox>
+                        </div>
+                        <div>
+                            <label>Surgeon Name</label>
+                            <asp:DropDownList ID="ddlOpN_Surgeon" runat="server" AppendDataBoundItems="true"></asp:DropDownList>
+                        </div>
+                        <div>
+                            <label>Assistants</label>
+                            <asp:TextBox ID="txtOpN_Assistants" runat="server" MaxLength="400"></asp:TextBox>
+                        </div>
+                        <div>
+                            <label>Anaesthetist Name</label>
+                            <asp:DropDownList ID="ddlOpN_Anaesthetist" runat="server" AppendDataBoundItems="true"></asp:DropDownList>
+                        </div>
+                        <div>
+                            <label>Type of Anaesthesia</label>
+                            <asp:TextBox ID="txtOpN_Type_Of_Anaesthesia" runat="server" list="dlOpNAnesType" MaxLength="200"></asp:TextBox>
+                        </div>
+                        <div class="ob-wide2">
+                            <label>Name of Procedure</label>
+                            <asp:TextBox ID="txtOpN_Procedure_Name" runat="server" MaxLength="500"></asp:TextBox>
+                        </div>
+                        <div>
+                            <label>Duration of Procedure</label>
+                            <asp:TextBox ID="txtOpN_Duration" runat="server" MaxLength="100"></asp:TextBox>
+                        </div>
+                    </div>
+
+                    <div class="ob-sub">Threads Used</div>
+                    <div class="ob-grid">
+                        <div>
+                            <label>1 - Catgut</label>
+                            <asp:TextBox ID="txtOpN_Thread_Catgut" runat="server" MaxLength="100"></asp:TextBox>
+                        </div>
+                        <div>
+                            <label>2 - Vicryl</label>
+                            <asp:TextBox ID="txtOpN_Thread_Vicryl" runat="server" MaxLength="100"></asp:TextBox>
+                        </div>
+                        <div>
+                            <label>3 - Proline</label>
+                            <asp:TextBox ID="txtOpN_Thread_Proline" runat="server" MaxLength="100"></asp:TextBox>
+                        </div>
+                        <div>
+                            <label>4 - Silk</label>
+                            <asp:TextBox ID="txtOpN_Thread_Silk" runat="server" MaxLength="100"></asp:TextBox>
+                        </div>
+                    </div>
+
+                    <div class="ob-sub">Procedure Notes</div>
+                    <div class="ob-grid">
+                        <div style="grid-column: 1 / -1;">
+                            <label>Procedure Notes</label>
+                            <asp:TextBox ID="txtOpN_Procedure_Notes" runat="server" Columns="10" Rows="10" Style="width: 100%;" TextMode="MultiLine"></asp:TextBox>
+                        </div>
+                    </div>
+
+                    <div class="ob-sub">Scrub Nurse Notes</div>
+                    <div class="ob-grid">
+                        <div>
+                            <label>Blood Loss</label>
+                            <asp:TextBox ID="txtOpN_Blood_Loss" runat="server" MaxLength="60"></asp:TextBox>
+                        </div>
+                        <div>
+                            <label>Intra-operative I.V Fluids</label>
+                            <asp:TextBox ID="txtOpN_IV_Fluids" runat="server" MaxLength="60"></asp:TextBox>
+                        </div>
+                        <div>
+                            <label>Blood Transfused</label>
+                            <asp:TextBox ID="txtOpN_Blood_Transfused" runat="server" MaxLength="60"></asp:TextBox>
+                        </div>
+                        <div>
+                            <label>Intra-operative Urine Output</label>
+                            <asp:TextBox ID="txtOpN_Urine_Output" runat="server" MaxLength="60"></asp:TextBox>
+                        </div>
+                        <div>
+                            <label>Swab / Instrument Counting</label>
+                            <asp:TextBox ID="txtOpN_Swab_Instrument_Count" runat="server" list="dlOpNSwab" MaxLength="120"></asp:TextBox>
+                        </div>
+                        <div>
+                            <label>Scrub Nurse Name &amp; Sign</label>
+                            <asp:DropDownList ID="ddlOpN_Scrub_Nurse" runat="server" AppendDataBoundItems="true"></asp:DropDownList>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </asp:PlaceHolder>
 
             <div id="Tab-3" style="display: none;">
                 <div id="OperatedBy" style="width: 90%">
@@ -2132,10 +2284,6 @@
                         <div class="row">
                             <h2>Post Of Order Details : </h2>
                         </div>
-                        <div class="ob-textrow"><label>Findings:</label><asp:TextBox ID="txtFindings" runat="server" Columns="10" Rows="5" Style="width: 60%;" TextMode="MultiLine"></asp:TextBox></div>
-
-                        <div class="ob-textrow"><label>Procedure:</label><asp:TextBox ID="txtProcedure_PO" runat="server" Columns="10" Rows="5" Style="width: 60%;" TextMode="MultiLine"></asp:TextBox></div>
-
                         <div class="row ddl_row ob-grid" style="margin-top: 14px;">
                             <div class="col-lg-3 col-md-4 col-sm-6">
                                 <label>Drain</label>
@@ -2199,14 +2347,6 @@
                        
 
                         <div class="ob-textrow"><label>Special Instruction:</label><asp:TextBox ID="txtSpecialInstruction" runat="server" Columns="10" Rows="5" Style="width: 60%;" TextMode="MultiLine"></asp:TextBox></div>
-
-                        <div class="ob-checks">
-                            <h4>Fill By Scrub Nurse:</h4>
-                            <label class="ob-check"><input type="checkbox" runat="server" id="chk_Bloodloose" name="Blood Loose" /><span>Estimated Blood Loose</span></label>
-                            <label class="ob-check"><input type="checkbox" runat="server" id="chk_Bloodtrans" name="Blood Transfused" /><span>Intra Operative IV Fluid / Blood Transfused</span></label>
-                            <label class="ob-check"><input type="checkbox" runat="server" id="chk_Urine" name="Operative Urine" /><span>Intra Operative Urine Output (If Catheterized)</span></label>
-                            <label class="ob-check"><input type="checkbox" runat="server" id="chk_Swab_Instrument" name="swab Instrument" /><span>Whether Swab and Instrument Count was Complete</span></label>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -2418,7 +2558,7 @@
                         <asp:Button ID="btnSave" CssClass="btn btn-primry" runat="server" Text="Save" OnClientClick="SaveMedicines()" OnClick="btnSave_Click" CausesValidation="false" />
                     </div>
                     <div class="col-lg-2 col-md-4 col-sm-6">
-                        <asp:Button Text="New" ID="btn3" CssClass="btn btn-yellow" runat="server" PostBackUrl="~/Modules/OT/OperationBooking.aspx" CausesValidation="false" />
+                        <input type="button" value="New" class="btn btn-yellow" onclick="window.location.href = 'OperationBooking.aspx';" />
                     </div>
                 </div>
             </div>

@@ -22,23 +22,33 @@ namespace PMS.Modules.PatientManagement
         {
             try
             {
-                string today = DateTime.Now.ToString("yyyyMMdd");
-                string prefix = $"DLY-{today}-";
-
                 using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
                 {
-                    int count = db.Dialysis_PreDialysis
-                                  .Count(d => d.Dialysis_ID.StartsWith(prefix));
-                    
-                    int nextNumber = count + 1;
-                    string dialysisId = $"{prefix}{nextNumber.ToString("D4")}";
-                    return dialysisId;
+                    return NextDialysisId(db);
                 }
             }
             catch (Exception ex)
             {
                 return "DLY-" + DateTime.Now.ToString("yyyyMMdd") + "-0001";
             }
+        }
+
+        // Highest of today's numbers + 1; a count would reuse a number after a delete
+        private static string NextDialysisId(DataBaseDataContext db)
+        {
+            string prefix = $"DLY-{DateTime.Now.ToString("yyyyMMdd")}-";
+
+            string lastId = db.Dialysis_PreDialysis
+                              .Where(d => d.Dialysis_ID.StartsWith(prefix))
+                              .Select(d => d.Dialysis_ID)
+                              .OrderByDescending(id => id)
+                              .FirstOrDefault();
+
+            int lastNumber = 0;
+            if (lastId != null)
+                int.TryParse(lastId.Substring(prefix.Length), out lastNumber);
+
+            return $"{prefix}{(lastNumber + 1).ToString("D4")}";
         }
 
         [WebMethod]
@@ -141,6 +151,61 @@ namespace PMS.Modules.PatientManagement
             catch (Exception ex)
             {
                 return JsonConvert.SerializeObject(new { error = ex.Message });
+            }
+        }
+
+        [WebMethod]
+        public static string GetPatientById(int patientId)
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var patients = (from p in db.Reg_patients
+                                    where p.pat_id == patientId
+                                    select new
+                                    {
+                                        PatientId = p.pat_id,
+                                        MRNo = p.mr_no_sequence ?? "",
+                                        PatientName = p.Full_Name ?? "",
+                                        FatherName = p.Father_Name ?? "",
+                                        NIC = p.NIC ?? "",
+                                        ContactNo = p.Mobile1 ?? "",
+                                        Age = p.Age_years ?? "",
+                                        Gender = p.Gender ?? ""
+                                    })
+                                   .ToList();
+
+                    return JsonConvert.SerializeObject(patients);
+                }
+            }
+            catch (Exception ex)
+            {
+                return JsonConvert.SerializeObject(new { error = ex.Message });
+            }
+        }
+
+        // Final (post-dialysis) weight of the patient's last session; "" on first visit
+        [WebMethod]
+        public static string GetLastPostWeight(int patientId)
+        {
+            try
+            {
+                using (var db = new DataBaseDataContext(DBClass.ConnectionString()))
+                {
+                    var weight = db.Dialysis_PostDialysis
+                                   .Where(p => p.Patient_ID == patientId && p.Weight != null)
+                                   .OrderByDescending(p => p.Created_Date)
+                                   .ThenByDescending(p => p.ID)
+                                   .Select(p => p.Weight)
+                                   .FirstOrDefault();
+
+                    return weight.HasValue ? weight.Value.ToString("0.##") : "";
+                }
+            }
+            catch (Exception ex)
+            {
+                return "";
             }
         }
 
@@ -415,7 +480,15 @@ namespace PMS.Modules.PatientManagement
                 {
                     var existingRecord = db.Dialysis_PreDialysis
                                            .FirstOrDefault(d => d.Dialysis_ID == preDialysisData.DialysisId);
-                    
+
+                    // A new dialysis whose number was taken meanwhile gets a fresh one, never overwrites
+                    if (preDialysisData.IsNew && existingRecord != null)
+                    {
+                        preDialysisData.DialysisId = NextDialysisId(db);
+                        preDialysisData.DialysisNo = preDialysisData.DialysisId;
+                        existingRecord = null;
+                    }
+
                     if (existingRecord != null)
                     {
                         UpdatePreDialysisRecord(existingRecord, preDialysisData);
@@ -1006,6 +1079,7 @@ namespace PMS.Modules.PatientManagement
         }
         public class PreDialysisData
         {
+            public bool IsNew { get; set; }
             public string DialysisId { get; set; }
             public string PatientId { get; set; }
             public string VascularAccess { get; set; }

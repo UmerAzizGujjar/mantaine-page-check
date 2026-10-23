@@ -2946,6 +2946,21 @@ namespace PMS
                     ddlDepartments.Items.Add(new ListItem() { Text = "All", Value = "0" });
                     ddlDepartments.DataBind();
                 }
+                else if (this.PageTitle == "UnBuildPurchase")
+                {
+                    string x = "Unbuild Purchase Report";
+                    Master.Label2.Text = x;
+                    Master.GetMenuName();
+                    DateDiv.Visible = true;
+                    Time_Row.Visible = false;
+                    tr_Export.Visible = true;
+                    tr_Summary.Visible = false;
+                    optRw.Visible = false;
+                    trDoctor.Visible = false;
+                    lblMultiSelect.Visible = false;
+                    lblMedical.Visible = false;
+                    tr1MedicalSubsidy.Visible = false;
+                }
                 #endregion
                 #region Purchase
                 else if (this.PageTitle == "VendorLedger")
