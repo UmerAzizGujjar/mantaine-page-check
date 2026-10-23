@@ -91,10 +91,11 @@
             }
             var lab = '<label for="' + id + '">' + f.l + req + '</label>', ctl = '';
             switch (f.t) {
-                case 'text': ctl = '<input type="text" class="form-control" ' + base + ' maxlength="300" />'; break;
+                case 'text': ctl = '<input type="text" class="form-control" ' + base + (f.ph ? ' placeholder="' + f.ph + '"' : '') + ' maxlength="300" />'; break;
+                case 'datetime': ctl = '<input type="datetime-local" class="form-control" ' + base + ' />'; break;
                 case 'num': ctl = '<input type="number" min="0" step="1" class="form-control" ' + base + ' />'; break;
                 case 'date': ctl = '<input type="date" class="form-control" ' + base + ' />'; break;
-                case 'area': ctl = '<textarea class="form-control" rows="2" ' + base + '></textarea>'; break;
+                case 'area': ctl = '<textarea class="form-control" rows="' + (f.rows || 2) + '" ' + base + (f.ph ? ' placeholder="' + f.ph + '"' : '') + '></textarea>'; break;
                 case 'staff': ctl = '<select class="form-control mg-staff" ' + base + '><option value="">Select</option></select>'; break;
                 case 'doctor': ctl = '<select class="form-control mg-doctor" ' + base + '><option value="">Select</option></select>'; break;
                 case 'pills':
@@ -160,7 +161,7 @@
             setRecordId(0);
             $('#f_Exam_Date').val(todayStr());
         }
-        function setRecordId(id) { mammoId = id || 0; $('#infoRecordId').text(mammoId ? mammoId : 'assigned on first save'); }
+        function setRecordId(id) { mammoId = id || 0; $('#infoRecordId').text(mammoId ? mammoId : 'assigned on first save'); $('.mg-print').toggle(!!mammoId); }
 
         // ===== save =====
         function saveRecord() {
@@ -234,6 +235,7 @@
             var t; $('#txtPatientSearch').on('input', function () { var v = $(this).val(); clearTimeout(t); t = setTimeout(function () { searchPatients(v); }, 300); });
             $('.mg-newform').on('click', function () { window.location.href = 'MammographyHistory.aspx'; });
             $('.mg-list').on('click', function () { window.location.href = 'MammographyHistoryView.aspx'; });
+            $('.mg-printbtn').on('click', function () { if (mammoId) window.open('MammographyHistoryPrint.aspx?ID=' + mammoId, '_blank'); });
 
             call('GetLookups', {}, function (r) {
                 if (r.ok) {
@@ -379,6 +381,9 @@
                         </div>
                         <div class="col-lg-2 col-md-3 col-sm-4">
                             <input type="button" class="btn btn-gray mg-list" value="View" />
+                        </div>
+                        <div class="col-lg-2 col-md-3 col-sm-4 mg-print" style="display:none">
+                            <input type="button" class="btn-primry mg-printbtn" value="Print" />
                         </div>
                     </div>
                 </div>

@@ -3201,6 +3201,22 @@ namespace PMS
             }
         }
 
+        public System.Data.Linq.Table<Lab_CT_History> Lab_CT_Histories
+        {
+            get
+            {
+                return this.GetTable<Lab_CT_History>();
+            }
+        }
+
+        public System.Data.Linq.Table<Lab_XRay_History> Lab_XRay_Histories
+        {
+            get
+            {
+                return this.GetTable<Lab_XRay_History>();
+            }
+        }
+
         public System.Data.Linq.Table<Anesthesia_History> Anesthesia_Histories
         {
             get
@@ -101233,6 +101249,1352 @@ namespace PMS
                     this._Remarks = value;
                     this.SendPropertyChanged("Remarks");
                     this.OnRemarksChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Company_ID", DbType = "Int")]
+        public System.Nullable<int> Company_ID
+        {
+            get
+            {
+                return this._Company_ID;
+            }
+            set
+            {
+                if ((this._Company_ID != value))
+                {
+                    this.OnCompany_IDChanging(value);
+                    this.SendPropertyChanging();
+                    this._Company_ID = value;
+                    this.SendPropertyChanged("Company_ID");
+                    this.OnCompany_IDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Book_ID", DbType = "Int")]
+        public System.Nullable<int> Book_ID
+        {
+            get
+            {
+                return this._Book_ID;
+            }
+            set
+            {
+                if ((this._Book_ID != value))
+                {
+                    this.OnBook_IDChanging(value);
+                    this.SendPropertyChanging();
+                    this._Book_ID = value;
+                    this.SendPropertyChanged("Book_ID");
+                    this.OnBook_IDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Created_By", DbType = "UniqueIdentifier")]
+        public System.Nullable<System.Guid> Created_By
+        {
+            get
+            {
+                return this._Created_By;
+            }
+            set
+            {
+                if ((this._Created_By != value))
+                {
+                    this.OnCreated_ByChanging(value);
+                    this.SendPropertyChanging();
+                    this._Created_By = value;
+                    this.SendPropertyChanged("Created_By");
+                    this.OnCreated_ByChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Created_Date", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Created_Date
+        {
+            get
+            {
+                return this._Created_Date;
+            }
+            set
+            {
+                if ((this._Created_Date != value))
+                {
+                    this.OnCreated_DateChanging(value);
+                    this.SendPropertyChanging();
+                    this._Created_Date = value;
+                    this.SendPropertyChanged("Created_Date");
+                    this.OnCreated_DateChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Modified_By", DbType = "UniqueIdentifier")]
+        public System.Nullable<System.Guid> Modified_By
+        {
+            get
+            {
+                return this._Modified_By;
+            }
+            set
+            {
+                if ((this._Modified_By != value))
+                {
+                    this.OnModified_ByChanging(value);
+                    this.SendPropertyChanging();
+                    this._Modified_By = value;
+                    this.SendPropertyChanged("Modified_By");
+                    this.OnModified_ByChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Modified_Date", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Modified_Date
+        {
+            get
+            {
+                return this._Modified_Date;
+            }
+            set
+            {
+                if ((this._Modified_Date != value))
+                {
+                    this.OnModified_DateChanging(value);
+                    this.SendPropertyChanging();
+                    this._Modified_Date = value;
+                    this.SendPropertyChanged("Modified_Date");
+                    this.OnModified_DateChanged();
+                }
+            }
+        }
+
+        public event PropertyChangingEventHandler PropertyChanging;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void SendPropertyChanging()
+        {
+            if ((this.PropertyChanging != null))
+            {
+                this.PropertyChanging(this, emptyChangingEventArgs);
+            }
+        }
+
+        protected virtual void SendPropertyChanged(String propertyName)
+        {
+            if ((this.PropertyChanged != null))
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.Lab_CT_History")]
+    public partial class Lab_CT_History : INotifyPropertyChanging, INotifyPropertyChanged
+    {
+
+        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+
+        private int _CT_ID;
+
+        private int _Patient_ID;
+
+        private System.Nullable<System.DateTime> _Exam_Date;
+
+        private string _Referring_Doctor;
+
+        private System.Nullable<bool> _Is_Pregnant;
+
+        private System.Nullable<System.DateTime> _LMP;
+
+        private string _Chief_Complaint;
+
+        private string _Prior_Radiological_Study;
+
+        private string _Surgical_History;
+
+        private string _Medications;
+
+        private System.Nullable<bool> _Had_Cancer;
+
+        private System.Nullable<bool> _Tx_Chemotherapy;
+
+        private System.Nullable<bool> _Tx_Operation;
+
+        private System.Nullable<bool> _Tx_Radiation;
+
+        private System.Nullable<bool> _Treatment_Finished;
+
+        private System.Nullable<bool> _Has_Electronic_Device;
+
+        private string _Electronic_Devices;
+
+        private System.Nullable<bool> _Has_Asthma;
+
+        private System.Nullable<bool> _Has_Allergies;
+
+        private System.Nullable<bool> _Is_Smoker;
+
+        private string _Smoke_Details;
+
+        private string _Patient_Sign_Name;
+
+        private string _Radiologist_Notes;
+
+        private System.Nullable<int> _Radiologist_ID;
+
+        private System.Nullable<System.DateTime> _Radiologist_Date;
+
+        private string _Report_Correlation;
+
+        private System.Nullable<int> _Company_ID;
+
+        private System.Nullable<int> _Book_ID;
+
+        private System.Nullable<System.Guid> _Created_By;
+
+        private System.Nullable<System.DateTime> _Created_Date;
+
+        private System.Nullable<System.Guid> _Modified_By;
+
+        private System.Nullable<System.DateTime> _Modified_Date;
+
+        #region Extensibility Method Definitions
+        partial void OnLoaded();
+        partial void OnValidate(System.Data.Linq.ChangeAction action);
+        partial void OnCreated();
+        partial void OnCT_IDChanging(int value);
+        partial void OnCT_IDChanged();
+        partial void OnPatient_IDChanging(int value);
+        partial void OnPatient_IDChanged();
+        partial void OnExam_DateChanging(System.Nullable<System.DateTime> value);
+        partial void OnExam_DateChanged();
+        partial void OnReferring_DoctorChanging(string value);
+        partial void OnReferring_DoctorChanged();
+        partial void OnIs_PregnantChanging(System.Nullable<bool> value);
+        partial void OnIs_PregnantChanged();
+        partial void OnLMPChanging(System.Nullable<System.DateTime> value);
+        partial void OnLMPChanged();
+        partial void OnChief_ComplaintChanging(string value);
+        partial void OnChief_ComplaintChanged();
+        partial void OnPrior_Radiological_StudyChanging(string value);
+        partial void OnPrior_Radiological_StudyChanged();
+        partial void OnSurgical_HistoryChanging(string value);
+        partial void OnSurgical_HistoryChanged();
+        partial void OnMedicationsChanging(string value);
+        partial void OnMedicationsChanged();
+        partial void OnHad_CancerChanging(System.Nullable<bool> value);
+        partial void OnHad_CancerChanged();
+        partial void OnTx_ChemotherapyChanging(System.Nullable<bool> value);
+        partial void OnTx_ChemotherapyChanged();
+        partial void OnTx_OperationChanging(System.Nullable<bool> value);
+        partial void OnTx_OperationChanged();
+        partial void OnTx_RadiationChanging(System.Nullable<bool> value);
+        partial void OnTx_RadiationChanged();
+        partial void OnTreatment_FinishedChanging(System.Nullable<bool> value);
+        partial void OnTreatment_FinishedChanged();
+        partial void OnHas_Electronic_DeviceChanging(System.Nullable<bool> value);
+        partial void OnHas_Electronic_DeviceChanged();
+        partial void OnElectronic_DevicesChanging(string value);
+        partial void OnElectronic_DevicesChanged();
+        partial void OnHas_AsthmaChanging(System.Nullable<bool> value);
+        partial void OnHas_AsthmaChanged();
+        partial void OnHas_AllergiesChanging(System.Nullable<bool> value);
+        partial void OnHas_AllergiesChanged();
+        partial void OnIs_SmokerChanging(System.Nullable<bool> value);
+        partial void OnIs_SmokerChanged();
+        partial void OnSmoke_DetailsChanging(string value);
+        partial void OnSmoke_DetailsChanged();
+        partial void OnPatient_Sign_NameChanging(string value);
+        partial void OnPatient_Sign_NameChanged();
+        partial void OnRadiologist_NotesChanging(string value);
+        partial void OnRadiologist_NotesChanged();
+        partial void OnRadiologist_IDChanging(System.Nullable<int> value);
+        partial void OnRadiologist_IDChanged();
+        partial void OnRadiologist_DateChanging(System.Nullable<System.DateTime> value);
+        partial void OnRadiologist_DateChanged();
+        partial void OnReport_CorrelationChanging(string value);
+        partial void OnReport_CorrelationChanged();
+        partial void OnCompany_IDChanging(System.Nullable<int> value);
+        partial void OnCompany_IDChanged();
+        partial void OnBook_IDChanging(System.Nullable<int> value);
+        partial void OnBook_IDChanged();
+        partial void OnCreated_ByChanging(System.Nullable<System.Guid> value);
+        partial void OnCreated_ByChanged();
+        partial void OnCreated_DateChanging(System.Nullable<System.DateTime> value);
+        partial void OnCreated_DateChanged();
+        partial void OnModified_ByChanging(System.Nullable<System.Guid> value);
+        partial void OnModified_ByChanged();
+        partial void OnModified_DateChanging(System.Nullable<System.DateTime> value);
+        partial void OnModified_DateChanged();
+        #endregion
+
+        public Lab_CT_History()
+        {
+            OnCreated();
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_CT_ID", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
+        public int CT_ID
+        {
+            get
+            {
+                return this._CT_ID;
+            }
+            set
+            {
+                if ((this._CT_ID != value))
+                {
+                    this.OnCT_IDChanging(value);
+                    this.SendPropertyChanging();
+                    this._CT_ID = value;
+                    this.SendPropertyChanged("CT_ID");
+                    this.OnCT_IDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Patient_ID", DbType = "Int NOT NULL")]
+        public int Patient_ID
+        {
+            get
+            {
+                return this._Patient_ID;
+            }
+            set
+            {
+                if ((this._Patient_ID != value))
+                {
+                    this.OnPatient_IDChanging(value);
+                    this.SendPropertyChanging();
+                    this._Patient_ID = value;
+                    this.SendPropertyChanged("Patient_ID");
+                    this.OnPatient_IDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Exam_Date", DbType = "Date")]
+        public System.Nullable<System.DateTime> Exam_Date
+        {
+            get
+            {
+                return this._Exam_Date;
+            }
+            set
+            {
+                if ((this._Exam_Date != value))
+                {
+                    this.OnExam_DateChanging(value);
+                    this.SendPropertyChanging();
+                    this._Exam_Date = value;
+                    this.SendPropertyChanged("Exam_Date");
+                    this.OnExam_DateChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Referring_Doctor", DbType = "NVarChar(150)")]
+        public string Referring_Doctor
+        {
+            get
+            {
+                return this._Referring_Doctor;
+            }
+            set
+            {
+                if ((this._Referring_Doctor != value))
+                {
+                    this.OnReferring_DoctorChanging(value);
+                    this.SendPropertyChanging();
+                    this._Referring_Doctor = value;
+                    this.SendPropertyChanged("Referring_Doctor");
+                    this.OnReferring_DoctorChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Is_Pregnant", DbType = "Bit")]
+        public System.Nullable<bool> Is_Pregnant
+        {
+            get
+            {
+                return this._Is_Pregnant;
+            }
+            set
+            {
+                if ((this._Is_Pregnant != value))
+                {
+                    this.OnIs_PregnantChanging(value);
+                    this.SendPropertyChanging();
+                    this._Is_Pregnant = value;
+                    this.SendPropertyChanged("Is_Pregnant");
+                    this.OnIs_PregnantChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_LMP", DbType = "Date")]
+        public System.Nullable<System.DateTime> LMP
+        {
+            get
+            {
+                return this._LMP;
+            }
+            set
+            {
+                if ((this._LMP != value))
+                {
+                    this.OnLMPChanging(value);
+                    this.SendPropertyChanging();
+                    this._LMP = value;
+                    this.SendPropertyChanged("LMP");
+                    this.OnLMPChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Chief_Complaint", DbType = "NVarChar(1000)")]
+        public string Chief_Complaint
+        {
+            get
+            {
+                return this._Chief_Complaint;
+            }
+            set
+            {
+                if ((this._Chief_Complaint != value))
+                {
+                    this.OnChief_ComplaintChanging(value);
+                    this.SendPropertyChanging();
+                    this._Chief_Complaint = value;
+                    this.SendPropertyChanged("Chief_Complaint");
+                    this.OnChief_ComplaintChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Prior_Radiological_Study", DbType = "NVarChar(1000)")]
+        public string Prior_Radiological_Study
+        {
+            get
+            {
+                return this._Prior_Radiological_Study;
+            }
+            set
+            {
+                if ((this._Prior_Radiological_Study != value))
+                {
+                    this.OnPrior_Radiological_StudyChanging(value);
+                    this.SendPropertyChanging();
+                    this._Prior_Radiological_Study = value;
+                    this.SendPropertyChanged("Prior_Radiological_Study");
+                    this.OnPrior_Radiological_StudyChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Surgical_History", DbType = "NVarChar(1000)")]
+        public string Surgical_History
+        {
+            get
+            {
+                return this._Surgical_History;
+            }
+            set
+            {
+                if ((this._Surgical_History != value))
+                {
+                    this.OnSurgical_HistoryChanging(value);
+                    this.SendPropertyChanging();
+                    this._Surgical_History = value;
+                    this.SendPropertyChanged("Surgical_History");
+                    this.OnSurgical_HistoryChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Medications", DbType = "NVarChar(1000)")]
+        public string Medications
+        {
+            get
+            {
+                return this._Medications;
+            }
+            set
+            {
+                if ((this._Medications != value))
+                {
+                    this.OnMedicationsChanging(value);
+                    this.SendPropertyChanging();
+                    this._Medications = value;
+                    this.SendPropertyChanged("Medications");
+                    this.OnMedicationsChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Had_Cancer", DbType = "Bit")]
+        public System.Nullable<bool> Had_Cancer
+        {
+            get
+            {
+                return this._Had_Cancer;
+            }
+            set
+            {
+                if ((this._Had_Cancer != value))
+                {
+                    this.OnHad_CancerChanging(value);
+                    this.SendPropertyChanging();
+                    this._Had_Cancer = value;
+                    this.SendPropertyChanged("Had_Cancer");
+                    this.OnHad_CancerChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Tx_Chemotherapy", DbType = "Bit")]
+        public System.Nullable<bool> Tx_Chemotherapy
+        {
+            get
+            {
+                return this._Tx_Chemotherapy;
+            }
+            set
+            {
+                if ((this._Tx_Chemotherapy != value))
+                {
+                    this.OnTx_ChemotherapyChanging(value);
+                    this.SendPropertyChanging();
+                    this._Tx_Chemotherapy = value;
+                    this.SendPropertyChanged("Tx_Chemotherapy");
+                    this.OnTx_ChemotherapyChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Tx_Operation", DbType = "Bit")]
+        public System.Nullable<bool> Tx_Operation
+        {
+            get
+            {
+                return this._Tx_Operation;
+            }
+            set
+            {
+                if ((this._Tx_Operation != value))
+                {
+                    this.OnTx_OperationChanging(value);
+                    this.SendPropertyChanging();
+                    this._Tx_Operation = value;
+                    this.SendPropertyChanged("Tx_Operation");
+                    this.OnTx_OperationChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Tx_Radiation", DbType = "Bit")]
+        public System.Nullable<bool> Tx_Radiation
+        {
+            get
+            {
+                return this._Tx_Radiation;
+            }
+            set
+            {
+                if ((this._Tx_Radiation != value))
+                {
+                    this.OnTx_RadiationChanging(value);
+                    this.SendPropertyChanging();
+                    this._Tx_Radiation = value;
+                    this.SendPropertyChanged("Tx_Radiation");
+                    this.OnTx_RadiationChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Treatment_Finished", DbType = "Bit")]
+        public System.Nullable<bool> Treatment_Finished
+        {
+            get
+            {
+                return this._Treatment_Finished;
+            }
+            set
+            {
+                if ((this._Treatment_Finished != value))
+                {
+                    this.OnTreatment_FinishedChanging(value);
+                    this.SendPropertyChanging();
+                    this._Treatment_Finished = value;
+                    this.SendPropertyChanged("Treatment_Finished");
+                    this.OnTreatment_FinishedChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Has_Electronic_Device", DbType = "Bit")]
+        public System.Nullable<bool> Has_Electronic_Device
+        {
+            get
+            {
+                return this._Has_Electronic_Device;
+            }
+            set
+            {
+                if ((this._Has_Electronic_Device != value))
+                {
+                    this.OnHas_Electronic_DeviceChanging(value);
+                    this.SendPropertyChanging();
+                    this._Has_Electronic_Device = value;
+                    this.SendPropertyChanged("Has_Electronic_Device");
+                    this.OnHas_Electronic_DeviceChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Electronic_Devices", DbType = "NVarChar(500)")]
+        public string Electronic_Devices
+        {
+            get
+            {
+                return this._Electronic_Devices;
+            }
+            set
+            {
+                if ((this._Electronic_Devices != value))
+                {
+                    this.OnElectronic_DevicesChanging(value);
+                    this.SendPropertyChanging();
+                    this._Electronic_Devices = value;
+                    this.SendPropertyChanged("Electronic_Devices");
+                    this.OnElectronic_DevicesChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Has_Asthma", DbType = "Bit")]
+        public System.Nullable<bool> Has_Asthma
+        {
+            get
+            {
+                return this._Has_Asthma;
+            }
+            set
+            {
+                if ((this._Has_Asthma != value))
+                {
+                    this.OnHas_AsthmaChanging(value);
+                    this.SendPropertyChanging();
+                    this._Has_Asthma = value;
+                    this.SendPropertyChanged("Has_Asthma");
+                    this.OnHas_AsthmaChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Has_Allergies", DbType = "Bit")]
+        public System.Nullable<bool> Has_Allergies
+        {
+            get
+            {
+                return this._Has_Allergies;
+            }
+            set
+            {
+                if ((this._Has_Allergies != value))
+                {
+                    this.OnHas_AllergiesChanging(value);
+                    this.SendPropertyChanging();
+                    this._Has_Allergies = value;
+                    this.SendPropertyChanged("Has_Allergies");
+                    this.OnHas_AllergiesChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Is_Smoker", DbType = "Bit")]
+        public System.Nullable<bool> Is_Smoker
+        {
+            get
+            {
+                return this._Is_Smoker;
+            }
+            set
+            {
+                if ((this._Is_Smoker != value))
+                {
+                    this.OnIs_SmokerChanging(value);
+                    this.SendPropertyChanging();
+                    this._Is_Smoker = value;
+                    this.SendPropertyChanged("Is_Smoker");
+                    this.OnIs_SmokerChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Smoke_Details", DbType = "NVarChar(300)")]
+        public string Smoke_Details
+        {
+            get
+            {
+                return this._Smoke_Details;
+            }
+            set
+            {
+                if ((this._Smoke_Details != value))
+                {
+                    this.OnSmoke_DetailsChanging(value);
+                    this.SendPropertyChanging();
+                    this._Smoke_Details = value;
+                    this.SendPropertyChanged("Smoke_Details");
+                    this.OnSmoke_DetailsChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Patient_Sign_Name", DbType = "NVarChar(150)")]
+        public string Patient_Sign_Name
+        {
+            get
+            {
+                return this._Patient_Sign_Name;
+            }
+            set
+            {
+                if ((this._Patient_Sign_Name != value))
+                {
+                    this.OnPatient_Sign_NameChanging(value);
+                    this.SendPropertyChanging();
+                    this._Patient_Sign_Name = value;
+                    this.SendPropertyChanged("Patient_Sign_Name");
+                    this.OnPatient_Sign_NameChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Radiologist_Notes", DbType = "NVarChar(1000)")]
+        public string Radiologist_Notes
+        {
+            get
+            {
+                return this._Radiologist_Notes;
+            }
+            set
+            {
+                if ((this._Radiologist_Notes != value))
+                {
+                    this.OnRadiologist_NotesChanging(value);
+                    this.SendPropertyChanging();
+                    this._Radiologist_Notes = value;
+                    this.SendPropertyChanged("Radiologist_Notes");
+                    this.OnRadiologist_NotesChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Radiologist_ID", DbType = "Int")]
+        public System.Nullable<int> Radiologist_ID
+        {
+            get
+            {
+                return this._Radiologist_ID;
+            }
+            set
+            {
+                if ((this._Radiologist_ID != value))
+                {
+                    this.OnRadiologist_IDChanging(value);
+                    this.SendPropertyChanging();
+                    this._Radiologist_ID = value;
+                    this.SendPropertyChanged("Radiologist_ID");
+                    this.OnRadiologist_IDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Radiologist_Date", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Radiologist_Date
+        {
+            get
+            {
+                return this._Radiologist_Date;
+            }
+            set
+            {
+                if ((this._Radiologist_Date != value))
+                {
+                    this.OnRadiologist_DateChanging(value);
+                    this.SendPropertyChanging();
+                    this._Radiologist_Date = value;
+                    this.SendPropertyChanged("Radiologist_Date");
+                    this.OnRadiologist_DateChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Report_Correlation", DbType = "NVarChar(20)")]
+        public string Report_Correlation
+        {
+            get
+            {
+                return this._Report_Correlation;
+            }
+            set
+            {
+                if ((this._Report_Correlation != value))
+                {
+                    this.OnReport_CorrelationChanging(value);
+                    this.SendPropertyChanging();
+                    this._Report_Correlation = value;
+                    this.SendPropertyChanged("Report_Correlation");
+                    this.OnReport_CorrelationChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Company_ID", DbType = "Int")]
+        public System.Nullable<int> Company_ID
+        {
+            get
+            {
+                return this._Company_ID;
+            }
+            set
+            {
+                if ((this._Company_ID != value))
+                {
+                    this.OnCompany_IDChanging(value);
+                    this.SendPropertyChanging();
+                    this._Company_ID = value;
+                    this.SendPropertyChanged("Company_ID");
+                    this.OnCompany_IDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Book_ID", DbType = "Int")]
+        public System.Nullable<int> Book_ID
+        {
+            get
+            {
+                return this._Book_ID;
+            }
+            set
+            {
+                if ((this._Book_ID != value))
+                {
+                    this.OnBook_IDChanging(value);
+                    this.SendPropertyChanging();
+                    this._Book_ID = value;
+                    this.SendPropertyChanged("Book_ID");
+                    this.OnBook_IDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Created_By", DbType = "UniqueIdentifier")]
+        public System.Nullable<System.Guid> Created_By
+        {
+            get
+            {
+                return this._Created_By;
+            }
+            set
+            {
+                if ((this._Created_By != value))
+                {
+                    this.OnCreated_ByChanging(value);
+                    this.SendPropertyChanging();
+                    this._Created_By = value;
+                    this.SendPropertyChanged("Created_By");
+                    this.OnCreated_ByChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Created_Date", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Created_Date
+        {
+            get
+            {
+                return this._Created_Date;
+            }
+            set
+            {
+                if ((this._Created_Date != value))
+                {
+                    this.OnCreated_DateChanging(value);
+                    this.SendPropertyChanging();
+                    this._Created_Date = value;
+                    this.SendPropertyChanged("Created_Date");
+                    this.OnCreated_DateChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Modified_By", DbType = "UniqueIdentifier")]
+        public System.Nullable<System.Guid> Modified_By
+        {
+            get
+            {
+                return this._Modified_By;
+            }
+            set
+            {
+                if ((this._Modified_By != value))
+                {
+                    this.OnModified_ByChanging(value);
+                    this.SendPropertyChanging();
+                    this._Modified_By = value;
+                    this.SendPropertyChanged("Modified_By");
+                    this.OnModified_ByChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Modified_Date", DbType = "DateTime")]
+        public System.Nullable<System.DateTime> Modified_Date
+        {
+            get
+            {
+                return this._Modified_Date;
+            }
+            set
+            {
+                if ((this._Modified_Date != value))
+                {
+                    this.OnModified_DateChanging(value);
+                    this.SendPropertyChanging();
+                    this._Modified_Date = value;
+                    this.SendPropertyChanged("Modified_Date");
+                    this.OnModified_DateChanged();
+                }
+            }
+        }
+
+        public event PropertyChangingEventHandler PropertyChanging;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void SendPropertyChanging()
+        {
+            if ((this.PropertyChanging != null))
+            {
+                this.PropertyChanging(this, emptyChangingEventArgs);
+            }
+        }
+
+        protected virtual void SendPropertyChanged(String propertyName)
+        {
+            if ((this.PropertyChanged != null))
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    [global::System.Data.Linq.Mapping.TableAttribute(Name = "dbo.Lab_XRay_History")]
+    public partial class Lab_XRay_History : INotifyPropertyChanging, INotifyPropertyChanged
+    {
+
+        private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+
+        private int _XRay_ID;
+
+        private int _Patient_ID;
+
+        private System.Nullable<System.DateTime> _Exam_Date;
+
+        private System.Nullable<bool> _Is_Pregnant;
+
+        private string _Referring_Doctor;
+
+        private string _Referring_Specialty;
+
+        private System.Nullable<bool> _Reason_Pain;
+
+        private System.Nullable<bool> _Reason_Injury;
+
+        private System.Nullable<bool> _Reason_FollowUp;
+
+        private System.Nullable<bool> _Reason_PreSurgical;
+
+        private System.Nullable<bool> _Reason_Screening;
+
+        private string _Reason_Other;
+
+        private System.Nullable<bool> _Previous_Imaging;
+
+        private System.Nullable<int> _Technician_ID;
+
+        private string _Comments;
+
+        private System.Nullable<int> _Company_ID;
+
+        private System.Nullable<int> _Book_ID;
+
+        private System.Nullable<System.Guid> _Created_By;
+
+        private System.Nullable<System.DateTime> _Created_Date;
+
+        private System.Nullable<System.Guid> _Modified_By;
+
+        private System.Nullable<System.DateTime> _Modified_Date;
+
+        #region Extensibility Method Definitions
+        partial void OnLoaded();
+        partial void OnValidate(System.Data.Linq.ChangeAction action);
+        partial void OnCreated();
+        partial void OnXRay_IDChanging(int value);
+        partial void OnXRay_IDChanged();
+        partial void OnPatient_IDChanging(int value);
+        partial void OnPatient_IDChanged();
+        partial void OnExam_DateChanging(System.Nullable<System.DateTime> value);
+        partial void OnExam_DateChanged();
+        partial void OnIs_PregnantChanging(System.Nullable<bool> value);
+        partial void OnIs_PregnantChanged();
+        partial void OnReferring_DoctorChanging(string value);
+        partial void OnReferring_DoctorChanged();
+        partial void OnReferring_SpecialtyChanging(string value);
+        partial void OnReferring_SpecialtyChanged();
+        partial void OnReason_PainChanging(System.Nullable<bool> value);
+        partial void OnReason_PainChanged();
+        partial void OnReason_InjuryChanging(System.Nullable<bool> value);
+        partial void OnReason_InjuryChanged();
+        partial void OnReason_FollowUpChanging(System.Nullable<bool> value);
+        partial void OnReason_FollowUpChanged();
+        partial void OnReason_PreSurgicalChanging(System.Nullable<bool> value);
+        partial void OnReason_PreSurgicalChanged();
+        partial void OnReason_ScreeningChanging(System.Nullable<bool> value);
+        partial void OnReason_ScreeningChanged();
+        partial void OnReason_OtherChanging(string value);
+        partial void OnReason_OtherChanged();
+        partial void OnPrevious_ImagingChanging(System.Nullable<bool> value);
+        partial void OnPrevious_ImagingChanged();
+        partial void OnTechnician_IDChanging(System.Nullable<int> value);
+        partial void OnTechnician_IDChanged();
+        partial void OnCommentsChanging(string value);
+        partial void OnCommentsChanged();
+        partial void OnCompany_IDChanging(System.Nullable<int> value);
+        partial void OnCompany_IDChanged();
+        partial void OnBook_IDChanging(System.Nullable<int> value);
+        partial void OnBook_IDChanged();
+        partial void OnCreated_ByChanging(System.Nullable<System.Guid> value);
+        partial void OnCreated_ByChanged();
+        partial void OnCreated_DateChanging(System.Nullable<System.DateTime> value);
+        partial void OnCreated_DateChanged();
+        partial void OnModified_ByChanging(System.Nullable<System.Guid> value);
+        partial void OnModified_ByChanged();
+        partial void OnModified_DateChanging(System.Nullable<System.DateTime> value);
+        partial void OnModified_DateChanged();
+        #endregion
+
+        public Lab_XRay_History()
+        {
+            OnCreated();
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_XRay_ID", AutoSync = AutoSync.OnInsert, DbType = "Int NOT NULL IDENTITY", IsPrimaryKey = true, IsDbGenerated = true)]
+        public int XRay_ID
+        {
+            get
+            {
+                return this._XRay_ID;
+            }
+            set
+            {
+                if ((this._XRay_ID != value))
+                {
+                    this.OnXRay_IDChanging(value);
+                    this.SendPropertyChanging();
+                    this._XRay_ID = value;
+                    this.SendPropertyChanged("XRay_ID");
+                    this.OnXRay_IDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Patient_ID", DbType = "Int NOT NULL")]
+        public int Patient_ID
+        {
+            get
+            {
+                return this._Patient_ID;
+            }
+            set
+            {
+                if ((this._Patient_ID != value))
+                {
+                    this.OnPatient_IDChanging(value);
+                    this.SendPropertyChanging();
+                    this._Patient_ID = value;
+                    this.SendPropertyChanged("Patient_ID");
+                    this.OnPatient_IDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Exam_Date", DbType = "Date")]
+        public System.Nullable<System.DateTime> Exam_Date
+        {
+            get
+            {
+                return this._Exam_Date;
+            }
+            set
+            {
+                if ((this._Exam_Date != value))
+                {
+                    this.OnExam_DateChanging(value);
+                    this.SendPropertyChanging();
+                    this._Exam_Date = value;
+                    this.SendPropertyChanged("Exam_Date");
+                    this.OnExam_DateChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Is_Pregnant", DbType = "Bit")]
+        public System.Nullable<bool> Is_Pregnant
+        {
+            get
+            {
+                return this._Is_Pregnant;
+            }
+            set
+            {
+                if ((this._Is_Pregnant != value))
+                {
+                    this.OnIs_PregnantChanging(value);
+                    this.SendPropertyChanging();
+                    this._Is_Pregnant = value;
+                    this.SendPropertyChanged("Is_Pregnant");
+                    this.OnIs_PregnantChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Referring_Doctor", DbType = "NVarChar(150)")]
+        public string Referring_Doctor
+        {
+            get
+            {
+                return this._Referring_Doctor;
+            }
+            set
+            {
+                if ((this._Referring_Doctor != value))
+                {
+                    this.OnReferring_DoctorChanging(value);
+                    this.SendPropertyChanging();
+                    this._Referring_Doctor = value;
+                    this.SendPropertyChanged("Referring_Doctor");
+                    this.OnReferring_DoctorChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Referring_Specialty", DbType = "NVarChar(150)")]
+        public string Referring_Specialty
+        {
+            get
+            {
+                return this._Referring_Specialty;
+            }
+            set
+            {
+                if ((this._Referring_Specialty != value))
+                {
+                    this.OnReferring_SpecialtyChanging(value);
+                    this.SendPropertyChanging();
+                    this._Referring_Specialty = value;
+                    this.SendPropertyChanged("Referring_Specialty");
+                    this.OnReferring_SpecialtyChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Reason_Pain", DbType = "Bit")]
+        public System.Nullable<bool> Reason_Pain
+        {
+            get
+            {
+                return this._Reason_Pain;
+            }
+            set
+            {
+                if ((this._Reason_Pain != value))
+                {
+                    this.OnReason_PainChanging(value);
+                    this.SendPropertyChanging();
+                    this._Reason_Pain = value;
+                    this.SendPropertyChanged("Reason_Pain");
+                    this.OnReason_PainChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Reason_Injury", DbType = "Bit")]
+        public System.Nullable<bool> Reason_Injury
+        {
+            get
+            {
+                return this._Reason_Injury;
+            }
+            set
+            {
+                if ((this._Reason_Injury != value))
+                {
+                    this.OnReason_InjuryChanging(value);
+                    this.SendPropertyChanging();
+                    this._Reason_Injury = value;
+                    this.SendPropertyChanged("Reason_Injury");
+                    this.OnReason_InjuryChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Reason_FollowUp", DbType = "Bit")]
+        public System.Nullable<bool> Reason_FollowUp
+        {
+            get
+            {
+                return this._Reason_FollowUp;
+            }
+            set
+            {
+                if ((this._Reason_FollowUp != value))
+                {
+                    this.OnReason_FollowUpChanging(value);
+                    this.SendPropertyChanging();
+                    this._Reason_FollowUp = value;
+                    this.SendPropertyChanged("Reason_FollowUp");
+                    this.OnReason_FollowUpChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Reason_PreSurgical", DbType = "Bit")]
+        public System.Nullable<bool> Reason_PreSurgical
+        {
+            get
+            {
+                return this._Reason_PreSurgical;
+            }
+            set
+            {
+                if ((this._Reason_PreSurgical != value))
+                {
+                    this.OnReason_PreSurgicalChanging(value);
+                    this.SendPropertyChanging();
+                    this._Reason_PreSurgical = value;
+                    this.SendPropertyChanged("Reason_PreSurgical");
+                    this.OnReason_PreSurgicalChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Reason_Screening", DbType = "Bit")]
+        public System.Nullable<bool> Reason_Screening
+        {
+            get
+            {
+                return this._Reason_Screening;
+            }
+            set
+            {
+                if ((this._Reason_Screening != value))
+                {
+                    this.OnReason_ScreeningChanging(value);
+                    this.SendPropertyChanging();
+                    this._Reason_Screening = value;
+                    this.SendPropertyChanged("Reason_Screening");
+                    this.OnReason_ScreeningChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Reason_Other", DbType = "NVarChar(300)")]
+        public string Reason_Other
+        {
+            get
+            {
+                return this._Reason_Other;
+            }
+            set
+            {
+                if ((this._Reason_Other != value))
+                {
+                    this.OnReason_OtherChanging(value);
+                    this.SendPropertyChanging();
+                    this._Reason_Other = value;
+                    this.SendPropertyChanged("Reason_Other");
+                    this.OnReason_OtherChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Previous_Imaging", DbType = "Bit")]
+        public System.Nullable<bool> Previous_Imaging
+        {
+            get
+            {
+                return this._Previous_Imaging;
+            }
+            set
+            {
+                if ((this._Previous_Imaging != value))
+                {
+                    this.OnPrevious_ImagingChanging(value);
+                    this.SendPropertyChanging();
+                    this._Previous_Imaging = value;
+                    this.SendPropertyChanged("Previous_Imaging");
+                    this.OnPrevious_ImagingChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Technician_ID", DbType = "Int")]
+        public System.Nullable<int> Technician_ID
+        {
+            get
+            {
+                return this._Technician_ID;
+            }
+            set
+            {
+                if ((this._Technician_ID != value))
+                {
+                    this.OnTechnician_IDChanging(value);
+                    this.SendPropertyChanging();
+                    this._Technician_ID = value;
+                    this.SendPropertyChanged("Technician_ID");
+                    this.OnTechnician_IDChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Comments", DbType = "NVarChar(1000)")]
+        public string Comments
+        {
+            get
+            {
+                return this._Comments;
+            }
+            set
+            {
+                if ((this._Comments != value))
+                {
+                    this.OnCommentsChanging(value);
+                    this.SendPropertyChanging();
+                    this._Comments = value;
+                    this.SendPropertyChanged("Comments");
+                    this.OnCommentsChanged();
                 }
             }
         }

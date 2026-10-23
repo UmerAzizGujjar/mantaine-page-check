@@ -504,6 +504,15 @@
     <Content Include="Modules\Lab\MammographyHistory.aspx" />
     <Content Include="Modules\Lab\MammographyHistoryView.aspx" />
     <Content Include="Modules\Lab\Mammography_History.sql" />
+    <Content Include="Modules\Lab\MammographyHistoryPrint.aspx" />
+    <Content Include="Modules\Lab\CTScanHistory.aspx" />
+    <Content Include="Modules\Lab\CTScanHistoryView.aspx" />
+    <Content Include="Modules\Lab\CTScanHistoryPrint.aspx" />
+    <Content Include="Modules\Lab\CT_Scan_History.sql" />
+    <Content Include="Modules\Lab\XRayHistory.aspx" />
+    <Content Include="Modules\Lab\XRayHistoryView.aspx" />
+    <Content Include="Modules\Lab\XRayHistoryPrint.aspx" />
+    <Content Include="Modules\Lab\XRay_History.sql" />
     <Content Include="Modules\PatientManagement\AnesthesiaPrint.aspx" />
     <Content Include="Modules\PatientManagement\EmergencyAdmission.aspx" />
     <Content Include="Modules\PatientManagement\EmergencyForm.aspx" />
@@ -4524,6 +4533,56 @@
     </Compile>
     <Compile Include="Modules\Lab\MammographyHistoryView.aspx.designer.cs">
       <DependentUpon>MammographyHistoryView.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Lab\MammographyHistoryPrint.aspx.cs">
+      <DependentUpon>MammographyHistoryPrint.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Lab\MammographyHistoryPrint.aspx.designer.cs">
+      <DependentUpon>MammographyHistoryPrint.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Lab\CTScanHistory.aspx.cs">
+      <DependentUpon>CTScanHistory.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Lab\CTScanHistory.aspx.designer.cs">
+      <DependentUpon>CTScanHistory.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Lab\CTScanHistoryView.aspx.cs">
+      <DependentUpon>CTScanHistoryView.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Lab\CTScanHistoryView.aspx.designer.cs">
+      <DependentUpon>CTScanHistoryView.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Lab\CTScanHistoryPrint.aspx.cs">
+      <DependentUpon>CTScanHistoryPrint.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Lab\CTScanHistoryPrint.aspx.designer.cs">
+      <DependentUpon>CTScanHistoryPrint.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Lab\HistoryFormPrint.cs" />
+    <Compile Include="Modules\Lab\XRayHistory.aspx.cs">
+      <DependentUpon>XRayHistory.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Lab\XRayHistory.aspx.designer.cs">
+      <DependentUpon>XRayHistory.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Lab\XRayHistoryView.aspx.cs">
+      <DependentUpon>XRayHistoryView.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Lab\XRayHistoryView.aspx.designer.cs">
+      <DependentUpon>XRayHistoryView.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Lab\XRayHistoryPrint.aspx.cs">
+      <DependentUpon>XRayHistoryPrint.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Modules\Lab\XRayHistoryPrint.aspx.designer.cs">
+      <DependentUpon>XRayHistoryPrint.aspx</DependentUpon>
     </Compile>
     <Compile Include="Modules\PatientManagement\DialysisForm.aspx.cs">
       <DependentUpon>DialysisForm.aspx</DependentUpon>

@@ -50,6 +50,7 @@
         }
 
         function editOpen(id) { window.open('MammographyHistory.aspx?ID=' + encodeURIComponent(id)); }
+        function printOpen(id) { window.open('MammographyHistoryPrint.aspx?ID=' + encodeURIComponent(id), '_blank'); }
         function deleteConfirm(id) {
             if (confirm('Delete this mammography history record?')) {
                 PageMethods.DeleteRecord(id, function (msg) {
@@ -95,6 +96,7 @@
                         orderable: false, width: '8%',
                         render: function (data, type, full) {
                             return '<a class="editListBtn" href="#" onclick="editOpen(' + full.Mammo_ID + ');return false;" style="border-radius:4px;margin-right:4px;padding:5px 8px;"><i class="fa fa-pencil"></i></a>' +
+                                '<a class="printListBtn" href="#" onclick="printOpen(' + full.Mammo_ID + ');return false;" style="border-radius:4px;margin-right:4px;padding:5px 8px;color:#fff;" title="Print"><i class="fa fa-print"></i></a>' +
                                 '<a class="delListBtn" href="#" onclick="deleteConfirm(' + full.Mammo_ID + ');return false;" style="border-radius:4px;margin-left:4px;padding:5px 8px;"><i class="fa fa-trash"></i></a>';
                         }
                     }
