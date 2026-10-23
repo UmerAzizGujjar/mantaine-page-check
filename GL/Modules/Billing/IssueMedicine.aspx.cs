@@ -2303,6 +2303,17 @@ ORDER BY i.Item_Code, i.Item_ID";
                 return new JavaScriptSerializer().Serialize(result);
             }
         }
+        // sys_Parms "Pharmacy MR Search": "01" = partial MR search, anything else (or no row) = exact MR search
+        [WebMethod]
+        public static string GetMRSearchCode()
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString()))
+            {
+                string code = db.sys_Parms.Where(p => p.Name == "Pharmacy MR Search").Select(p => p.Code).FirstOrDefault();
+                return code ?? "";
+            }
+        }
+
         [WebMethod]
         public static string GetPatientName(int patientId)
         {

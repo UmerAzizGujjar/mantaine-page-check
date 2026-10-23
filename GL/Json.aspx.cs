@@ -939,10 +939,14 @@ namespace PMS
                     }
                     Response.Write("[" + result + "]");
                 }
-                else if (Request.QueryString["Table"] == "PatientsForPharmacy")
+                else if (Request.QueryString["Table"] == "PatientsForPharmacy" || Request.QueryString["Table"] == "PatientsForPharmacyLike")
                 {
+                    // PatientsForPharmacyLike: partial MR match, top 20 (IssueMedicine uses it when sys_Parms "Pharmacy MR Search" is 01)
+                    bool likeSearch = Request.QueryString["Table"] == "PatientsForPharmacyLike";
                     string sqlQuery;
-                    if (Request.QueryString["q"] != null)
+                    if (Request.QueryString["q"] != null && likeSearch)
+                        sqlQuery = "Select top 20 pat_id as Pat_id, Patient_No,mr_no_sequence from Reg_patient  Where mr_no_sequence like '%' + @qe_q + '%' order by Created_time desc";
+                    else if (Request.QueryString["q"] != null)
                         sqlQuery = "Select top 1 pat_id as Pat_id, Patient_No,mr_no_sequence from Reg_patient  Where mr_no_sequence = @qe_q order by Created_time desc";
                     else
                         sqlQuery = "Select distinct (select top 1 Patient_ID from Patients where Patient_No=p.Patient_No) Patient_ID, Patient_No from Patients p where isnull(IsRevisit,'0')=0 order by Created_Time desc";

@@ -3393,7 +3393,21 @@ function CalculateReceivedAmount() {
         var Opd_ID;
         var pat_id;
         function LoadTokenInputsDefaultMRNo() {
-            $("#txtMRNo").tokenInput("../../json.aspx?Table=PatientsForPharmacy", {
+            var searchTable = "PatientsForPharmacy";   // exact MR match
+            $.ajax({
+                type: "POST",
+                url: "IssueMedicine.aspx/GetMRSearchCode",
+                data: "{}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: false,
+                success: function (response) {
+                    var code = response.d ? String(response.d).trim() : "";
+                    if (code === "01")
+                        searchTable = "PatientsForPharmacyLike";   // partial MR match, top 20
+                }
+            });
+            $("#txtMRNo").tokenInput("../../json.aspx?Table=" + searchTable, {
                 tokenLimit: 1,
                 onAdd: function (item) {
                     try {
