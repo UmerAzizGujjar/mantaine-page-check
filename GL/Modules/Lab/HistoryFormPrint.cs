@@ -79,7 +79,16 @@ namespace PMS.Modules.Lab
             "s.style.width='190mm';s.style.padding='0';s.style.margin='0';s.style.minHeight='0';s.style.zoom='1';" +
             "var mm=s.getBoundingClientRect().height*25.4/96;s.setAttribute('style',cs||'');" +
             "var max=255;document.documentElement.style.setProperty('--fit',mm>max?(max/mm).toFixed(3):'1');}" +
-            "window.addEventListener('beforeprint',fitOnePage);";
+            "window.addEventListener('beforeprint',fitOnePage);" +
+            // Browser extensions add their own elements to the page (often inline display:...!important and positioned
+            // below the sheet), which made Chrome print an empty second page. While printing, hide everything that is
+            // not the sheet with an inline !important (the only thing that overrides theirs), and put it back afterwards.
+            "function onlySheet(on){var keep=document.querySelector('.sheet');" +
+            "[].slice.call(document.documentElement.children).concat([].slice.call(document.body.children)).forEach(function(el){" +
+            "if(el===keep||el===document.body||el.tagName==='HEAD'||el.contains(keep))return;" +
+            "if(on){el.dataset.pd=el.style.getPropertyValue('display')+'|'+el.style.getPropertyPriority('display');el.style.setProperty('display','none','important');}" +
+            "else if(el.dataset.pd!==undefined){var v=el.dataset.pd.split('|');el.style.setProperty('display',v[0],v[1]);delete el.dataset.pd;}});}" +
+            "window.addEventListener('beforeprint',function(){onlySheet(true);});window.addEventListener('afterprint',function(){onlySheet(false);});";
 
         private const string Css =
             "@page{size:A4;margin:10mm}" +
@@ -121,6 +130,10 @@ namespace PMS.Modules.Lab
             ".compact .ck{margin:2px 16px 2px 0}" +
             ".compact .sec{margin:9px 0 4px}" +
             ".compact table.t{margin:6px 0}.compact table.t th,.compact table.t td{padding:4px 6px}" +
-            "@media print{html,body{height:auto}body{background:#fff}.toolbar{display:none}.sheet{width:auto;min-height:0;margin:0;padding:0;box-shadow:none;zoom:var(--fit,1);break-after:avoid;page-break-after:avoid}.band,.cb.on,table.t th{-webkit-print-color-adjust:exact;print-color-adjust:exact}}";
+            // Print only the sheet: browser extensions inject tiny elements after it (even outside <body>)
+            // that made Chrome add an empty second page. The page is also clipped to one sheet;
+            // FitScript has already shrunk the content to fit, so nothing is cut off.
+            "@media print{body>*:not(.sheet),html>:not(head):not(body){display:none!important}" +
+            "html,body{height:auto;max-height:257mm;overflow:hidden}body{position:relative;background:#fff}.toolbar{display:none}.sheet{width:auto;min-height:0;margin:0;padding:0;box-shadow:none;zoom:var(--fit,1);break-after:avoid;page-break-after:avoid}.band,.cb.on,table.t th{-webkit-print-color-adjust:exact;print-color-adjust:exact}}";
     }
 }
