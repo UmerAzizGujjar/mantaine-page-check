@@ -4,8 +4,8 @@
     {
       "name": "gl-iisexpress",
       "runtimeExecutable": "C:\\Program Files\\IIS Express\\iisexpress.exe",
-      "runtimeArgs": ["/config:E:\\Noman\\Hmis_sources\\Standard_Hospital\\.vs\\GL\\config\\applicationhost.config", "/site:GL"],
-      "port": 28402
+      "runtimeArgs": ["/config:C:\\Users\\Ali\\AppData\\Local\\Temp\\claude\\F--Latest-Sources-Standard-Hospital-GL\\ad8bcac3-4402-49e3-896a-44599c7df451\\scratchpad\\applicationhost.8765.config", "/site:GL"],
+      "port": 8765
     }
   ]
 }
