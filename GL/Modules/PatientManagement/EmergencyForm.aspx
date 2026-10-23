@@ -68,6 +68,10 @@
             $('#ddlPatient_Type').off('change').on('change', function () {
                 loaddata();
             });
+            // Type 99: manual fee entry; keep actual fee in sync
+            $('#txtfees').on('input', function () {
+                if ($('#ddlPatient_Type').val() === '99') $('#txtactualfee').val($(this).val());
+            });
             var reg_id = '<%= Request.QueryString["ID"] %>';
             var added = '<%= Request.QueryString["isAdd"] %>';
             var EMERID = '<%= Request.QueryString["EMERID"] %>'
@@ -326,6 +330,7 @@
                 $('#txtfees').val("0");
                 return;
             }
+            if (selectedPatientType == '99') return;
             if (selectedPatientType == '03') {
                 $('#txtfees').val("0");
                 return;
@@ -600,11 +605,23 @@
             $('#hdnDocshare').val('');
             $('#hdnhospShare').val('');
             $('#txtdiscount').val('').attr('disabled', false);
+            // Fee is editable only for type 99 (manual fee, not loaded from policy)
+            $('#txtfees').prop('readonly', Category != "99").toggleClass('opd-input--readonly', Category != "99");
             $('#ddlDepartment').val('0').trigger('change');
             $('#ddldoctor').val('0').trigger('change');
 
             if (Category == "0") {
 
+            }
+            else if (Category == "99") {
+                $('#fees').show();
+                $('#department').show();
+                $('#doctor').hide();
+                $('#balance').hide();
+                $('#ddlDepartment').attr('disabled', false);
+                $('#pnlcompany').hide();
+                $('#employee').hide();
+                $('#discount').hide();
             }
             else if (Category == "01") {
                 $('#fees').show();
@@ -1313,6 +1330,9 @@
             var emer_reffered = $("#hdn_emer_reffered").val();
             var type = $("#ddlPatient_Type").val();
             var type_text = $('#ddlPatient_Type option:selected').text().trim();
+
+            // Type 99: fee is entered manually, never loaded from policy
+            if (type === "99") return;
 
             // For Panel category, don't load fees from department
             if (type === "03") {
