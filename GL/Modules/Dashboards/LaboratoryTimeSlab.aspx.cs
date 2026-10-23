@@ -229,6 +229,118 @@ namespace PMS.Modules.Dashboards
             return $"{hours}h {mins}m";
         }
 
+        public class RadTimeSlabRow
+        {
+            public string MR_No { get; set; }
+            public string Patient_Name { get; set; }
+            public string Study { get; set; }
+            public DateTime? Slip_Time { get; set; }
+            public DateTime? Report_Time { get; set; }
+        }
+
+        // Radiology & Imaging (depts 002/003/004): slip generation -> consultant report entry.
+        private static List<RadTimeSlabRow> GetRadiologyRows(DataBaseDataContext db, string txt_sdate, string txt_edate)
+        {
+            DateTime fromDt = ParseDate(txt_sdate);
+            DateTime toDt = ParseDate(txt_edate).AddDays(1);
+            db.CommandTimeout = 180;
+
+            return (from ltd in db.Lab_Test_Details
+                    join tdef in db.Lab_Tests on ltd.Test_ID equals tdef.Test_ID
+                    join pa in db.Reg_patients on ltd.Patient_ID equals pa.pat_id
+                    join bd in db.Ar_Billing_Details on ltd.Bill_Details_ID equals bd.Bill_Details_ID
+                    join ar in db.Ar_Billings on bd.Bill_ID equals ar.Bill_ID
+                    where (bd.Test_Main_Department == "002" || bd.Test_Main_Department == "003" || bd.Test_Main_Department == "004")
+                       && ar.Creation_Date >= fromDt && ar.Creation_Date < toDt
+                       && (ar.isCancel == null || ar.isCancel == false)
+                    select new RadTimeSlabRow
+                    {
+                        MR_No = pa.mr_no_sequence,
+                        Patient_Name = pa.Full_Name,
+                        Study = tdef.Test_Name,
+                        Slip_Time = ar.Creation_Date,
+                        Report_Time = ltd.Is_Result == true ? ltd.Created_Time : null
+                    }).ToList();
+        }
+
+        private static string FormatDt(DateTime? d)
+        {
+            return d.HasValue ? d.Value.ToString("dd-MMM-yyyy hh:mm tt") : "";
+        }
+
+        [WebMethod]
+        public static object RadiologyViewList(int draw, int start, int length, string sortColumn, string sortColumnDirection, string searchValue, string txt_sdate, string txt_edate)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var all = GetRadiologyRows(db, txt_sdate, txt_edate).Select(x => new
+                {
+                    mrNo = x.MR_No ?? "",
+                    patientName = x.Patient_Name ?? "",
+                    study = x.Study ?? "",
+                    slipDate = x.Slip_Time,
+                    reportDate = x.Report_Time,
+                    mins = (x.Slip_Time.HasValue && x.Report_Time.HasValue)
+                        ? (int?)Math.Max(0, (int)(x.Report_Time.Value - x.Slip_Time.Value).TotalMinutes) : null
+                }).ToList();
+
+                if (!string.IsNullOrEmpty(searchValue))
+                {
+                    string sv = searchValue.ToLower();
+                    all = all.Where(x => x.mrNo.ToLower().Contains(sv) || x.patientName.ToLower().Contains(sv) || x.study.ToLower().Contains(sv)).ToList();
+                }
+
+                bool desc = sortColumnDirection == "desc";
+                switch (sortColumn)
+                {
+                    case "mrNo": all = desc ? all.OrderByDescending(x => x.mrNo).ToList() : all.OrderBy(x => x.mrNo).ToList(); break;
+                    case "patientName": all = desc ? all.OrderByDescending(x => x.patientName).ToList() : all.OrderBy(x => x.patientName).ToList(); break;
+                    case "study": all = desc ? all.OrderByDescending(x => x.study).ToList() : all.OrderBy(x => x.study).ToList(); break;
+                    case "slipDate": all = desc ? all.OrderByDescending(x => x.slipDate).ToList() : all.OrderBy(x => x.slipDate).ToList(); break;
+                    case "reportDate": all = desc ? all.OrderByDescending(x => x.reportDate).ToList() : all.OrderBy(x => x.reportDate).ToList(); break;
+                    case "totalTimeMinutes": all = desc ? all.OrderByDescending(x => x.mins).ToList() : all.OrderBy(x => x.mins).ToList(); break;
+                }
+
+                int total = all.Count;
+                var data = all.Skip(start).Take(length).Select((x, i) => new
+                {
+                    srNo = start + i + 1,
+                    x.mrNo,
+                    x.patientName,
+                    x.study,
+                    slipDate = FormatDt(x.slipDate),
+                    reportDate = x.reportDate.HasValue ? FormatDt(x.reportDate) : "Pending",
+                    totalTime = x.mins.HasValue ? FormatMinutes(x.mins.Value) : "-",
+                    totalTimeMinutes = x.mins ?? -1
+                }).ToList();
+
+                return new { draw, recordsTotal = total, recordsFiltered = total, data };
+            }
+        }
+
+        [WebMethod]
+        public static string GetRadiologyDashboard(string txt_sdate, string txt_edate)
+        {
+            using (DataBaseDataContext db = new DataBaseDataContext())
+            {
+                var all = GetRadiologyRows(db, txt_sdate, txt_edate);
+                var done = all.Where(x => x.Slip_Time.HasValue && x.Report_Time.HasValue)
+                              .Select(x => Math.Max(0, (x.Report_Time.Value - x.Slip_Time.Value).TotalMinutes)).ToList();
+
+                int avg = done.Any() ? (int)Math.Round(done.Average(), 0) : 0;
+                int max = done.Any() ? (int)Math.Round(done.Max(), 0) : 0;
+
+                return new JavaScriptSerializer().Serialize(new
+                {
+                    totalStudies = all.Count,
+                    reported = done.Count,
+                    pending = all.Count - done.Count,
+                    avgTat = FormatMinutes(avg),
+                    maxTat = FormatMinutes(max)
+                });
+            }
+        }
+
         [WebMethod]
         public static string GetMonthlyTrends()
         {

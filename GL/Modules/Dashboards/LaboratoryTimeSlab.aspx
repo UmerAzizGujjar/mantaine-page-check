@@ -95,6 +95,83 @@
             } else {
                 LoadTable();
             }
+            LoadRadDashboard();
+            if ($.fn.DataTable.isDataTable('#tblRad')) {
+                $('#tblRad').DataTable().ajax.reload();
+            } else {
+                LoadRadTable();
+            }
+        }
+        function LoadRadDashboard() {
+            $.ajax({
+                type: "POST",
+                url: "LaboratoryTimeSlab.aspx/GetRadiologyDashboard",
+                data: JSON.stringify({ txt_sdate: _dt, txt_edate: _dts }),
+                contentType: "application/json; charset=utf-8",
+                success: function (r) {
+                    var d = JSON.parse(r.d);
+                    $('#radTotal').text(d.totalStudies);
+                    $('#radReported').text(d.reported);
+                    $('#radPending').text(d.pending);
+                    $('#radAvgTat').text(d.avgTat);
+                    $('#radMaxTat').text(d.maxTat);
+                },
+                error: function (xhr) { console.log(xhr.responseText); }
+            });
+        }
+        function LoadRadTable() {
+            $('#tblRad').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "dom": 'lBfrtip',
+                "buttons": ['copy', 'excel', 'pdf'],
+                "ajax": function (data, callback) {
+                    $.ajax({
+                        type: "POST",
+                        url: "LaboratoryTimeSlab.aspx/RadiologyViewList",
+                        data: JSON.stringify({
+                            draw: data.draw,
+                            start: data.start,
+                            length: data.length,
+                            sortColumn: data.columns[data.order[0].column].name,
+                            sortColumnDirection: data.order[0].dir,
+                            searchValue: data.search.value,
+                            txt_sdate: _dt,
+                            txt_edate: _dts
+                        }),
+                        contentType: "application/json; charset=utf-8",
+                        success: function (response) {
+                            callback({
+                                draw: response.d.draw,
+                                recordsTotal: response.d.recordsTotal,
+                                recordsFiltered: response.d.recordsFiltered,
+                                data: response.d.data
+                            });
+                        },
+                        error: function (xhr) { console.log(xhr.responseText); }
+                    });
+                },
+                "columns": [
+                    { "data": "srNo", "name": "srNo", "width": "5%", "orderable": true },
+                    { "data": "mrNo", "name": "mrNo", "width": "9%", "orderable": true },
+                    { "data": "patientName", "name": "patientName", "width": "17%", "orderable": true },
+                    { "data": "study", "name": "study", "width": "17%", "orderable": true },
+                    { "data": "slipDate", "name": "slipDate", "width": "14%", "orderable": true },
+                    { "data": "reportDate", "name": "reportDate", "width": "14%", "orderable": true },
+                    { "data": "totalTime", "name": "totalTimeMinutes", "width": "11%", "orderable": true,
+                        "render": function (data, type, full) {
+                            if (type === 'display') {
+                                var mins = full.totalTimeMinutes;
+                                if (mins < 0) return '<span class="time-badge badge-orange">Pending</span>';
+                                var c = mins > 240 ? 'badge-red' : (mins > 120 ? 'badge-orange' : 'badge-green');
+                                return '<span class="time-badge ' + c + '">' + data + '</span>';
+                            }
+                            return data;
+                        }
+                    }
+                ],
+                "order": [[0, "asc"]]
+            });
         }
         function LoadDashboard() {
             $.ajax({
@@ -407,6 +484,44 @@
                                     <th>Approve Date</th>
                                     <th>Total Time</th>
                                     <th style="width:8%">History</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row-dash">
+        <div class="row" style="margin:16px 0 8px 0;">
+            <div class="col-lg-12" style="padding:0 8px;"><h3 class="dash-title">Radiology &amp; Imaging Time Slab</h3>
+                <div class="kpi-sub">Slip generation to consultant report entry</div></div>
+        </div>
+        <div class="row kpi-row" style="margin:0 0 16px 0;">
+            <div class="col-md-3" style="padding:0 8px;"><div class="card-dash"><div class="card-body">
+                <div class="kpi-label">Total Studies</div><div class="kpi-value" id="radTotal">0</div></div></div></div>
+            <div class="col-md-3" style="padding:0 8px;"><div class="card-dash"><div class="card-body">
+                <div class="kpi-label">Reported / Pending</div><div class="kpi-value"><span id="radReported">0</span> / <span id="radPending">0</span></div></div></div></div>
+            <div class="col-md-3" style="padding:0 8px;"><div class="card-dash"><div class="card-body">
+                <div class="kpi-label">Avg. Slip to Report</div><div class="kpi-value" id="radAvgTat">0m</div></div></div></div>
+            <div class="col-md-3" style="padding:0 8px;"><div class="card-dash"><div class="card-body kpi-warn">
+                <div class="kpi-label">Longest Wait</div><div class="kpi-value" id="radMaxTat">0m</div></div></div></div>
+        </div>
+        <div class="row" style="margin:0;">
+            <div class="col-lg-12" style="padding:0 8px;">
+                <div class="card-dash">
+                    <div class="table-container">
+                        <table id="tblRad" class="table table-hover table-striped table-nb" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>SR No</th>
+                                    <th>MR No</th>
+                                    <th>Patient Name</th>
+                                    <th>Study</th>
+                                    <th>Slip Generated</th>
+                                    <th>Report Entered</th>
+                                    <th>Total Time</th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
