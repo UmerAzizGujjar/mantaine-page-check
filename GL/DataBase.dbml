@@ -4533,6 +4533,69 @@
       <Column Name="Modified_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
     </Type>
   </Table>
+  <Table Name="dbo.Lab_Mammography_History" Member="Lab_Mammography_Histories">
+    <Type Name="Lab_Mammography_History">
+      <Column Name="Mammo_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Patient_ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Exam_Date" Type="System.DateTime" DbType="Date" CanBeNull="true" />
+      <Column Name="Referring_Doctor" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="Is_Pregnant" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Is_Married" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="No_Of_Children" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Is_Breastfeeding" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Reason_Screening" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Reason_FollowUp" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Reason_Lump" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Reason_Nipple_Discharge" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Nipple_Discharge_Color" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="Reason_Skin_Changes" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Reason_Implant" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Reason_Pain" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Pain_Type" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="Reason_Other" Type="System.String" DbType="NVarChar(300)" CanBeNull="true" />
+      <Column Name="Previous_Mammogram" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="LMP" Type="System.DateTime" DbType="Date" CanBeNull="true" />
+      <Column Name="Menopause" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="Diagnosed_Breast_Cancer" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Family_Breast_Cancer" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Ca_Myself" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Ca_Myself_Age" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="Ca_Mother" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Ca_Mother_Age" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="Ca_Sister" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Ca_Sister_Age" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="Ca_Daughter" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Ca_Daughter_Age" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="Ca_Aunt" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Ca_Aunt_Age" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="Ca_Grandmother" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Ca_Grandmother_Age" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="Breast_Surgery" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Surgery_Mastectomy" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Surgery_Lumpectomy" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Surgery_Side" Type="System.String" DbType="NVarChar(20)" CanBeNull="true" />
+      <Column Name="HRT_Used" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="HRT_Estrogen" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="HRT_Provera" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="HRT_Premarin" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="HRT_Prempro" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="HRT_Tamoxifen" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="HRT_Other" Type="System.String" DbType="NVarChar(200)" CanBeNull="true" />
+      <Column Name="Refer_To_Surgeon" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Reminder_Next" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Contact_By_Phone_Email" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="Contact_Phone" Type="System.String" DbType="NVarChar(30)" CanBeNull="true" />
+      <Column Name="Contact_Email" Type="System.String" DbType="NVarChar(150)" CanBeNull="true" />
+      <Column Name="Technologist_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Remarks" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Column Name="Company_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Book_ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Created_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Created_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Modified_By" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Modified_Date" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+    </Type>
+  </Table>
   <Table Name="dbo.Anesthesia_History" Member="Anesthesia_Histories">
     <Type Name="Anesthesia_History">
       <Column Name="History_ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />

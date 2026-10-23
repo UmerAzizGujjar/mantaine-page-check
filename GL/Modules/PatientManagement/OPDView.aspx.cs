@@ -281,6 +281,50 @@ namespace PMS.Modules.PatientManagement
             }
         }
 
-        
+        // Read-only detail of one OPD visit (row click on the list), with its billed services
+        [WebMethod]
+        public static object GetOPDDetail(int Patient_ID)
+        {
+            DataTable dtOpd = DBClass.getDataTable(@"
+                SELECT p.Patient_ID, p.Opd_No, rg.mr_no_sequence, rg.Full_Name, rg.Father_Name, rg.Gender, p.Age_years, rg.NIC, rg.Mobile1,
+                       rg.Permanent_Address, rg.Blood_Group, FORMAT(p.Created_Time, 'dd-MMM-yyyy hh:mm tt') AS Created_Time,
+                       p.Doc_Token, p.Dept_Token,
+                       dbo.GetDataValueName('Patient Main Category', p.Patient_Main_Category) AS Department,
+                       dbo.GetDataValueName('Patient Type', p.Patient_Type) AS Patient_Type,
+                       (SELECT TOP 1 hr.Emp_Name FROM HR_Employees hr WHERE CONVERT(varchar(20), hr.Emp_ID) = p.Doctor_ID) AS Doctor,
+                       (SELECT TOP 1 hr.Emp_Name FROM HR_Employees hr WHERE hr.Emp_ID = p.opd_doc_reffered) AS Referred_By,
+                       p.Receipt_Amount, p.discount_amt, ISNULL(p.free_check, 0) AS free_check, p.Status, p.Remarks,
+                       ISNULL(p.isCancel, 0) AS isCancel, p.CancelRemarks, u.UserName AS Created_By
+                FROM Patients p
+                JOIN Reg_patient rg ON rg.pat_id = p.Reg_PatId
+                LEFT JOIN aspnet_Users u ON u.UserId = p.Created_By
+                WHERE p.Patient_ID = @Patient_ID",
+                DBClass.Param("@Patient_ID", Patient_ID));
+
+            DataTable dtServices = DBClass.getDataTable(@"
+                SELECT b.Bill_No, d.Item_Name, d.Qty, d.Amount, d.Discount_Amount, d.Net_Amount, ISNULL(b.isCancel, 0) AS isCancel
+                FROM Ar_Billings b
+                JOIN Ar_Billing_Details d ON d.Bill_ID = b.Bill_ID
+                WHERE b.Opd_Id = @Patient_ID
+                ORDER BY b.Bill_ID, d.Bill_Details_ID",
+                DBClass.Param("@Patient_ID", Patient_ID));
+
+            return new { opd = ToRows(dtOpd).FirstOrDefault(), services = ToRows(dtServices) };
+        }
+
+        private static List<Dictionary<string, object>> ToRows(DataTable dt)
+        {
+            var rows = new List<Dictionary<string, object>>();
+            foreach (DataRow dr in dt.Rows)
+            {
+                var row = new Dictionary<string, object>();
+                foreach (DataColumn col in dt.Columns)
+                {
+                    row[col.ColumnName] = dr[col] == DBNull.Value ? null : dr[col];
+                }
+                rows.Add(row);
+            }
+            return rows;
+        }
     }
 }

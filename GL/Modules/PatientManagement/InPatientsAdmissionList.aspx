@@ -12,6 +12,15 @@
         .opd-slider:before { content: ""; position: absolute; height: 18px; width: 18px; left: 3px; top: 3px; background: #fff; border-radius: 50%; transition: .2s; }
         .opd-switch input:checked + .opd-slider { background: #2e7d32; }
         .opd-switch input:checked + .opd-slider:before { transform: translateX(20px); }
+        .detail-container { padding: 15px; }
+        .clickable-row { cursor: pointer; }
+        .clickable-row:hover { background-color: #f0f8ff; }
+        .opd-dt-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 8px 16px; margin-bottom: 12px; }
+        .opd-dt-item { min-width: 0; }
+        .opd-dt-item.wide { grid-column: span 2; }
+        .opd-dt-item span { display: block; font-size: 12px; color: #718096; }
+        /* table cells are nowrap in the theme; let long values (address) wrap inside their own cell */
+        .opd-dt-item b { display: block; font-size: 13px; color: #2d3748; white-space: normal; overflow-wrap: anywhere; }
     </style>
     <script type="text/javascript">
         $(document).ready(function () {
@@ -115,6 +124,67 @@
             
         }
 
+        function escHtml(v) { return v == null ? '' : $('<div>').text(v).html(); }
+        function fmtAmt(v) { return v == null || v === '' ? '0.00' : parseFloat(v).toFixed(2); }
+
+        function LoadAdmissionDetails(inPatientId, row) {
+            PageMethods.GetAdmissionDetail(parseInt(inPatientId), function (res) {
+                row.child(BuildAdmissionDetailsHTML(res)).show();
+            }, function (err) {
+                row.child('<div style="padding:20px;color:red;">Error loading details</div>').show();
+                console.log(err.get_message());
+            });
+        }
+
+        function BuildAdmissionDetailsHTML(res) {
+            var a = res.admission;
+            if (!a) {
+                return '<div style="padding:20px;color:red;">Admission record not found</div>';
+            }
+            var field = function (label, value, wide) {
+                var v = escHtml(value);
+                return '<div class="opd-dt-item' + (wide ? ' wide' : '') + '"><span>' + label + '</span><b>' + (v === '' ? '-' : v) + '</b></div>';
+            };
+
+            var html = '<div class="detail-container"><div class="opd-dt-grid">'
+                + field('IPD No.', a.IPD_No) + field('Admission Date & Time', a.Admission_Date) + field('Expected Discharge', a.Expected_Discharge_Date)
+                + field('Gender', a.Gender) + field('Age', a.Age_years) + field('CNIC', a.NIC) + field('Mobile', a.Mobile1)
+                + field('Address', a.Permanent_Address, true) + field('Doctor', a.Doctor) + field('Referred Doctor', a.Referred_Doctor)
+                + field('Room Type', a.Room_Type) + field('Package', a.packagae_name) + field('Admission Fee', fmtAmt(a.Admission_Fees))
+                + field('Provisional Diagnosis', a.Provisional_Diagnosis, true) + field('Health Complaints', a.Health_Complaints, true)
+                + '</div>';
+
+            html += '<table class="details-table" style="width: 100%; border-collapse: collapse; text-align: left; font-family: sans-serif;">';
+            html += '<thead><tr style="background-color: #f4f4f4; border-bottom: 2px solid #ddd;">';
+            html += '<th style="padding: 10px; width: 10%;">Bill #</th>';
+            html += '<th style="padding: 10px; width: 50%;">Item Name</th>';
+            html += '<th style="padding: 10px; width: 10%;">Qty</th>';
+            html += '<th style="padding: 10px; width: 10%;">Amount</th>';
+            html += '<th style="padding: 10px; width: 10%;">Discount</th>';
+            html += '<th style="padding: 10px; width: 10%;">Net Amount</th>';
+            html += '</tr></thead><tbody>';
+
+            if (res.services && res.services.length) {
+                $.each(res.services, function (i, s) {
+                    // Cancelled bill lines are struck through
+                    var style = s.isCancel ? 'border-bottom: 1px solid #eee; color: #721c24; text-decoration: line-through;' : 'border-bottom: 1px solid #eee;';
+                    html += '<tr style="' + style + '">';
+                    html += '<td style="padding: 10px;">' + escHtml(s.Bill_No) + '</td>';
+                    html += '<td style="padding: 10px;">' + escHtml(s.Item_Name || 'N/A') + '</td>';
+                    html += '<td style="padding: 10px;">' + fmtAmt(s.Qty) + '</td>';
+                    html += '<td style="padding: 10px;">' + fmtAmt(s.Amount) + '</td>';
+                    html += '<td style="padding: 10px;">' + fmtAmt(s.Discount_Amount) + '</td>';
+                    html += '<td style="padding: 10px;">' + fmtAmt(s.Net_Amount) + '</td>';
+                    html += '</tr>';
+                });
+            } else {
+                html += '<tr><td colspan="6" style="padding: 10px; text-align: center; color: #888;">No bill against this admission</td></tr>';
+            }
+
+            html += '</tbody></table></div>';
+            return html;
+        }
+
         function LoadPage() {
             let savedVisibility = null;
             $.ajax({
@@ -136,7 +206,7 @@
                     console.error("Failed to load column preferences");
                 }
             });
-            $("#tblResult").DataTable({
+            const table = $("#tblResult").DataTable({
                 "processing": true,
                 "serverSide": true,
                 "dom": 'lBfrtip',
@@ -248,6 +318,7 @@
                             var res = '<a href="#" onclick="editOpen(' + full.In_Patient_ID + ')" class="editListBtn" style="border-radius: 4px;padding: 5px 8px;"><i class="fa fa-pencil"></i></a>';
                             var Del = '<a class="delListBtn" href="#" style="border-radius: 4px;margin-left: 4px;color:white;padding: 5px 8px;" onclick="deleteConfirm(this)"><i class="fa fa-trash"></i></a>';
                             var print = '<a class="printListBtn" style="border-radius: 4px;margin-left: 4px;color:white;padding: 5px 8px;" href="#" onclick="PrintSlip(' + full.In_Patient_ID + ')"><i class="fa fa-print"></i></a>';
+                            var printBtn = '';
                             if (full.Birth_Date) {
                                 printBtn = '<a class="printListBtn" href="#" style="border-radius: 4px; margin-left: 4px; color: white; padding: 5px 8px;" onclick="PrintBirthCertificate(' + full.In_Patient_ID + ')"><i class="fa fa-print"></i></a>';
                             }
@@ -257,6 +328,8 @@
                     }
                 ],
                 "createdRow": function (row, data, dataIndex) {
+                    $(row).addClass('clickable-row');
+                    $(row).attr('data-inpatient-id', data.In_Patient_ID);
                     if (data.AdmitDays >= 10 && (data.Discharge_ON == null || data.Discharge_ON === "")) {
                         $(row).css({
                             "background-color": "#f8d7da",
@@ -312,6 +385,33 @@
 
             $('#ddlLocationFilter').on('change', function () {
                 $('#tblResult').DataTable().ajax.reload();
+            });
+
+            // Row click = expand read-only admission detail below the row; checkbox and action icons keep their own behaviour
+            $('#tblResult tbody').on('click', 'tr.clickable-row', function (e) {
+                if ($(e.target).closest('a,button,input,td.dt-checkbox').length > 0) {
+                    return;
+                }
+
+                var tr = $(this);
+                var row = table.row(tr);
+                var inPatientId = tr.attr('data-inpatient-id');
+
+                if (row.child.isShown()) {
+                    row.child.hide();
+                    tr.removeClass('shown');
+                } else {
+                    table.rows().every(function () {
+                        if (this.child.isShown()) {
+                            this.child.hide();
+                            $(this.node()).removeClass('shown');
+                        }
+                    });
+
+                    row.child('<div style="padding:20px;text-align:center;">Loading...</div>').show();
+                    tr.addClass('shown');
+                    LoadAdmissionDetails(inPatientId, row);
+                }
             });
         }
 
