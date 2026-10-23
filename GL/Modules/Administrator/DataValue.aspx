@@ -106,6 +106,25 @@
             }
         }
 
+        function confirmDeleteRow(button) {
+            var postBackUrl = button.getAttribute("href");
+            var name = $(button).closest('tr').find('.dv-code-chip').text();
+            Swal.fire({
+                icon: 'warning',
+                title: 'Delete this entry?',
+                text: '"' + name + '" will be removed permanently.',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete',
+                cancelButtonText: 'No',
+                reverseButtons: true
+            }).then(function (result) {
+                if (result.isConfirmed && postBackUrl) {
+                    eval(postBackUrl.replace(/^javascript:/, ''));
+                }
+            });
+            return false;
+        }
+
         function clearAddFields() {
             $("#<%= txtDataValue_Name.ClientID %>").val('');
             $("#<%= txtDataValue_Description.ClientID %>").val('');
@@ -195,15 +214,13 @@
                                         <asp:Button CssClass="dv-btn dv-btn-primary" SkinID="Custom"
                                             Text="Add" ID="btnAdd" runat="server" OnClick="btnAdd_Click" />
                                         <input type="button" class="dv-btn dv-btn-primary" value="Clear" onclick="clearAddFields();" />
-                                        <asp:Button CssClass="dv-btn dv-btn-primary" SkinID="Custom"
-                                            Text="Delete" ID="btnDelete" runat="server" OnClick="btnDelete_Click" />
                                     </div>
                                 </div>
                             </ContentTemplate>
                             <Triggers>
                                 <asp:AsyncPostBackTrigger ControlID="GRD" EventName="SelectedIndexChanging" />
+                                <asp:AsyncPostBackTrigger ControlID="GRD" EventName="RowCommand" />
                                 <asp:AsyncPostBackTrigger ControlID="btnAdd" EventName="Click" />
-                                <asp:AsyncPostBackTrigger ControlID="btnDelete" EventName="Click" />
                             </Triggers>
                         </asp:UpdatePanel>
                     </div>
@@ -224,7 +241,7 @@
                             <ContentTemplate>
                                 <div class="dv-table-wrap">
                                     <asp:GridView ID="GRD" runat="server" SkinID="Custom" EmptyDataText="No records found" Width="100%" AutoGenerateColumns="False"
-                                        Style="margin-right: 1px" OnSelectedIndexChanging="GRD_SelectedIndexChanging"
+                                        Style="margin-right: 1px" OnSelectedIndexChanging="GRD_SelectedIndexChanging" OnRowCommand="GRD_RowCommand"
                                         CellPadding="0" CellSpacing="0" GridLines="None"
                                         CssClass="dv-table"
                                         HeaderStyle-CssClass="dv-th"
@@ -232,15 +249,6 @@
                                         AlternatingRowStyle-CssClass="dv-tr-alt"
                                         UseAccessibleHeader="True">
                                         <Columns>
-                                            <asp:TemplateField HeaderText="">
-                                                <ItemTemplate>
-                                                    <asp:LinkButton ID="lbselect" CommandName="select" runat="server"
-                                                        CssClass="dv-action-btn" ToolTip="Select / edit row">
-                                                        <i class="fa fa-pencil"></i>
-                                                    </asp:LinkButton>
-                                                </ItemTemplate>
-                                                <ItemStyle HorizontalAlign="Center" Width="50px" CssClass="dv-td-center" />
-                                            </asp:TemplateField>
                                             <asp:TemplateField HeaderText="Index" SortExpression="Index" Visible="False">
                                                 <ItemTemplate>
                                                     <asp:Label ID="lblIndex" runat="server" Text='<%# Bind("Index") %>'></asp:Label>
@@ -280,6 +288,22 @@
                                                 </ItemTemplate>
                                                 <HeaderStyle HorizontalAlign="Left" />
                                                 <ItemStyle Width="200px" />
+                                            </asp:TemplateField>
+                                            <asp:TemplateField HeaderText="Action">
+                                                <ItemTemplate>
+                                                    <asp:LinkButton ID="lbselect" CommandName="select" runat="server"
+                                                        CssClass="dv-action-btn" ToolTip="Select / edit row">
+                                                        <i class="fa fa-pencil"></i>
+                                                    </asp:LinkButton>
+                                                    <asp:LinkButton ID="lbDelete" runat="server" CommandName="DeleteRow"
+                                                        CommandArgument='<%# Eval("Index") %>'
+                                                        CssClass="dv-action-btn dv-action-delete" ToolTip="Delete row"
+                                                        OnClientClick="return confirmDeleteRow(this);">
+                                                        <i class="fa fa-trash"></i>
+                                                    </asp:LinkButton>
+                                                </ItemTemplate>
+                                                <HeaderStyle HorizontalAlign="Center" />
+                                                <ItemStyle HorizontalAlign="Center" Width="80px" CssClass="dv-td-center" />
                                             </asp:TemplateField>
                                         </Columns>
                                     </asp:GridView>

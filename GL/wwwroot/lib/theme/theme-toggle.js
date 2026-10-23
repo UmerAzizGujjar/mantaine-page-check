@@ -135,7 +135,10 @@
             }
             memo.set(el, res); return res;
         }
-        var all = doc.body.querySelectorAll('*'), n = 0;
+        // read every computed style first and apply the colour fixes afterwards: writing el.style
+        // inside this loop invalidated styles, so each getComputedStyle forced a full recalc
+        // (made pages with large tables freeze in dark mode)
+        var all = doc.body.querySelectorAll('*'), n = 0, pending = [];
         for (var i = 0; i < all.length && n < 6000; i++) {
             var el = all[i], tag = el.tagName;
             if (tag === 'SCRIPT' || tag === 'STYLE' || tag === 'OPTION' || tag === 'SVG' || tag === 'PATH') { continue; }
@@ -150,8 +153,11 @@
             if (fg[3] < 1) { continue; }
             if (ratio(fg, bg) >= 3) { if (el.hasAttribute(FIXATTR)) { /* already readable */ } continue; }
             var ink = ratio(INK, bg), paper = ratio(PAPER, bg);
-            el.style.setProperty('color', 'rgb(' + ((paper >= 3.5 || paper >= ink) ? PAPER : INK).join(',') + ')', 'important');
-            el.setAttribute(FIXATTR, '1');
+            pending.push([el, 'rgb(' + ((paper >= 3.5 || paper >= ink) ? PAPER : INK).join(',') + ')']);
+        }
+        for (var p = 0; p < pending.length; p++) {
+            pending[p][0].style.setProperty('color', pending[p][1], 'important');
+            pending[p][0].setAttribute(FIXATTR, '1');
         }
         win.setTimeout(function () { fixing = false; }, 0);
     }

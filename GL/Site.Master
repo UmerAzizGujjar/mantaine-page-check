@@ -1116,6 +1116,8 @@
     <%-- One size for every Bootstrap modal (900px x 80% height, centred; opt out with class="modal-free-size") --%>
     <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/modal-modern.css") %>?v=<%= Ver("~/wwwroot/lib/theme/modal-modern.css") %>" rel="stylesheet" type="text/css" />
     <script src="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/modal-modern.js") %>?v=<%= Ver("~/wwwroot/lib/theme/modal-modern.js") %>" type="text/javascript"></script>
+    <%-- Patient registration modal layout (sections + 12-col grid); used by modals with class="pm-modal" --%>
+    <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/patient-modal.css") %>?v=<%= Ver("~/wwwroot/lib/theme/patient-modal.css") %>" rel="stylesheet" type="text/css" />
     <%-- Branch-wise warehouse dropdowns (sys_Parms "Branch Wise Ware House" = 01); forms opt in with BranchWareHouse.attach() --%>
     <script type="text/javascript">window.BranchWareHouseUrl = '<%= Page.ResolveUrl("~/Modules/Inventory/BranchWareHouse.ashx") %>';</script>
     <script src="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/branch-warehouse.js") %>?v=<%= Ver("~/wwwroot/lib/theme/branch-warehouse.js") %>" type="text/javascript"></script>
@@ -1125,8 +1127,10 @@
     <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/file-modern.css") %>?v=<%= Ver("~/wwwroot/lib/theme/file-modern.css") %>" rel="stylesheet" type="text/css" />
     <%-- Modern form / record pages (pf-* classes and .emr-page); nothing applies until a page uses them --%>
     <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/page-form-modern.css") %>?v=<%= Ver("~/wwwroot/lib/theme/page-form-modern.css") %>" rel="stylesheet" type="text/css" />
+    <%-- Modern controls (buttons, text boxes, dropdowns, labels). Only applies under body.ui-modern. --%>
+    <link href="<%= Page.ResolveClientUrl("~/wwwroot/lib/theme/controls-modern.css") %>?v=<%= Ver("~/wwwroot/lib/theme/controls-modern.css") %>" rel="stylesheet" type="text/css" />
 </head>
-<body class="no-skin" onload="releasemenu()">
+<body class="no-skin ui-modern" onload="releasemenu()">
     <form runat="server" id="MasterPageForm1">
         <asp:ToolkitScriptManager ID="cmManager" runat="server" EnablePageMethods="true" />
         <div class="page">

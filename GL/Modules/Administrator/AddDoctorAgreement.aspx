@@ -1663,10 +1663,6 @@
 
     <!-- Page header + actions -->
     <div class="da-head">
-        <div>
-            <h2><span id="daTitle">Doctor Agreement</span> <span class="da-badge" id="daMode"><i class="fa fa-plus-circle" style="font-size: 12px !important; margin: 0 !important; color: inherit !important;"></i> New</span></h2>
-            <p>Doctor and hospital share of each service, by department.</p>
-        </div>
         <div class="da-actions">
             <input type="button" value="Save" id="btnValue" class="da-btn da-btn-primary" onclick="saveLabtest()" />
             <input type="button" value="New" class="da-btn da-btn-quiet" onclick="NewPage()" />

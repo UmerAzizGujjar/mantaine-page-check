@@ -2675,129 +2675,145 @@
     </div>
 
     <%--patient modal--%>
-    <div id="PatientModel" class="modal fade" tabindex="-1" role="dialog">
+    <div id="PatientModel" class="modal fade pm-modal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Patient Details</h5>
+                <div class="modal-header pm-header">
+                    <div class="pm-header-title">
+                        <span class="pm-header-icon"><i class="fa fa-user-plus"></i></span>
+                        <div>
+                            <h5 class="modal-title">Patient Details</h5>
+                            <small>Fields marked <span class="pm-req">*</span> are required</small>
+                        </div>
+                    </div>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
 
-                <div class="modal-body">
-                    <div class=" row">
-                        <div class="col-lg-2 col-md-4 col-sm-6">
-                            <label for="txt_Mrno">MR No</label>
-                            <input type="text" id="txt_Mrno" class="form-control" disabled />
-                        </div>
-                        <div class="col-lg-1 col-md-4 col-sm-6">
-                            <label for="ddl_name">Name<span style="color: red;">*</span></label>
-                            <select id="ddl_name" class="form-control" style="width: 137%">
-                                <option value="Mr.">Mr.</option>
-                                <option value="Mrs.">Mrs.</option>
-                                <option value="Ms.">Ms.</option>
-                                <option value="B/O.">B/O.</option>
-                            </select>
-                        </div>
-                        <div class="col-lg-3 col-md-4 col-sm-6" style="margin-top: 7px">
-                            <label></label>
-                            <input name="dob" type="text" id="txt_name" class="form-control" />
-                        </div>
-                        <div class="col-lg-2 col-md-4 col-sm-6">
-                            <label for="ddlRelation">Relation<span style="color: red;">*</span></label>
-                            <select id="ddlRelation" class="form-control">
-                                <option value="S/O">S/O</option>
-                                <option value="W/O">W/O</option>
-                                <option value="D/O">D/O</option>
-                            </select>
-                        </div>
-                        <div class="col-lg-3 col-md-4 col-sm-6">
-                            <label></label>
-                            <input type="text" id="txt_relation" class="form-control" style="margin-top: 5px" />
+                <div class="modal-body pm-body">
+                    <%-- Personal information --%>
+                    <div class="pm-section">
+                        <div class="pm-section-title"><i class="fa fa-id-card-o"></i>Personal Information</div>
+                        <div class="pm-grid">
+                            <div class="pm-col-2">
+                                <label for="txt_Mrno">MR No</label>
+                                <input type="text" id="txt_Mrno" class="form-control" disabled />
+                            </div>
+                            <div class="pm-col-5">
+                                <label for="txt_name">Name<span class="pm-req">*</span></label>
+                                <div class="pm-combo">
+                                    <select id="ddl_name" class="form-control" aria-label="Name prefix">
+                                        <option value="Mr.">Mr.</option>
+                                        <option value="Mrs.">Mrs.</option>
+                                        <option value="Ms.">Ms.</option>
+                                        <option value="B/O.">B/O.</option>
+                                    </select>
+                                    <input name="dob" type="text" id="txt_name" class="form-control" placeholder="Patient name" />
+                                </div>
+                            </div>
+                            <div class="pm-col-5">
+                                <label for="txt_relation">Relation<span class="pm-req">*</span></label>
+                                <div class="pm-combo">
+                                    <select id="ddlRelation" class="form-control" aria-label="Relation type">
+                                        <option value="S/O">S/O</option>
+                                        <option value="W/O">W/O</option>
+                                        <option value="D/O">D/O</option>
+                                    </select>
+                                    <input type="text" id="txt_relation" class="form-control" placeholder="Father / husband name" />
+                                </div>
+                            </div>
+
+                            <div class="pm-col-3">
+                                <label for="txt_dob">Age<span class="pm-req">*</span></label>
+                                <div class="pm-combo">
+                                    <select id="PrefixAge" class="form-control" aria-label="Age unit">
+                                        <option value="Year">Year</option>
+                                        <option value="Month">Month</option>
+                                        <option value="Day">Day</option>
+                                    </select>
+                                    <input type="text" id="txt_dob" class="form-control" placeholder="DOB" onchange="CalculateDateOfBirth();" />
+                                </div>
+                            </div>
+                            <div class="pm-col-3">
+                                <label for="txtAge_yearss">Date of Birth</label>
+                                <input type="text" id="txtAge_yearss" class="form-control" placeholder="dd mmyy" />
+                            </div>
+                            <div class="pm-col-3">
+                                <label for="ddl_Gender">Gender<span class="pm-req">*</span></label>
+                                <select id="ddl_Gender" class="form-control">
+                                    <option value="0">Select Gender</option>
+                                </select>
+                            </div>
+                            <div class="pm-col-3">
+                                <label for="ddl_status">Marital Status<span class="pm-req">*</span></label>
+                                <select id="ddl_status" class="form-control">
+                                    <option value="0">Select Marital</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="row">
-                        <div class="col-lg-2 col-md-4 col-sm-6">
-                            <label for="PrefixAge">Age/DOB<span style="color: red;">*</span></label>
-                            <select id="PrefixAge" class="form-control">
-                                <option value="Year">Year</option>
-                                <option value="Month">Month</option>
-                                <option value="Day">Day</option>
-                            </select>
-                        </div>
-                        <div class="col-lg-1 col-md-4 col-sm-6" style="margin-top: 8px;">
-                            <label></label>
-                            <input type="text" id="txt_dob" class="form-control" placeholder="DOB" onchange="CalculateDateOfBirth();" style="width: 137% !important" />
-                        </div>
-                        <div class="col-lg-3 col-md-4 col-sm-6" style="margin-top: 7px;">
-                            <label></label>
-                            <input type="text" id="txtAge_yearss" class="form-control" placeholder="dd mmyy" />
-                        </div>
-                        <div class="col-lg-2 col-md-4 col-sm-6">
-                            <label for="ddl_Gender">Gender<span style="color: red;">*</span></label>
-                            <select id="ddl_Gender" class="form-control">
-                                <option value="0">Select Gender</option>
-                            </select>
-                        </div>
-                        <div class="col-lg-3 col-md-4 col-sm-6">
-                            <label for="txt_cnic">CNIC<span style="color: red;">*</span></label>
-                            <input type="text" id="txt_cnic" class="form-control" />
+                    <%-- Contact & identity --%>
+                    <div class="pm-section">
+                        <div class="pm-section-title"><i class="fa fa-phone"></i>Contact &amp; Identity</div>
+                        <div class="pm-grid">
+                            <div class="pm-col-3">
+                                <label for="txt_mobile">Mobile<span class="pm-req">*</span></label>
+                                <input type="text" id="txt_mobile" class="form-control" />
+                            </div>
+                            <div class="pm-col-3">
+                                <label for="txt_cnic">CNIC<span class="pm-req">*</span></label>
+                                <input type="text" id="txt_cnic" class="form-control" />
+                            </div>
+                            <div class="pm-col-3">
+                                <label for="txt_Othercnic">Other CNIC</label>
+                                <input type="text" id="txt_Othercnic" class="form-control" />
+                            </div>
+                            <%-- #lblfee / #txtcardfees are shown/hidden by IsWalkinPatientRegFeeActive() --%>
+                            <div class="pm-col-3">
+                                <label for="txtcardfees" id="lblfee">Fee</label>
+                                <input type="text" disabled="disabled" tabindex="17" id="txtcardfees" class="form-control" />
+                            </div>
                         </div>
                     </div>
 
-                    <div class="row">
-                        <div class="col-lg-3 col-md-4 col-sm-6">
-                            <label for="txt_Othercnic">Other CNIC</label>
-                            <input type="text" id="txt_Othercnic" class="form-control" />
-                        </div>
-                        <div class="col-lg-3 col-md-4 col-sm-6">
-                            <label for="txt_mobile">Mobile<span style="color: red;">*</span></label>
-                            <input type="text" id="txt_mobile" class="form-control" />
-                        </div>
-                        <div class="col-lg-2 col-md-4 col-sm-6">
-                            <label for="ddl_status">Marital Status<span style="color: red;">*</span></label>
-                            <select id="ddl_status" class="form-control">
-                                <option value="0">Select Marital</option>
-                            </select>
-                        </div>
-                        <div class="col-lg-3 colmd-4 col-sm-6">
-                            <label>Country</label>
-                            <select id="ddlCountry" class="form-control">
-                                <option value="0">Select Country</option>
-                            </select>
+                    <%-- Address --%>
+                    <div class="pm-section">
+                        <div class="pm-section-title"><i class="fa fa-map-marker"></i>Address</div>
+                        <div class="pm-grid">
+                            <div class="pm-col-3">
+                                <label for="ddlCountry">Country</label>
+                                <select id="ddlCountry" class="form-control">
+                                    <option value="0">Select Country</option>
+                                </select>
+                            </div>
+                            <div class="pm-col-3">
+                                <label for="ddl_Province">Province</label>
+                                <select id="ddl_Province" class="form-control">
+                                    <option value="0">Select Province</option>
+                                </select>
+                            </div>
+                            <div class="pm-col-3">
+                                <label for="txtcity">City</label>
+                                <select id="txtcity" class="form-control">
+                                    <option value="0">Select City</option>
+                                </select>
+                            </div>
+                            <div class="pm-col-3">
+                                <label for="txtarea">Area</label>
+                                <select id="txtarea" class="form-control">
+                                    <option value="0">Select Area</option>
+                                </select>
+                            </div>
+                            <div class="pm-col-12">
+                                <label for="txt_house">Address</label>
+                                <input type="text" id="txt_house" class="form-control" placeholder="House / street / mohalla" />
+                            </div>
                         </div>
                     </div>
 
-                    <div class="row">
-                        <div class="col-lg-3 colmd-4 col-sm-6">
-                            <label>Province</label>
-                            <select id="ddl_Province" class="form-control">
-                                <option value="0">Select Province</option>
-                            </select>
-                        </div>
-                        <div class="col-lg-3 colmd-4 col-sm-6">
-                            <label for="txtcity">City</label>
-                            <select id="txtcity" class="form-control">
-                                <option value="0">Select City</option>
-                            </select>
-                        </div>
-                        <div class="col-lg-2 col-md-4 col-sm-6">
-                            <label for="txtarea">Area</label>
-                            <select id="txtarea" class="form-control">
-                                <option value="0">Select Area</option>
-                            </select>
-                        </div>
-                        <div class="col-lg-3 col-md-4 col-sm-6">
-                            <label for="txt_house">Address</label>
-                            <input type="text" id="txt_house" class="form-control" />
-                        </div>
-                        <div class="col-lg-3 col-md-4 col-sm-6" >
-                            <label for="lblfee" id="lblfee">Fee</label>
-                            <input type="text" disabled="disabled" tabindex="17" id="txtcardfees" class="form-control" />
-                        </div>
-                    </div>
+
                     <div class="form-group row" style="display: none;">
                         <label for="txt_Address" class="col-sm-3 col-form-label">Address<span style="color: red;">*</span></label>
                         <div class="col-sm-9">
@@ -2810,10 +2826,10 @@
                     </div>
                 </div>
 
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primry" id="SavePatient_Data" onclick="SavePatient();">Save</button>
-                    <button type="button" class="btn btn-secondary" id="updatePatient_Data" onclick="SavePatient();">Update</button>
+                <div class="modal-footer pm-footer">
                     <button type="button" class="btn btn-gray" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" id="updatePatient_Data" onclick="SavePatient();">Update</button>
+                    <button type="button" class="btn btn-primry" id="SavePatient_Data" onclick="SavePatient();">Save</button>
                 </div>
             </div>
         </div>

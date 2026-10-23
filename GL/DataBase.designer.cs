@@ -104360,6 +104360,8 @@ namespace PMS
 
         private string _PMDC;
 
+        private System.Nullable<bool> _Ismanual;
+
         #region Extensibility Method Definitions
         partial void OnLoaded();
         partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -104472,6 +104474,8 @@ namespace PMS
         partial void OnBlock_categoryChanged();
         partial void OnPMDCChanging(string value);
         partial void OnPMDCChanged();
+        partial void OnIsmanualChanging(System.Nullable<bool> value);
+        partial void OnIsmanualChanged();
         #endregion
 
         public HR_Employee()
@@ -105555,6 +105559,26 @@ namespace PMS
                     this._PMDC = value;
                     this.SendPropertyChanged("PMDC");
                     this.OnPMDCChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Ismanual", DbType = "Bit")]
+        public System.Nullable<bool> Ismanual
+        {
+            get
+            {
+                return this._Ismanual;
+            }
+            set
+            {
+                if ((this._Ismanual != value))
+                {
+                    this.OnIsmanualChanging(value);
+                    this.SendPropertyChanging();
+                    this._Ismanual = value;
+                    this.SendPropertyChanged("Ismanual");
+                    this.OnIsmanualChanged();
                 }
             }
         }
@@ -123930,6 +123954,8 @@ namespace PMS
 
         private string _Refer_Doctor;
 
+        private System.Nullable<int> _Referred_Doctor_ID;
+
         private string _Close_Status;
 
         private System.Nullable<bool> _is_Closed;
@@ -124078,6 +124104,8 @@ namespace PMS
         partial void OnDoctorIDChanged();
         partial void OnRefer_DoctorChanging(string value);
         partial void OnRefer_DoctorChanged();
+        partial void OnReferred_Doctor_IDChanging(System.Nullable<int> value);
+        partial void OnReferred_Doctor_IDChanged();
         partial void OnClose_StatusChanging(string value);
         partial void OnClose_StatusChanged();
         partial void Onis_ClosedChanging(System.Nullable<bool> value);
@@ -125413,6 +125441,26 @@ namespace PMS
                     this._Refer_Doctor = value;
                     this.SendPropertyChanged("Refer_Doctor");
                     this.OnRefer_DoctorChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Referred_Doctor_ID", DbType = "Int")]
+        public System.Nullable<int> Referred_Doctor_ID
+        {
+            get
+            {
+                return this._Referred_Doctor_ID;
+            }
+            set
+            {
+                if ((this._Referred_Doctor_ID != value))
+                {
+                    this.OnReferred_Doctor_IDChanging(value);
+                    this.SendPropertyChanging();
+                    this._Referred_Doctor_ID = value;
+                    this.SendPropertyChanged("Referred_Doctor_ID");
+                    this.OnReferred_Doctor_IDChanged();
                 }
             }
         }
@@ -191039,6 +191087,8 @@ namespace PMS
 
         private string _Remarks;
 
+        private System.Nullable<bool> _Is_Camp_Patient;
+
         private EntitySet<Birth_Certificate> _Birth_Certificates;
 
         #region Extensibility Method Definitions
@@ -191147,6 +191197,8 @@ namespace PMS
         partial void Oncharge_timeChanged();
         partial void OnRemarksChanging(string value);
         partial void OnRemarksChanged();
+        partial void OnIs_Camp_PatientChanging(System.Nullable<bool> value);
+        partial void OnIs_Camp_PatientChanged();
         #endregion
 
         public Reg_patient()
@@ -192171,6 +192223,26 @@ namespace PMS
                     this._Remarks = value;
                     this.SendPropertyChanged("Remarks");
                     this.OnRemarksChanged();
+                }
+            }
+        }
+
+        [global::System.Data.Linq.Mapping.ColumnAttribute(Storage = "_Is_Camp_Patient", DbType = "Bit")]
+        public System.Nullable<bool> Is_Camp_Patient
+        {
+            get
+            {
+                return this._Is_Camp_Patient;
+            }
+            set
+            {
+                if ((this._Is_Camp_Patient != value))
+                {
+                    this.OnIs_Camp_PatientChanging(value);
+                    this.SendPropertyChanging();
+                    this._Is_Camp_Patient = value;
+                    this.SendPropertyChanged("Is_Camp_Patient");
+                    this.OnIs_Camp_PatientChanged();
                 }
             }
         }

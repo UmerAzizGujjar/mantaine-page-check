@@ -95,10 +95,6 @@ namespace PMS
                         sat = true;
                     }
                 }
-                if (employee.Account_ID != null)
-                {
-                    LoadGLAccount(employee.Account_ID);
-                }
                 if (employee.Resign_Date != null)
                 {
                     txtEmployee_Resign = employee.Resign_Date.Value.ToString(AppConfig.DateFormat);
@@ -111,6 +107,7 @@ namespace PMS
                 var DataFromTable = new
                 {
                     Account_ID = employee.Account_ID,
+                    Ismanual = employee.Ismanual ?? false,
                     panelrate = employee.Panel_Rate,
                     dependent = employee.Dependent,
                     user = employee.userid,
@@ -212,6 +209,48 @@ namespace PMS
                 data = new JavaScriptSerializer().Serialize(details);
             }
             return data;
+        }
+
+        [WebMethod]
+        public static string LoadAccounts()
+        {
+            DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
+            var itemsList = (from a in db.GL_Accounts
+                             where a.Levels == 4 && a.Book_ID == AppConfig.Book_ID
+                             orderby a.Account_Code
+                             select new { a.Account_ID, name = a.Account_Code + " - " + a.Account_Name }).ToList();
+            return new JavaScriptSerializer().Serialize(itemsList);
+        }
+
+        // Next auto account under the "Consultant Payables" parent; null when the parent is not set up
+        private static GL_Account GetNewEmployeeAccount(DataBaseDataContext db)
+        {
+            sys_Parm AccountPram = (from tbl in db.sys_Parms
+                                    where tbl.Name == "Consultant Payables"
+                                    select tbl).FirstOrDefault();
+            if (AccountPram == null || string.IsNullOrEmpty(AccountPram.Code))
+                return null;
+
+            GL_Account parent = (from a in db.GL_Accounts
+                                 where a.Account_Code == AccountPram.Code && a.Book_ID == AppConfig.Book_ID
+                                 select a).FirstOrDefault();
+            if (parent == null)
+                return null;
+
+            int maxSerial = (from a in db.GL_Accounts
+                             where a.Parent_Code == parent.Account_ID
+                             select a.Account_Serial).ToList()
+                            .Select(s => { int n; return int.TryParse(s, out n) ? n : 0; })
+                            .DefaultIfEmpty(0).Max();
+            string newSerial = (maxSerial + 1).ToString("000");
+
+            return new GL_Account
+            {
+                Parent_Code = parent.Account_ID,
+                Account_Code = AccountPram.Code + newSerial,
+                Account_Serial = newSerial,
+                Levels = 4
+            };
         }
 
         [WebMethod]
@@ -413,34 +452,48 @@ namespace PMS
                     employee.Updated_Time = DateTime.Now;
 
                 }
-                if (dataa.hdfAccount_ID != "")
+                if (dataa.Ismanual)
                 {
-                    accountID = Convert.ToInt32(dataa.hdfAccount_ID);
-                    accounts = (from tbl in db.GL_Accounts
-                                where tbl.Account_ID == accountID
-                                select tbl).FirstOrDefault();
-                    accounts.Account_Name = dataa.txtEmployee_Name;
-                    db.SubmitChanges();
+                    // Manual: attach the selected existing account as is, never rename it
+                    if (!int.TryParse(dataa.ddlAccount, out accountID) || accountID == 0)
+                    {
+                        return "Please select GL Account.";
+                    }
                 }
                 else
                 {
-
-                    if (dataa.hdfParent_Code == "")
+                    // Auto: keep renaming the employee's own account; one attached manually earlier is not ours
+                    accounts = null;
+                    if (employee.Account_ID != null && employee.Ismanual != true)
                     {
-                        return "";
+                        accounts = (from tbl in db.GL_Accounts
+                                    where tbl.Account_ID == employee.Account_ID
+                                    select tbl).FirstOrDefault();
                     }
 
-                    accounts.Account_Name = dataa.txtEmployee_Name;
-                    accounts.Account_Code = dataa.hdfAccount_Code;
-                    accounts.Parent_Code = Convert.ToInt32(dataa.hdfParent_Code);
-                    accounts.Levels = Convert.ToInt32(dataa.hdfLevel);
-                    accounts.Account_Serial = dataa.hdfAccount_Serial;
-                    accounts.Active = true;
-                    accounts.Book_ID = AppConfig.Book_ID;
-                    db.GL_Accounts.InsertOnSubmit(accounts);
-                    db.SubmitChanges();
-                    accountID = accounts.Account_ID;
+                    if (accounts != null)
+                    {
+                        accounts.Account_Name = dataa.txtEmployee_Name;
+                        db.SubmitChanges();
+                        accountID = accounts.Account_ID;
+                    }
+                    else
+                    {
+                        accounts = GetNewEmployeeAccount(db);
+                        if (accounts == null)
+                        {
+                            return "Please assign Consultant Payables account in sys_Params table, or check Manual and select an account.";
+                        }
+
+                        accounts.Account_Name = dataa.txtEmployee_Name;
+                        accounts.Active = true;
+                        accounts.Book_ID = AppConfig.Book_ID;
+                        db.GL_Accounts.InsertOnSubmit(accounts);
+                        db.SubmitChanges();
+                        accountID = accounts.Account_ID;
+                    }
                 }
+                employee.Ismanual = dataa.Ismanual;
 
                 employee.Emp_Name = dataa.txtEmployee_Name;
                 employee.Father_Name = dataa.txtFather_Name;
@@ -621,50 +674,16 @@ namespace PMS
         [WebMethod]
         public static string LoadNewAccountToCreate()
         {
-            string sql = "";
-            string[] accountLength;
             DataBaseDataContext db = new DataBaseDataContext(DBClass.ConnectionString());
-            sys_Parm AccountPram = new sys_Parm();
-            AccountPram = (from tbl in db.sys_Parms
-                           where tbl.Name == "Consultant Payables"
-
-                           select tbl).FirstOrDefault();
-            if (AccountPram != null && AccountPram.Code != null)
+            GL_Account account = GetNewEmployeeAccount(db);
+            if (account != null)
             {
-                GL_Account account = new GL_Account();
-
-                var tbl = (from config in db.Configurations
-                           where config.Configuration_Name == "Chart of Accounts Level"
-                           select config).SingleOrDefault();
-                accountLength = tbl.Configuration_Value.Split(',');
-                sql = "Select account_id from gl_Accounts where Account_Code='" + AccountPram.Code + "' and Book_ID=" + AppConfig.Book_ID;
-                string value = DBClass.getField(sql);
-                var NewhdfParent_Code = "";
-                if (value == "There is no row at position 0.")
-                {
-                    NewhdfParent_Code = AccountPram.Code.ToString();
-                }
-                else
-                {
-                    NewhdfParent_Code = value;
-                }
-
-                sql = "Select isNUll(MAX(Convert(int, Account_Serial)),0) from gl_accounts where parent_code=" + value;
-                string maxcode = DBClass.getField(sql);
-                int newcode = Convert.ToInt32(maxcode);
-                newcode += 1;
-                string newAccountcode = newcode.ToString("000");
-                var NewhdfAccount_Code = AccountPram.Code + newAccountcode;
-                var NewhdfAccount_Serial = newAccountcode;
-                var NewhdfLevel = "4";
-
                 var result = new
                 {
-                    NewhdfParent_Code,
-                    NewhdfAccount_Code,
-                    NewhdfAccount_Serial,
-                    NewhdfLevel,
-
+                    NewhdfParent_Code = account.Parent_Code.ToString(),
+                    NewhdfAccount_Code = account.Account_Code,
+                    NewhdfAccount_Serial = account.Account_Serial,
+                    NewhdfLevel = account.Levels.ToString(),
                 };
 
 
@@ -673,7 +692,7 @@ namespace PMS
             }
             else
             {
-                var Newlblmessage = "Please assign Customers account in sys_Params table.";
+                var Newlblmessage = "Please assign Consultant Payables account in sys_Params table.";
                 var result = new
                 {
                     Newlblmessage,
@@ -736,6 +755,8 @@ namespace PMS
             public bool IsEmployee { get; set; }
             public bool BlockCategory { get; set; }
             public string hdfAccount_ID { get; set; }
+            public bool Ismanual { get; set; }
+            public string ddlAccount { get; set; }
             public string hdfParent_Code { get; set; }
             public string hdfAccount_Serial { get; set; }
             public string hdfLevel { get; set; }

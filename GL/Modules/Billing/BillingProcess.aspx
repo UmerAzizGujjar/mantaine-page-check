@@ -1932,7 +1932,7 @@
                             var amount = n(value.Amount);
                             var qty = n(value.Qty);
 
-                            rows = '<tr>' +
+                            rows = '<tr data-skip-share="1">' +
                                 '<td style="text-align:left;">' + (rowIndex + 1) + '</td>' +
                                 '<td id="btndeletes">' +
                                 '<a href="javascript:void(0)" onclick="ExcludeFromPayment(this)" id="btnDelete" name="btndelBill">' +
@@ -2686,6 +2686,43 @@
                     }, function (error) { alert(error.get_message()); })
                 }
             }
+            // Rows still in the table with no doctor and no hospital share yet; rows that
+            // already carry a saved or agreed share are left as they are.
+            function FillMissingShares(trs) {
+                // Bill edit mode keeps the saved shares untouched.
+                if ('<%= Request.QueryString["Bill_ID"] %>' !== '') return;
+                $.each(trs, function (i, tr) {
+                    var $row = $(tr);
+                    if (!$.contains(document, tr)) return;
+                    // Previous bills pulled into an IPD final bill keep their own shares.
+                    if ($row.attr('data-skip-share') === '1') return;
+                    if ($row.find('input[name="HocShare"]').length === 0) return;
+                    if (!$row.find('input[name="hdnItemID"]').val()) return;
+                    var hoc = parseFloat($row.find('input[name="HocShare"]').val()) || 0;
+                    var doc = parseFloat($row.find('input[name="DocShare"]').val()) || 0;
+                    if (hoc > 0 || doc > 0) return;
+
+                    var docId = $row.find('select[name="ddlDoctor"]').val();
+                    if ((!docId || docId === '0') && $("#ddlpanel").val() == "0") {
+                        // no doctor selected: the row's actual amount is all hospital share
+                        // per-unit share is kept undiscounted at the original rate so RescaleRowShares
+                        // follows later amount / qty / discount edits
+                        var unitHos = parseFloat($row.find('td:eq(5)').text()) || 0;
+                        var qty = parseFloat($row.find('input[name="txtQty"]').val()) || 1;
+                        var disPer = parseFloat($row.find('input[name="DisPer"]').val()) || 0;
+                        var hos = unitHos * qty * (1 - disPer / 100);
+                        $row.find('input[name="HocShare"]').val(hos.toFixed(2));
+                        $row.find('input[name="DocShare"]').val("0.00");
+                        $row.find('input[name="hdnPerUnitDocShare"]').remove();
+                        $row.find('input[name="hdnPerUnitHocShare"]').remove();
+                        $row.append('<input type="hidden" name="hdnPerUnitDocShare" value="0.00" />');
+                        $row.append('<input type="hidden" name="hdnPerUnitHocShare" value="' + unitHos.toFixed(6) + '" />');
+                        return;
+                    }
+                    GetDocAgreementValuess(tr);
+                });
+            }
+
             function GetDocAgreementValuess(rows) {
                 var PanelId = $("#ddlpanel").val();
 
@@ -2722,11 +2759,16 @@
                         dataType: "json",
                         success: function (data) {
                             var result = JSON.parse(data.d);
-                            var hos_share = parseFloat(result["hos_share"]) || 0;
-                            var doc_share = parseFloat(result["doc_share"]) || 0;
 
                             // ?? Find the <tr> from 'rows'
                             var $row = $(rows).closest('tr');
+
+                            // no agreement and no rate found: the whole row amount is hospital share
+                            if (!result) {
+                                result = { doc_share: 0, hos_share: parseFloat($row.find('td:eq(5)').text()) || 0 };
+                            }
+                            var hos_share = parseFloat(result["hos_share"]) || 0;
+                            var doc_share = parseFloat(result["doc_share"]) || 0;
 
                             // ? Read DisPer from *this row* (not 'value')
                             var disPerStr = $row.find('input[name="DisPer"]').val();
@@ -7842,9 +7884,11 @@
                     if (!tbody || tbody.getAttribute('data-approval-obs')) return;
                     tbody.setAttribute('data-approval-obs', '1');
                     new MutationObserver(function (mutations) {
+                        var addedRows = [];
                         mutations.forEach(function (mutation) {
                             mutation.addedNodes.forEach(function (node) {
                                 if (node.nodeType !== 1 || node.tagName !== 'TR') return;
+                                addedRows.push(node);
                                 var $tr = $(node);
                                 if ($tr.find('input[name="chkApproval"]').length > 0) return;
                                 var hdnApproval = $tr.find('input[name="hdnApproval"]').val();
@@ -7865,9 +7909,22 @@
                         if (typeof applyApprovalPermission === 'function') {
                             applyApprovalPermission();
                         }
+                        // Rows added from any path (MR no, discharge queue, previous bill, packages...)
+                        // get their doctor/hospital share like a doctor change does; wait so the
+                        // adding code has filled the row's amount and discount first.
+                        if (addedRows.length > 0) {
+                            setTimeout(function () { FillMissingShares(addedRows); }, 300);
+                        }
                     }).observe(tbody, { childList: true });
                 }
                 initApprovalCheckbox();
+
+                // The amount cell's own onkeypress runs before the typed digit lands, so also
+                // recompute the row (and its doctor/hospital share) once the edit is in the cell.
+                $(document).on('input', '#tblDetails tbody td[name="amnt"]', function () {
+                    var idx = $(this).closest('tr').index();
+                    if (idx >= 0) CalculateSummarieDiscountPerWise(idx);
+                });
 
                 getAllowApprovalitem();
 
@@ -9186,149 +9243,127 @@
 
         <%--patient modal here--%>
 
-          <div id="PatientModel" class="modal fade-in" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content modalSize" style="width: 1104px; margin-left: -302px; height: 300px; margin-top: 117px; /* 316px */">
+          <div id="PatientModel" class="modal fade-in pm-modal" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content modalSize">
+
+                    <div class="modal-header pm-header">
+                        <div class="pm-header-title">
+                            <span class="pm-header-icon"><i class="fa fa-user-plus"></i></span>
+                            <div>
+                                <h5 class="modal-title">Patient Details</h5>
+                                <small>Fields marked <span class="pm-req">*</span> are required</small>
+                            </div>
+                        </div>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
 
                     <form>
-                        <div class="container-fluid">
-                            <div class="row" style="margin-top: 40px!important;">
-                                <div class="col-lg-1 col-md-3 col-sm-4"></div>
-                                <div class="col-lg-1 col-md-3 col-sm-4">
-                                    <label>MR No</label>
-                                </div>
+                        <div class="modal-body pm-body">
+                            <%-- Personal information --%>
+                            <div class="pm-section">
+                                <div class="pm-section-title"><i class="fa fa-id-card-o"></i>Personal Information</div>
+                                <div class="pm-grid">
+                                    <div class="pm-col-2">
+                                        <label for="txt_Mrno">MR No</label>
+                                        <input type="text" id="txt_Mrno" class="form-control" value="New" disabled />
+                                    </div>
+                                    <div class="pm-col-5">
+                                        <label for="txt_name">Name<span class="pm-req">*</span></label>
+                                        <div class="pm-combo">
+                                            <select class="impo-drop1 fcux form-control" name="name" id="ddl_name" aria-label="Name prefix">
+                                                <option value="Mr.">Mr.</option>
+                                                <option value="Mrs.">Mrs.</option>
+                                                <option value="Ms.">Ms.</option>
+                                                <option value="B/O.">B/O.</option>
+                                            </select>
+                                            <input name="dob" type="text" id="txt_name" class="form-control" tabindex="1" placeholder="Patient name" />
+                                        </div>
+                                    </div>
+                                    <div class="pm-col-5">
+                                        <label for="txt_relation">Relation<span class="pm-req">*</span></label>
+                                        <div class="pm-combo">
+                                            <select class="impo-drop fcux form-control" name="name" id="ddlRelation" aria-label="Relation type">
+                                                <option value="S/O">S/O</option>
+                                                <option value="W/O">W/O</option>
+                                                <option value="D/O">D/O</option>
+                                            </select>
+                                            <input type="text" id="txt_relation" class="form-control" tabindex="2" placeholder="Father / husband name" />
+                                        </div>
+                                    </div>
 
-                                <div class="col-lg-2 col-md-3 col-sm-4">
-                                    <input type="text" id="txt_Mrno" value="New" disabled style="width: 232px !important;" />
-                                </div>
-
-
-                                <div class="col-lg-1 col-md-3 col-sm-4"></div>
-                                <div class="col-lg-2 col-md-3 col-sm-4"></div>
-                                <div class="col-lg-2 col-md-3 col-sm-4">
-                                    <label>Gender<span style="color:red;">*</span></label>
-                                </div>
-
-                                <div class="col-lg-2 col-md-3 col-sm-4">
-                                    <select id="ddl_Gender" tabindex="4" style="width: 197px;">
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-1 col-md-3 col-sm-4"></div>
-                                <div class="col-lg-1 col-md-3 col-sm-4">
-                                    <label>Name<span style="color:red;">*</span></label>
-                                </div>
-
-                                <div class="col-lg-1 col-md-3 col-sm-4">
-                                    <select class="impo-drop1 fcux" name="name" id="ddl_name">
-                                        <option value="Mr.">Mr.</option>
-                                        <option value="Mrs.">Mrs.</option>
-                                        <option value="Ms.">Ms.</option>
-                                        <option value="B/O.">B/O.</option>
-                                    </select>
-                                </div>
-
-
-                                <div class="col-lg-2 col-md-3 col-sm-4">
-                                    <input name="dob"  type="text" id="txt_name" tabindex="1" style="margin-left: -12px !important" />
-                                </div>
-                                <div class="col-lg-2 col-md-3 col-sm-4"></div>
-                                <div class="col-lg-2 col-md-3 col-sm-4">
-                                    <label>Martial Status<span style="color:red;">*</span></label>
-                                </div>
-
-                                <div class="col-lg-2 col-md-3 col-sm-4">
-                                    <select  tabindex="5" id="ddl_status" style="width: 197px;">
-                                        <option></option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-1 col-md-3 col-sm-4"></div>
-                                <div class="col-lg-1 col-md-3 col-sm-4">
-                                    <label>Relation<span style="color:red;">*</span></label>
-                                </div>
-                                <div class="col-lg-1 col-md-3 col-sm-4">
-                                    <select class="impo-drop fcux" name="name" id="ddlRelation">
-                                        <option value="S/O">S/O</option>
-                                        <option value="W/O">W/O</option>
-                                        <option value="D/O">D/O</option>
-                                    </select>
-                                </div>
-                                <div class="col-lg-2 col-md-3 col-sm-4">
-                                    <input type="text" id="txt_relation" tabindex="2" style="margin-left: -12px !important" />
-                                </div>
-
-                                <div class="col-lg-2 col-md-3 col-sm-4"></div>
-                                <div class="col-lg-2 col-md-3 col-sm-4">
-                                    <label>Mobile<span style="color:red;">*</span></label>
-                                </div>
-                                <div class="col-lg-2 col-md-3 col-sm-4">
-                                    <input type="text" tabindex="6" id="txt_mobile" style="width: 197px !important;" />
+                                    <div class="pm-col-3">
+                                        <label for="txt_dob">Age<span class="pm-req">*</span></label>
+                                        <div class="pm-combo">
+                                            <select name="name" id="PrefixAge" class="form-control" aria-label="Age unit">
+                                                <option value="Year">Year</option>
+                                                <option value="Month">Month</option>
+                                                <option value="Day">Day</option>
+                                            </select>
+                                            <input type="text" id="txt_dob" class="form-control" tabindex="3" placeholder="Age" onchange="CalculateDateOfBirth();" />
+                                        </div>
+                                    </div>
+                                    <div class="pm-col-3">
+                                        <label for="txtAge_yearss">Date of Birth</label>
+                                        <input class="fcux form-control" type="text" id="txtAge_yearss" placeholder="mm ddyy" />
+                                    </div>
+                                    <div class="pm-col-3">
+                                        <label for="ddl_Gender">Gender<span class="pm-req">*</span></label>
+                                        <select id="ddl_Gender" class="form-control" tabindex="4">
+                                        </select>
+                                    </div>
+                                    <div class="pm-col-3">
+                                        <label for="ddl_status">Marital Status<span class="pm-req">*</span></label>
+                                        <select tabindex="5" id="ddl_status" class="form-control">
+                                            <option></option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="row">
-                                <div class="col-lg-1 col-md-3 col-sm-4"></div>
-                                <div class="col-lg-1 col-md-3 col-sm-4">
-                                    <label>Age/DOB<span style="color:red;">*</span></label>
-                                </div>
-                                <div class="col-lg-1 col-md-3 col-sm-4">
-                                    <select name="name" id="PrefixAge" >
-                                        <option value="Year">Year</option>
-                                        <option value="Month">Month</option>
-                                        <option value="Day">Day</option>
-                                    </select>
-                                </div>
-
-                                <div class="col-lg-2 col-md-3 col-sm-4">
-                                    <input type="text" id="txt_dob" tabindex="3" style="width: 35% !important; margin-left: -15px!important" onchange="CalculateDateOfBirth();" />
-                                    <input class="fcux" type="text" id="txtAge_yearss" style="display: inline; width: 65% !important" placeholder="mm ddyy" />
-                                </div>
-
-                                <div class="col-lg-2 col-md-3 col-sm-4"></div>
-                                <div class="col-lg-2 col-md-3 col-sm-4">
-                                    <label>CNIC<span style="color:red;">*</span></label>
-                                </div>
-
-                                <div class="col-lg-2 col-md-3 col-sm-4">
-                                    <input tabindex="7"  type="text" id="txt_cnic" style="width: 200px !important" />
+                            <%-- Contact & identity (Fees is shown/hidden by CheckAndLoadWalkinPatientRegFee) --%>
+                            <div class="pm-section">
+                                <div class="pm-section-title"><i class="fa fa-phone"></i>Contact &amp; Identity</div>
+                                <div class="pm-grid">
+                                    <div class="pm-col-4">
+                                        <label for="txt_mobile">Mobile<span class="pm-req">*</span></label>
+                                        <input type="text" tabindex="6" id="txt_mobile" class="form-control" />
+                                    </div>
+                                    <div class="pm-col-4">
+                                        <label for="txt_cnic">CNIC<span class="pm-req">*</span></label>
+                                        <input tabindex="7" type="text" id="txt_cnic" class="form-control" />
+                                    </div>
+                                    <div class="pm-col-4">
+                                        <label for="txt_Othercnic">Other CNIC</label>
+                                        <input tabindex="12" type="text" id="txt_Othercnic" class="form-control" />
+                                    </div>
+                                    <div class="pm-col-4 pm-optional">
+                                        <label id="lblfee" for="txtfees" style="display:none">Fees<span class="pm-req">*</span></label>
+                                        <input tabindex="9" type="text" disabled="disabled" style="display:none" id="txtfees" class="form-control" />
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="row">
-                                <div class="col-lg-1 col-md-3 col-sm-4"></div>
-                                <div class="col-lg-1 col-md-3 col-sm-4">
-                                    <label>Address<span style="color:red;">*</span></label>
-                                </div>
-
-                                <div class="col-lg-5 col-md-3 col-sm-4">
-                                    <input type="text" tabindex="8" id="txt_Address"  />
-                                </div>
-                                <div class="col-lg-2 col-md-3 col-sm-4">
-                                    <label>Other CNIC</label>
-                                </div>
-                                <div class="col-lg-2 col-md-3 col-sm-4">
-                                    <input tabindex="12" type="text" id="txt_Othercnic" style="width: 200px !important" />
-                                </div>
-                                    <div class="col-lg-2 col-md-3 col-sm-4" >
-                                    <label id="lblfee">Fees<span style="color:red;">*</span></label>
-                                </div>
-
-                                <div class="col-lg-2 col-md-3 col-sm-4">
-                                    <input tabindex="9"  type="text" disabled="disabled" style="display:none" id="txtfees" />
+                            <%-- Address --%>
+                            <div class="pm-section">
+                                <div class="pm-section-title"><i class="fa fa-map-marker"></i>Address</div>
+                                <div class="pm-grid">
+                                    <div class="pm-col-12">
+                                        <label for="txt_Address">Address<span class="pm-req">*</span></label>
+                                        <input type="text" tabindex="8" id="txt_Address" class="form-control" placeholder="House / street / mohalla" />
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </form>
 
-
-                    <div class="modal-footer" style="margin-top: 6%;">
-                        <input type="button"  id="SavePatient_Data" class="btn btn-primry" tabindex="9" name="savePatient_Data" value="Save" style="width:10% !important" onclick="SavePatient();" />
+                    <div class="modal-footer pm-footer">
+                        <input type="button" id="CloseSearchModel" class="btn btn-gray" name="saveENT" value="Close" data-dismiss="modal" />
                         <%-- <input type="button" id="RevistPat" name="RevistPat" value="Revist" onclick="SaveRevist_Patient();" />--%>
-                        <input type="button" id="updatePatient_Data" class="btn btn-primry"  name="updatePatient_Data" style="text-transform: capitalize;width:10% !important" value="Update" onclick="SavePatient();" tabindex="23" />
-                        <input type="button" id="CloseSearchModel" class="btn-gray" style="width:10% !important" name="saveENT" value="Close" data-dismiss="modal" />
+                        <input type="button" id="updatePatient_Data" class="btn btn-primry" name="updatePatient_Data" value="Update" onclick="SavePatient();" tabindex="23" />
+                        <input type="button" id="SavePatient_Data" class="btn btn-primry" tabindex="9" name="savePatient_Data" value="Save" onclick="SavePatient();" />
                     </div>
                 </div>
             </div>

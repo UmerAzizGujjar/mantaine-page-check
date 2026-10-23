@@ -42,7 +42,6 @@
                  GetNextSampleNo();
                  GetNextSampleSequence();
              }
-             GetPendingList();
              loadtokenInputsDefaultPRNo();
              loadtokenInputsDefaultBill();
              var date = '<%= DateTime.Now %>';
@@ -51,30 +50,24 @@
              if (Patient_ID != '') {
                  FillTokenInputForMRNo(Patient_ID);
              }
+             // load the pending list after the form has rendered so it doesn't block first paint
+             setTimeout(GetPendingList, 300);
+             // Debounced; reads (textContent) are done before any writes so the browser
+             // doesn't re-layout the 1000+ row table once per row.
+             var pendingSearchTimer = null;
              $('#txtMRNOSearch').keyup(function (e) {
-
-
-                 var MRno = $('#txtMRNOSearch').val();
-                 var tbl = document.getElementById('tblPendingSample');
-                 if (MRno.trim() != '') {
-
-                     for (var i = 1; i < tbl.rows.length; i++) {
-                         if (tbl.rows[i].cells[1].innerText != MRno) {
-                             var row = tbl.rows[i];
-                             row.style.display = 'none';
-                         }
-                         else {
-                             var row = tbl.rows[i];
-                             row.style.display = '';
-                         }
+                 clearTimeout(pendingSearchTimer);
+                 pendingSearchTimer = setTimeout(function () {
+                     var MRno = $('#txtMRNOSearch').val().trim();
+                     var rows = document.getElementById('tblPendingSample').rows;
+                     var show = [];
+                     for (var i = 1; i < rows.length; i++) {
+                         show[i] = (MRno == '' || rows[i].cells[1].textContent == MRno);
                      }
-                 }
-                 else {
-                     for (var i = 1; i < tbl.rows.length; i++) {
-                         var row = tbl.rows[i];
-                         row.style.display = '';
+                     for (var j = 1; j < rows.length; j++) {
+                         rows[j].style.display = show[j] ? '' : 'none';
                      }
-                 }
+                 }, 250);
              });
         });
         var acknowlagment;
@@ -395,11 +388,12 @@
 
             if (PatientID != "") {
                 $('#txtMR_No').tokenInput('clear');
-                var tokendata = httpGet("../../json.aspx?Table=PatientsFetchByID&q=" + PatientID);
-
-                $('#txtMR_No').tokenInput("add", { id: JSON.parse(tokendata)[0].id, name: JSON.parse(tokendata)[0].name });
-                $("#hdPatientID").val(JSON.parse(tokendata)[0].id);
-                GetPatientDetail();
+                $.get("../../json.aspx?Table=PatientsFetchByID&q=" + PatientID, function (tokendata) {
+                    var item = JSON.parse(tokendata)[0];
+                    $('#txtMR_No').tokenInput("add", { id: item.id, name: item.name });
+                    $("#hdPatientID").val(item.id);
+                    GetPatientDetail();
+                });
             }
             else {
 
@@ -578,6 +572,7 @@
                 }
             }
             var PateintDep;
+            var loadDetail;
             mrNo = mrNo.trim();
             if (mrNo != "") {
                 var pateintNo = $("#txtMR_No").val().toString().split('-')[0];
@@ -589,15 +584,16 @@
                     }),
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
-                    async: false,
                     success: function (data) {
                         var parse1 = JSON.parse(data.d)
                         PateintDep = parse1;
+                        loadDetail();
                     },
-                    failure: function (response) {
+                    error: function (response) {
                         alert("error!");
                     }
                 });
+                loadDetail = function () {
                 $.ajax({
                     type: "POST",
                     url: "SampleCollectionFrom.aspx/GetTestDetail",
@@ -671,6 +667,7 @@
                         alert("error!");
                     }
                 });
+                };
             }
             else {
                 Swal.fire({
@@ -965,7 +962,14 @@
                                         window.open('../../ReportViewer.aspx?ReportName=LabSlip&ReportTitle=Department Of Pathology&Lab_ID=' + id);
                                         }
 
-                                        window.location = "SampleCollectionFrom.aspx?sampleID=" + id;
+                                        // When the lab test list is saved (acknowlagment '01'), SavelabTest redirects
+                                        // once it has finished; redirecting here would cancel that save mid-flight.
+                                        if (acknowlagment == '01') {
+                                            setTimeout(function () { window.location = "SampleCollectionFrom.aspx?sampleID=" + id; }, 30000);
+                                        }
+                                        else {
+                                            window.location = "SampleCollectionFrom.aspx?sampleID=" + id;
+                                        }
                                     }
                                     else {
                                         alert(response.d);
@@ -1100,9 +1104,14 @@
                 });
                 $('#tblPendingPatients tbody').html(rows);
                 $('#tblPendingPatients tbody tr').each(function (key, value) {
-                    select3(value, id);
+                    select3(value, id, true);
 
                 });
+                // Save the lab test list ONCE after every row has been built. It used to run inside
+                // select3 (once per test row), firing parallel saves that each inserted the whole list.
+                if (acknowlagment == '01') {
+                    SavelabTest(id);
+                }
                 $("#tblPendingPatients").find('tr th:nth-child(7)').hide();
                 $("#tblPendingPatients").find('tr th:nth-child(8)').hide();
             }, function (exec) { alert(exec.getmessage()); })
@@ -1110,7 +1119,7 @@
 
         }
 
-        function select3(value, id) {
+        function select3(value, id, skipSave) {
 
             var row = value;
             var RecievedID = $($(row).find('td input[name=RecievedID]')[0]).val();
@@ -1192,10 +1201,10 @@
                  $('#txtReadyBy' + df).val(date);
                  $('#txtCollectionDate' + df).val(date);
             }
-            if (acknowlagment == '01') {
+            if (acknowlagment == '01' && !skipSave) {
                 SavelabTest(id);
             }
-             
+
          }
         function SavelabTest(id) {
             var btnSave = "Save";
@@ -1215,6 +1224,9 @@
             var patientID = $("#hdPatientID").val();
             var labTest = { 'PatientID': patientID, 'TestList': test_list };
             PageMethods.SaveLabTestList(LabTestID, btnSave, transType, transID, JSON.stringify(labTest), function (res) {
+                window.location = "SampleCollectionFrom.aspx?sampleID=" + id;
+            }, function (err) {
+                alert("Sample saved, but saving the lab test list failed: " + (err && err.get_message ? err.get_message() : ""));
                 window.location = "SampleCollectionFrom.aspx?sampleID=" + id;
             });
         }
