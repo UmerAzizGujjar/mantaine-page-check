@@ -1223,6 +1223,10 @@
     <Content Include="wwwroot\lib\theme\table-modern.js" />
     <Content Include="wwwroot\lib\theme\file-modern.css" />
     <Content Include="wwwroot\lib\theme\theme-toggle.js" />
+    <Content Include="wwwroot\lib\theme\patient-modal.css" />
+    <Content Include="wwwroot\lib\theme\form-modern.css" />
+    <Content Include="wwwroot\lib\theme\page-form-modern.css" />
+    <Content Include="wwwroot\lib\theme\controls-modern.css" />
     <Content Include="wwwroot\lib\jquery\jquery.min.js" />
     <Content Include="wwwroot\lib\jquery\jquery.mobile.custom.min.js" />
     <Content Include="wwwroot\lib\jquery\jquery.ptTimeSelect.css" />
