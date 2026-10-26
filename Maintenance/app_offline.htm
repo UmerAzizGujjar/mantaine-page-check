@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hospital Information System — Scheduled Maintenance</title>
+<meta name="description" content="The Hospital Information System is currently undergoing scheduled maintenance. Play Emergency Ambulance Rush while you wait.">
+<style>
+  :root {
+    --text: #0f2942;
+    --accent: #0d9488;
+    --accent-dark: #0f766e;
+    --accent-soft: #ccfbf1;
+    --accent-light: #14b8a6;
+    --accent-border: #99f6e4;
+    --accent-ring: rgba(13, 148, 136, .25);
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    font-family: -apple-system, "Segoe UI", Roboto, Arial, Helvetica, sans-serif;
+    background: linear-gradient(160deg, #1e293b 0%, #0f172a 100%);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  .mono {
+    font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+  }
+
+  /* ==========================================================================
+     FRAMELESS HEARTBEAT (ECG) PROGRESS WAVEFORM (NO BACKGROUND BOX)
+     ========================================================================== */
+  .ecg-frameless-wrap {
+    width: 100%;
+    max-width: 560px;
+    margin: 0 auto 6px;
+    padding: 2px 0;
+    background: transparent;
+    position: relative;
+  }
+
+  /* Subtle base heartbeat path so the full non-straight waveform is always visible */
+  .ecg-base-wave {
+    stroke: #cbd5e1;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+  }
+
+  /* Soft glowing trail behind the active pulse */
+  .ecg-glow-wave {
+    stroke: var(--accent-light);
+    stroke-width: 5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+    opacity: 0.28;
+    filter: blur(3px);
+    stroke-dasharray: 240 960;
+    stroke-dashoffset: 1200;
+    animation: ecgLineSweep 2.4s linear infinite;
+  }
+
+  /* Crisp updating heartbeat line sweeping across the peaks */
+  .ecg-active-wave {
+    stroke: var(--accent);
+    stroke-width: 2.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+    stroke-dasharray: 240 960;
+    stroke-dashoffset: 1200;
+    animation: ecgLineSweep 2.4s linear infinite;
+  }
+
+  @keyframes ecgLineSweep {
+    from { stroke-dashoffset: 1200; }
+    to { stroke-dashoffset: 0; }
+  }
+
+  /* Reduced motion accessibility */
+  @media (prefers-reduced-motion: reduce) {
+    .ecg-glow-wave, .ecg-active-wave {
+      animation: none !important;
+    }
+    .ecg-glow-wave, .ecg-active-wave {
+      stroke-dasharray: none;
+      stroke-dashoffset: 0;
+    }
+  }
+
+  /* Plain-CSS replacements for the removed Tailwind CDN utilities */
+  [class~="flex"] { display:flex }
+  [class~="inline-flex"] { display:inline-flex }
+  [class~="block"] { display:block }
+  [class~="relative"] { position:relative }
+  [class~="absolute"] { position:absolute }
+  [class~="top-0"] { top:0 }
+  [class~="left-0"] { left:0 }
+  [class~="right-0"] { right:0 }
+  [class~="flex-col"] { flex-direction:column }
+  [class~="flex-wrap"] { flex-wrap:wrap }
+  [class~="items-center"] { align-items:center }
+  [class~="justify-center"] { justify-content:center }
+  [class~="justify-between"] { justify-content:space-between }
+  [class~="self-start"] { align-self:flex-start }
+  [class~="shrink-0"] { flex-shrink:0 }
+  [class~="gap-2"] { gap:8px }
+  [class~="w-full"] { width:100% }
+  [class~="h-auto"] { height:auto }
+  [class~="h-14"] { height:56px }
+  [class~="h-1.5"] { height:6px }
+  [class~="h-2"] { height:8px }
+  [class~="w-2"] { width:8px }
+  [class~="h-3.5"] { height:14px }
+  [class~="w-3.5"] { width:14px }
+  [class~="h-6"] { height:24px }
+  [class~="w-6"] { width:24px }
+  [class~="max-w-3xl"] { max-width:620px }
+  [class~="max-w-xl"] { max-width:576px }
+  [class~="mx-auto"] { margin-left:auto; margin-right:auto }
+  [class~="overflow-hidden"] { overflow:hidden }
+  [class~="overflow-visible"] { overflow:visible }
+  [class~="cursor-pointer"] { cursor:pointer }
+  [class~="select-none"] { user-select:none }
+  [class~="p-5"] { padding:20px }
+  [class~="px-3"] { padding-left:12px; padding-right:12px }
+  [class~="px-3.5"] { padding-left:14px; padding-right:14px }
+  [class~="px-4"] { padding-left:16px; padding-right:16px }
+  [class~="px-1.5"] { padding-left:6px; padding-right:6px }
+  [class~="py-6"] { padding-top:24px; padding-bottom:24px }
+  [class~="py-1.5"] { padding-top:6px; padding-bottom:6px }
+  [class~="py-0.5"] { padding-top:2px; padding-bottom:2px }
+  [class~="pt-5"] { padding-top:20px }
+  [class~="mt-6"] { margin-top:24px }
+  [class~="mt-0.5"] { margin-top:2px }
+  [class~="mb-2"] { margin-bottom:8px }
+  [class~="mb-3"] { margin-bottom:12px }
+  [class~="mb-4"] { margin-bottom:16px }
+  [class~="text-xs"] { font-size:12px; line-height:16px }
+  [class~="text-sm"] { font-size:14px; line-height:20px }
+  [class~="text-base"] { font-size:16px; line-height:24px }
+  [class~="text-2xl"] { font-size:24px; line-height:32px }
+  [class~="text-[11px]"] { font-size:11px }
+  [class~="font-medium"] { font-weight:500 }
+  [class~="font-semibold"] { font-weight:600 }
+  [class~="font-bold"] { font-weight:700 }
+  [class~="font-extrabold"] { font-weight:800 }
+  [class~="tracking-wider"] { letter-spacing:.05em }
+  [class~="uppercase"] { text-transform:uppercase }
+  [class~="leading-relaxed"] { line-height:1.625 }
+  [class~="text-center"] { text-align:center }
+  [class~="text-left"] { text-align:left }
+  [class~="bg-white"] { background-color:#ffffff }
+  [class~="bg-slate-100"] { background-color:#f1f5f9 }
+  [class~="bg-slate-900"] { background-color:#0f172a }
+  [class~="bg-teal-50"] { background-color:var(--accent-soft) }
+  [class~="bg-teal-600"] { background-color:var(--accent) }
+  [class~="bg-rose-100"] { background-color:#ffe4e6 }
+  [class~="mt-3"] { margin-top:12px }
+  [class~="rounded"] { border-radius:4px }
+  [class~="text-emerald-600"] { color:#059669 }
+  [class~="tracking-tight"] { letter-spacing:-.025em }
+  [class~="text-white"] { color:#ffffff }
+  [class~="text-slate-400"] { color:#94a3b8 }
+  [class~="text-slate-500"] { color:#64748b }
+  [class~="text-slate-600"] { color:#475569 }
+  [class~="text-slate-700"] { color:#334155 }
+  [class~="text-slate-900"] { color:#0f172a }
+  [class~="text-teal-600"] { color:var(--accent) }
+  [class~="text-teal-800"] { color:var(--accent-dark) }
+  [class~="text-teal-900"] { color:var(--accent-dark) }
+  [class~="text-rose-600"] { color:#e11d48 }
+  [class~="border"] { border:1px solid }
+  [class~="border-t"] { border-top:1px solid }
+  [class~="border-slate-200"] { border-color:#e2e8f0 }
+  [class~="border-slate-300"] { border-color:#cbd5e1 }
+  [class~="border-teal-200"] { border-color:var(--accent-border) }
+  [class~="border-slate-200/90"] { border-color:rgba(226,232,240,.9) }
+  [class~="border-teal-200/80"] { border-color:var(--accent-ring) }
+  [class~="rounded-full"] { border-radius:9999px }
+  [class~="rounded-lg"] { border-radius:8px }
+  [class~="rounded-xl"] { border-radius:12px }
+  [class~="rounded-2xl"] { border-radius:16px }
+  [class~="shadow-xl"] { box-shadow:0 20px 25px -5px rgba(15,23,42,.05), 0 8px 10px -6px rgba(15,23,42,.05) }
+  [class~="shadow-inner"] { box-shadow:inset 0 2px 4px 0 rgba(0,0,0,.05) }
+  [class~="bg-gradient-to-r"] { background-image:linear-gradient(to right,var(--accent),var(--accent-light),var(--accent-dark)) }
+  [class~="animate-ping"] { animation:ping 1s cubic-bezier(0,0,.2,1) infinite }
+  [class~="transition"] { transition:all .15s ease }
+  [class~="hover:bg-slate-800"]:hover { background-color:#1e293b }
+  [class~="hover:bg-teal-700"]:hover { background-color:var(--accent-dark) }
+  [class~="hover:bg-slate-200"]:hover { background-color:#e2e8f0 }
+  @keyframes ping { 75%, 100% { transform:scale(2); opacity:0; } }
+  @media (min-width:640px) { [class~="sm:px-6"] { padding-left:24px; padding-right:24px } [class~="sm:p-8"] { padding:32px } [class~="sm:text-3xl"] { font-size:30px; line-height:36px } [class~="sm:text-base"] { font-size:16px; line-height:24px } [class~="sm:text-lg"] { font-size:18px; line-height:28px } [class~="sm:flex-row"] { flex-direction:row } [class~="sm:items-center"] { align-items:center } [class~="sm:self-center"] { align-self:center } }
+  /* Inside the watcher's full-screen frame: let the blurred application show through, so the
+     popup looks like a modal dialog over the live software instead of a separate page. */
+  html.hms-embedded,
+  html.hms-embedded body {
+    background: transparent;
+    background-image: none;
+  }
+
+  /* Short laptop screens: keep the popup on one screen instead of scrolling. Only inside the
+     frame - a direct visit to the 503 page may scroll normally. */
+  /* The game canvas always fills the card; height follows the 640x185 bitmap. */
+  #game {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  /* Short laptop screens: keep the popup on one screen by trimming spacing and captions,
+     never by shrinking the game (that made it look zoomed out). */
+  @media (max-height: 780px) {
+    html.hms-embedded body { padding: 8px 12px; }
+    html.hms-embedded [class~="sm:p-8"] { padding: 20px 24px; }
+    .ecg-frameless-wrap svg { height: 40px; }
+    .ecg-frameless-wrap + p { display: none; }
+    html.hms-embedded section[aria-labelledby="game-title"] { margin-top: 14px; padding-top: 12px; }
+    html.hms-embedded section[aria-labelledby="game-title"] > p { display: none; }
+  }
+</style>
+<script>(function () { try { if (window.top !== window.self) { document.documentElement.className += " hms-embedded"; } } catch (e) { } }());</script>
+</head>
+<body class="py-6 px-3 sm:px-6 flex items-center justify-center">
+
+  <main class="w-full max-w-3xl bg-white border border-slate-200/90 rounded-2xl shadow-xl shadow-slate-900/5 p-5 sm:p-8 text-center relative overflow-hidden" role="dialog" aria-modal="true" aria-labelledby="mtTitle">
+    <!-- Top decorative clinical accent bar -->
+    <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-teal-600 via-emerald-400 to-cyan-600"></div>
+
+    <!-- Header Pill -->
+    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-teal-50 border border-teal-200/80 text-teal-800 text-xs font-semibold tracking-wider uppercase mb-2">
+      <span class="w-2 h-2 rounded-full bg-teal-600 animate-ping"></span>
+      <svg class="w-3.5 h-3.5 text-teal-600" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6V3z"/>
+      </svg>
+      <span>Hospital Information System</span>
+    </div>
+
+    <!-- ====================================================================
+         2. HEADLINE & DESCRIPTION
+         ==================================================================== -->
+    <h1 id="mtTitle" class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mb-2">
+      System Under Maintenance
+    </h1>
+    <p class="text-sm sm:text-base text-slate-600 max-w-xl mx-auto leading-relaxed mb-4">
+      Our hospital software is currently being upgraded to improve clinical speed and reliability. The portal is locked during deployment and will automatically reopen once verification completes.
+    </p>
+
+    <!-- ====================================================================
+         3. FRAMELESS HEARTBEAT (ECG) LINE (NO BACKGROUND BOX, ONLY THE WAVE)
+         ==================================================================== -->
+    <div class="ecg-frameless-wrap" role="progressbar" aria-label="System update in progress" aria-valuetext="Update in progress">
+      <svg class="w-full h-14 block overflow-visible" viewBox="0 0 600 56" preserveAspectRatio="none" aria-hidden="true">
+        <!-- Base non-straight heartbeat waveform path -->
+        <path id="ecgWavePath" class="ecg-base-wave"
+          d="M 0,32 L 38,32 L 46,24 L 54,32 L 68,32 L 74,41 L 83,6 L 92,50 L 100,28 L 106,32 L 118,32 L 128,21 L 138,32
+             L 195,32 L 203,24 L 211,32 L 225,32 L 231,41 L 240,6 L 249,50 L 257,28 L 263,32 L 275,32 L 285,21 L 295,32
+             L 352,32 L 360,24 L 368,32 L 382,32 L 388,41 L 397,6 L 406,50 L 414,28 L 420,32 L 432,32 L 442,21 L 452,32
+             L 508,32 L 516,24 L 524,32 L 538,32 L 544,41 L 553,6 L 562,50 L 570,28 L 576,32 L 600,32" />
+
+        <!-- Soft outer glow pulse traveling along the heartbeat waveform -->
+        <path class="ecg-glow-wave" pathLength="1200"
+          d="M 0,32 L 38,32 L 46,24 L 54,32 L 68,32 L 74,41 L 83,6 L 92,50 L 100,28 L 106,32 L 118,32 L 128,21 L 138,32
+             L 195,32 L 203,24 L 211,32 L 225,32 L 231,41 L 240,6 L 249,50 L 257,28 L 263,32 L 275,32 L 285,21 L 295,32
+             L 352,32 L 360,24 L 368,32 L 382,32 L 388,41 L 397,6 L 406,50 L 414,28 L 420,32 L 432,32 L 442,21 L 452,32
+             L 508,32 L 516,24 L 524,32 L 538,32 L 544,41 L 553,6 L 562,50 L 570,28 L 576,32 L 600,32" />
+
+        <!-- Crisp teal heartbeat line actively updating along the waveform -->
+        <path class="ecg-active-wave" pathLength="1200"
+          d="M 0,32 L 38,32 L 46,24 L 54,32 L 68,32 L 74,41 L 83,6 L 92,50 L 100,28 L 106,32 L 118,32 L 128,21 L 138,32
+             L 195,32 L 203,24 L 211,32 L 225,32 L 231,41 L 240,6 L 249,50 L 257,28 L 263,32 L 275,32 L 285,21 L 295,32
+             L 352,32 L 360,24 L 368,32 L 382,32 L 388,41 L 397,6 L 406,50 L 414,28 L 420,32 L 432,32 L 442,21 L 452,32
+             L 508,32 L 516,24 L 524,32 L 538,32 L 544,41 L 553,6 L 562,50 L 570,28 L 576,32 L 600,32" />
+      </svg>
+    </div>
+    <p class="text-xs text-slate-500 mb-4">
+      Live heartbeat indicates active server migration. Deployment duration varies by database verification.
+    </p>
+
+    <p style="font-size:12px; color:#64748b; margin:0 0 16px;">The system will be back after the update. This page will reopen by itself.</p>
+
+    <!-- ====================================================================
+         4. CREATIVE HOSPITAL MINI-GAME: "EMERGENCY AMBULANCE RUSH"
+         ==================================================================== -->
+    <section class="mt-6 pt-5 border-t border-slate-200 text-left" aria-labelledby="game-title">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="inline-flex items-center justify-center w-6 h-6 rounded-lg bg-rose-100 text-rose-600 font-bold text-xs">🚑</span>
+            <h2 id="game-title" class="text-base sm:text-lg font-bold text-slate-900">
+              While You Wait: Emergency Ambulance Rush
+            </h2>
+          </div>
+          <p class="text-xs text-slate-500 mt-0.5">
+            Press <kbd class="px-1.5 py-0.5 text-[11px] font-semibold bg-slate-100 border border-slate-300 rounded">Space</kbd> / <kbd class="px-1.5 py-0.5 text-[11px] font-semibold bg-slate-100 border border-slate-300 rounded">↑</kbd> or <strong>Tap</strong> to jump (Double-Jump enabled!). Dodge traffic cones &amp; collect <span class="text-emerald-600 font-semibold">+25 First-Aid Kits</span>.
+          </p>
+        </div>
+
+        <!-- Score Badges -->
+        <div class="flex items-center gap-2 self-start sm:self-center shrink-0">
+          <div class="px-3 py-1.5 rounded-xl bg-slate-100 border border-slate-200 text-xs font-semibold text-slate-700">
+            Score: <strong id="score" class="mono text-slate-900 text-sm">0</strong>
+          </div>
+          <div class="px-3 py-1.5 rounded-xl bg-teal-50 border border-teal-200 text-xs font-semibold text-teal-800">
+            Best: <strong id="best" class="mono text-teal-900 text-sm">0</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- Responsive Game Canvas -->
+      <div class="relative rounded-xl overflow-hidden border border-slate-300 shadow-inner bg-slate-900">
+        <canvas id="game" width="640" height="185" class="w-full h-auto block cursor-pointer select-none" style="touch-action: manipulation;" role="img" aria-label="Emergency Ambulance Rush mini game. Press Space or tap to jump over roadblocks and collect medical kits."></canvas>
+      </div>
+
+      <!-- Game Controls Bar -->
+      <div class="flex flex-wrap items-center justify-between gap-2 mt-3">
+        <div class="flex items-center gap-2">
+          <button id="startBtn" type="button" class="px-4 py-1.5 rounded-lg text-xs font-semibold bg-slate-900 text-white hover:bg-slate-800 transition cursor-pointer">
+            Start Shift
+          </button>
+          <button id="restartBtn" type="button" hidden class="px-4 py-1.5 rounded-lg text-xs font-semibold bg-teal-600 text-white hover:bg-teal-700 transition cursor-pointer">
+            Play Again
+          </button>
+          <button id="sirenBtn" type="button" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200 transition cursor-pointer">
+            🚨 Siren Lights: ON
+          </button>
+        </div>
+        <span class="text-[11px] text-slate-400">
+          Standalone mini-game • Does not affect maintenance progress
+        </span>
+      </div>
+    </section>
+  </main>
+
+<script>
+(function () {
+  "use strict";
+
+  var canvas = document.getElementById("game");
+  var ctx = canvas.getContext("2d");
+  var startBtn = document.getElementById("startBtn");
+  var restartBtn = document.getElementById("restartBtn");
+  var sirenBtn = document.getElementById("sirenBtn");
+  var scoreEl = document.getElementById("score");
+  var bestEl = document.getElementById("best");
+
+  var W = 640;
+  var H = 185;
+  var GROUND = 152;
+
+  var state = "ready"; // "ready" | "playing" | "over"
+  var sirenOn = true;
+  var score = 0;
+  var kitsCollected = 0;
+  var BASE_SPEED = 5.2;
+  var speed = BASE_SPEED;
+  var frame = 0;
+  var spawnTimer = 72;
+  var kitTimer = 110;
+  var rafId = null;
+  var lastTime = 0;
+
+  // Player Ambulance object (supports double jump)
+  var amb = {
+    x: 52,
+    y: GROUND - 36,
+    w: 58,
+    h: 36,
+    vy: 0,
+    jumps: 0,
+    maxJumps: 2,
+    wheelAngle: 0,
+    tilt: 0
+  };
+
+  var obstacles = [];
+  var kits = [];
+  var particles = [];
+  var popups = [];
+  var buildings = [];
+
+  // Load high score safely
+  var best = 0;
+  try {
+    best = parseInt(window.localStorage.getItem("hisAmbulanceBest") || "0", 10) || 0;
+  } catch (e) {
+    best = 0;
+  }
+  bestEl.textContent = best;
+
+  function stopLoop() {
+    if (rafId !== null) {
+      cancelAnimationFrame(rafId);
+      rafId = null;
+    }
+  }
+
+  function initCityline() {
+    buildings = [];
+    var bx = 0;
+    while (bx < W + 120) {
+      var bw = 38 + Math.floor(Math.random() * 36);
+      var bh = 40 + Math.floor(Math.random() * 55);
+      buildings.push({
+        x: bx,
+        w: bw,
+        h: bh,
+        isHospital: Math.random() < 0.28
+      });
+      bx += bw + 6;
+    }
+  }
+
+  function resetGame() {
+    amb.y = GROUND - amb.h;
+    amb.vy = 0;
+    amb.jumps = 0;
+    amb.tilt = 0;
+    obstacles = [];
+    kits = [];
+    particles = [];
+    popups = [];
+    score = 0;
+    kitsCollected = 0;
+    speed = BASE_SPEED;
+    frame = 0;
+    spawnTimer = 72;
+    kitTimer = 100;
+    lastTime = 0;
+    scoreEl.textContent = "0";
+    if (buildings.length === 0) initCityline();
+  }
+
+  // Draw rounded rectangle helper
+  function roundRect(x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + w - r, y);
+    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+    ctx.lineTo(x + w, y + h - r);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    ctx.lineTo(x + r, y + h);
+    ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+    ctx.lineTo(x, y + r);
+    ctx.quadraticCurveTo(x, y, x + r, y);
+    ctx.closePath();
+  }
+
+  function drawBackground() {
+    // Twilight clinical sky gradient
+    var grad = ctx.createLinearGradient(0, 0, 0, GROUND);
+    grad.addColorStop(0, "#0b192c");
+    grad.addColorStop(1, "#16324f");
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, W, GROUND);
+
+    // Subtle ECG background wave in sky
+    ctx.strokeStyle = "rgba(45, 212, 191, 0.12)";
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    for (var x = 0; x < W; x += 4) {
+      var waveX = (x + frame * 1.5) % 160;
+      var yOffset = 38;
+      if (waveX > 70 && waveX < 76) yOffset = 18;
+      else if (waveX >= 76 && waveX < 82) yOffset = 52;
+      else if (waveX >= 82 && waveX < 90) yOffset = 32;
+      if (x === 0) ctx.moveTo(x, yOffset);
+      else ctx.lineTo(x, yOffset);
+    }
+    ctx.stroke();
+
+    // Parallax City & Hospital Skyline
+    buildings.forEach(function (b) {
+      ctx.fillStyle = "#1e3a56";
+      ctx.fillRect(b.x, GROUND - b.h, b.w, b.h);
+
+      // Windows
+      ctx.fillStyle = "rgba(148, 210, 255, 0.22)";
+      for (var wy = GROUND - b.h + 10; wy < GROUND - 10; wy += 12) {
+        for (var wx = b.x + 6; wx < b.x + b.w - 8; wx += 10) {
+          ctx.fillRect(wx, wy, 5, 6);
+        }
+      }
+
+      // Red/Teal Cross on Hospital buildings
+      if (b.isHospital) {
+        var cx = b.x + b.w / 2;
+        var cy = GROUND - b.h + 10;
+        ctx.fillStyle = "#14b8a6";
+        ctx.fillRect(cx - 2, cy - 5, 4, 10);
+        ctx.fillRect(cx - 5, cy - 2, 10, 4);
+      }
+    });
+
+    // Asphalt Road
+    ctx.fillStyle = "#0f172a";
+    ctx.fillRect(0, GROUND, W, H - GROUND);
+
+    // Top road curb line
+    ctx.fillStyle = "#334155";
+    ctx.fillRect(0, GROUND, W, 3);
+
+    // Moving dashed lane markers
+    ctx.fillStyle = "#fbbf24";
+    var dashOffset = (frame * speed) % 48;
+    for (var dx = -dashOffset; dx < W; dx += 48) {
+      ctx.fillRect(dx, GROUND + 16, 24, 3);
+    }
+  }
+
+  function drawAmbulance() {
+    ctx.save();
+    var cx = amb.x + amb.w / 2;
+    var cy = amb.y + amb.h / 2;
+    ctx.translate(cx, cy);
+    ctx.rotate(amb.tilt);
+    ctx.translate(-cx, -cy);
+
+    var x = amb.x;
+    var y = amb.y;
+
+    // Siren light glow cone when active
+    if (sirenOn && state === "playing") {
+      var isRedPhase = Math.floor(frame / 6) % 2 === 0;
+      var glowGrad = ctx.createRadialGradient(x + 28, y - 4, 2, x + 28, y - 4, 28);
+      glowGrad.addColorStop(0, isRedPhase ? "rgba(244, 63, 94, 0.65)" : "rgba(56, 189, 248, 0.65)");
+      glowGrad.addColorStop(1, "rgba(0, 0, 0, 0)");
+      ctx.fillStyle = glowGrad;
+      ctx.beginPath();
+      ctx.arc(x + 28, y - 4, 28, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // Main Ambulance Van Body
+    ctx.fillStyle = "#f8fafc";
+    roundRect(x, y, 44, 30, 5);
+    ctx.fill();
+
+    // Front Cab Nose
+    ctx.beginPath();
+    ctx.moveTo(x + 40, y + 6);
+    ctx.lineTo(x + 54, y + 14);
+    ctx.lineTo(x + 58, y + 22);
+    ctx.lineTo(x + 58, y + 30);
+    ctx.lineTo(x + 40, y + 30);
+    ctx.closePath();
+    ctx.fill();
+
+    // Red/Orange Emergency Stripe along bottom & middle
+    ctx.fillStyle = "#ef4444";
+    ctx.fillRect(x + 1, y + 21, 56, 5);
+
+    // Windshield
+    ctx.fillStyle = "#38bdf8";
+    ctx.beginPath();
+    ctx.moveTo(x + 42, y + 9);
+    ctx.lineTo(x + 52, y + 15);
+    ctx.lineTo(x + 52, y + 19);
+    ctx.lineTo(x + 42, y + 19);
+    ctx.closePath();
+    ctx.fill();
+
+    // Headlight beam
+    ctx.fillStyle = "#fef08a";
+    ctx.fillRect(x + 56, y + 23, 3, 4);
+
+    // Red Medical Cross on Side of Ambulance
+    ctx.fillStyle = "#ef4444";
+    ctx.fillRect(x + 17, y + 6, 4, 12);
+    ctx.fillRect(x + 13, y + 10, 12, 4);
+
+    // Roof Siren Lightbar
+    var flashRed = !sirenOn || Math.floor(frame / 6) % 2 === 0;
+    ctx.fillStyle = flashRed ? "#f43f5e" : "#0ea5e9";
+    roundRect(x + 22, y - 5, 12, 5, 2);
+    ctx.fill();
+
+    // Wheels
+    var wheelPositions = [x + 13, x + 45];
+    wheelPositions.forEach(function (wx) {
+      ctx.fillStyle = "#1e293b";
+      ctx.beginPath();
+      ctx.arc(wx, y + 30, 6.5, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = "#cbd5e1";
+      ctx.beginPath();
+      ctx.arc(wx, y + 30, 2.8, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    ctx.restore();
+  }
+
+  function drawObstacle(o) {
+    if (o.type === "cone") {
+      // High-vis Orange Traffic Cone
+      var cx = o.x;
+      var cy = GROUND;
+      ctx.fillStyle = "#f97316";
+      ctx.beginPath();
+      ctx.moveTo(cx + 2, cy);
+      ctx.lineTo(cx + o.w / 2, cy - o.h);
+      ctx.lineTo(cx + o.w - 2, cy);
+      ctx.closePath();
+      ctx.fill();
+
+      // White reflective cone stripe
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(cx + 6, cy - o.h + 9, o.w - 12, 5);
+      // Cone base
+      ctx.fillStyle = "#ea580c";
+      ctx.fillRect(cx, cy - 4, o.w, 4);
+    } else if (o.type === "drum") {
+      // Yellow/Black Hazard Drum Barrel
+      var dx = o.x;
+      var dy = GROUND - o.h;
+      ctx.fillStyle = "#eab308";
+      roundRect(dx, dy, o.w, o.h, 4);
+      ctx.fill();
+      ctx.fillStyle = "#1e293b";
+      ctx.fillRect(dx, dy + 6, o.w, 5);
+      ctx.fillRect(dx, dy + 17, o.w, 5);
+    } else {
+      // Roadblock Barrier Gate
+      var bx = o.x;
+      var by = GROUND - o.h;
+      // Legs
+      ctx.fillStyle = "#64748b";
+      ctx.fillRect(bx + 3, by + 10, 3, o.h - 10);
+      ctx.fillRect(bx + o.w - 6, by + 10, 3, o.h - 10);
+      // Striped Board
+      ctx.fillStyle = "#f59e0b";
+      roundRect(bx, by, o.w, 13, 3);
+      ctx.fill();
+      ctx.fillStyle = "#1e293b";
+      ctx.fillRect(bx + 5, by + 2, 5, 9);
+      ctx.fillRect(bx + 16, by + 2, 5, 9);
+    }
+  }
+
+  function drawFirstAidKit(k) {
+    var bobY = k.y + Math.sin((frame + k.x) * 0.08) * 4;
+    // White First Aid Box
+    ctx.fillStyle = "#ffffff";
+    roundRect(k.x, bobY, k.w, k.h, 4);
+    ctx.fill();
+    ctx.strokeStyle = "#10b981";
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // Emerald Medical Cross
+    ctx.fillStyle = "#10b981";
+    ctx.fillRect(k.x + 8, bobY + 4, 4, 12);
+    ctx.fillRect(k.x + 4, bobY + 8, 12, 4);
+  }
+
+  function spawnParticles(x, y, color) {
+    for (var i = 0; i < 10; i++) {
+      particles.push({
+        x: x,
+        y: y,
+        vx: (Math.random() - 0.5) * 4.5,
+        vy: (Math.random() - 0.7) * 4.5,
+        life: 24,
+        color: color
+      });
+    }
+  }
+
+  function drawScene() {
+    ctx.clearRect(0, 0, W, H);
+    drawBackground();
+
+    // Draw Collectible First-Aid Kits
+    kits.forEach(drawFirstAidKit);
+
+    // Draw Obstacles
+    obstacles.forEach(drawObstacle);
+
+    // Draw Player Ambulance
+    drawAmbulance();
+
+    // Draw Particles
+    for (var i = particles.length - 1; i >= 0; i--) {
+      var p = particles[i];
+      ctx.fillStyle = p.color;
+      ctx.globalAlpha = Math.max(0, p.life / 24);
+      ctx.fillRect(p.x, p.y, 3.5, 3.5);
+      ctx.globalAlpha = 1;
+    }
+
+    // Draw Floating Score Popups (+25)
+    popups.forEach(function (pop) {
+      ctx.fillStyle = "#34d399";
+      ctx.font = "bold 12px Arial, sans-serif";
+      ctx.fillText(pop.text, pop.x, pop.y);
+    });
+
+    // HUD Overlay on Canvas
+    ctx.fillStyle = "rgba(255, 255, 255, 0.85)";
+    ctx.font = "600 12px Consolas, monospace";
+    ctx.textAlign = "right";
+    ctx.fillText("KITS: " + kitsCollected + "  |  SPD: " + Math.round(speed * 14) + " KM/H", W - 12, 20);
+    ctx.textAlign = "left";
+
+    if (state === "ready") {
+      ctx.fillStyle = "rgba(15, 23, 42, 0.68)";
+      ctx.fillRect(0, 0, W, H);
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "bold 17px Arial, sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText("🚑 Emergency Ambulance Rush", W / 2, 74);
+      ctx.fillStyle = "#cbd5e1";
+      ctx.font = "13px Arial, sans-serif";
+      ctx.fillText("Press Space, Up Arrow, or Tap to Jump (Double-Jump supported!)", W / 2, 100);
+      ctx.textAlign = "left";
+    } else if (state === "over") {
+      ctx.fillStyle = "rgba(15, 23, 42, 0.76)";
+      ctx.fillRect(0, 0, W, H);
+      ctx.fillStyle = "#f87171";
+      ctx.font = "bold 18px Arial, sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText("Shift Ended! Final Score: " + Math.floor(score), W / 2, 68);
+      ctx.fillStyle = "#e2e8f0";
+      ctx.font = "13px Arial, sans-serif";
+      ctx.fillText("First-Aid Kits Delivered: " + kitsCollected + "  •  Press Space or Tap to Retry", W / 2, 95);
+      ctx.textAlign = "left";
+    }
+  }
+
+  function startGame() {
+    // Explicitly cancel any running animation frame so loops never stack
+    stopLoop();
+    resetGame();
+    state = "playing";
+    startBtn.hidden = true;
+    restartBtn.hidden = true;
+    lastTime = performance.now();
+    rafId = requestAnimationFrame(loop);
+  }
+
+  function triggerGameOver() {
+    stopLoop();
+    state = "over";
+    restartBtn.hidden = false;
+    var finalScore = Math.floor(score);
+    if (finalScore > best) {
+      best = finalScore;
+      bestEl.textContent = best;
+      try {
+        window.localStorage.setItem("hisAmbulanceBest", String(best));
+      } catch (e) {
+        // Ignore storage errors in restricted environments
+      }
+    }
+    drawScene();
+  }
+
+  function jump() {
+    if (state === "ready" || state === "over") {
+      startGame();
+      return;
+    }
+    if (amb.jumps < amb.maxJumps) {
+      amb.vy = amb.jumps === 0 ? -11.4 : -9.8;
+      amb.jumps++;
+      spawnParticles(amb.x + 12, amb.y + amb.h, "#38bdf8");
+    }
+  }
+
+  function loop(timestamp) {
+    if (state !== "playing") {
+      stopLoop();
+      return;
+    }
+
+    rafId = requestAnimationFrame(loop);
+
+    if (!lastTime) lastTime = timestamp;
+    var elapsed = timestamp - lastTime;
+    lastTime = timestamp;
+
+    // Normalize delta-time to 60 FPS (16.667ms per frame) and cap spikes
+    var dt = Math.min(Math.max(elapsed / 16.667, 0.1), 2.5);
+    frame += dt;
+
+    // Scroll skyline smoothly with dt
+    buildings.forEach(function (b) {
+      b.x -= speed * 0.25 * dt;
+    });
+    if (buildings.length && buildings[0].x + buildings[0].w < -10) {
+      var first = buildings.shift();
+      var last = buildings[buildings.length - 1];
+      first.x = last.x + last.w + 6;
+      buildings.push(first);
+    }
+
+    // Ambulance jump physics (normalized by dt)
+    amb.y += amb.vy * dt;
+    amb.vy += 0.62 * dt;
+    if (amb.y >= GROUND - amb.h) {
+      amb.y = GROUND - amb.h;
+      amb.vy = 0;
+      amb.jumps = 0;
+      amb.tilt = 0;
+    } else {
+      amb.tilt = Math.max(-0.18, Math.min(0.18, amb.vy * 0.015));
+    }
+
+    // Spawn obstacles
+    spawnTimer -= dt;
+    if (spawnTimer <= 0) {
+      var roll = Math.random();
+      var obsType = roll < 0.45 ? "cone" : (roll < 0.75 ? "barrier" : "drum");
+      obstacles.push({
+        x: W + 16,
+        w: obsType === "cone" ? 22 : (obsType === "drum" ? 22 : 28),
+        h: obsType === "cone" ? 26 : (obsType === "drum" ? 28 : 30),
+        type: obsType
+      });
+      spawnTimer = Math.floor(68 + Math.random() * 56) - Math.min(22, Math.floor((speed - BASE_SPEED) * 3));
+    }
+
+    // Spawn First-Aid Kits
+    kitTimer -= dt;
+    if (kitTimer <= 0) {
+      kits.push({
+        x: W + 20,
+        y: GROUND - 55 - Math.floor(Math.random() * 42),
+        w: 20,
+        h: 20
+      });
+      kitTimer = Math.floor(110 + Math.random() * 80);
+    }
+
+    // Update & collide obstacles
+    for (var i = obstacles.length - 1; i >= 0; i--) {
+      var o = obstacles[i];
+      o.x -= speed * dt;
+      if (o.x + o.w < -10) {
+        obstacles.splice(i, 1);
+        continue;
+      }
+      // Forgiving hitbox padding
+      var padX = 6;
+      var padY = 5;
+      if (
+        amb.x + padX < o.x + o.w - padX &&
+        amb.x + amb.w - padX > o.x + padX &&
+        amb.y + amb.h - padY > GROUND - o.h
+      ) {
+        spawnParticles(amb.x + 30, amb.y + 20, "#f43f5e");
+        triggerGameOver();
+        return;
+      }
+    }
+
+    // Update & collect First-Aid Kits
+    for (var j = kits.length - 1; j >= 0; j--) {
+      var k = kits[j];
+      k.x -= speed * dt;
+      if (k.x + k.w < -10) {
+        kits.splice(j, 1);
+        continue;
+      }
+      if (
+        amb.x < k.x + k.w &&
+        amb.x + amb.w > k.x &&
+        amb.y < k.y + k.h &&
+        amb.y + amb.h > k.y
+      ) {
+        score += 25;
+        kitsCollected++;
+        spawnParticles(k.x + 10, k.y + 10, "#10b981");
+        popups.push({ x: k.x, y: k.y, text: "+25 KIT!", life: 28 });
+        kits.splice(j, 1);
+      }
+    }
+
+    // Update particles & floating popups
+    for (var pIdx = particles.length - 1; pIdx >= 0; pIdx--) {
+      var pt = particles[pIdx];
+      pt.x += pt.vx * dt;
+      pt.y += pt.vy * dt;
+      pt.life -= dt;
+      if (pt.life <= 0) particles.splice(pIdx, 1);
+    }
+    for (var popIdx = popups.length - 1; popIdx >= 0; popIdx--) {
+      var pp = popups[popIdx];
+      pp.y -= 0.8 * dt;
+      pp.life -= dt;
+      if (pp.life <= 0) popups.splice(popIdx, 1);
+    }
+
+    // Advance score first, then derive speed FROM the score.
+    // This keeps the rise gradual and tied to progress, and it can
+    // never drop back mid-run: the score only ever grows during a
+    // run, so the speed only ever grows. A new game zeroes the
+    // score in resetGame(), which returns the speed to normal.
+    score += 0.14 * dt;
+    scoreEl.textContent = Math.floor(score);
+    speed = Math.min(9.6, BASE_SPEED + Math.floor(score) * 0.006);
+
+    drawScene();
+  }
+
+  // Keyboard, touch, and click controls
+  document.addEventListener("keydown", function (e) {
+    if (e.code === "Space" || e.code === "ArrowUp" || e.code === "KeyW") {
+      if (document.activeElement === startBtn || document.activeElement === restartBtn || document.activeElement === sirenBtn) {
+        return;
+      }
+      e.preventDefault();
+      jump();
+    }
+  });
+
+  canvas.addEventListener("pointerdown", function (e) {
+    e.preventDefault();
+    jump();
+  });
+
+  startBtn.addEventListener("click", startGame);
+  restartBtn.addEventListener("click", startGame);
+  sirenBtn.addEventListener("click", function () {
+    sirenOn = !sirenOn;
+    sirenBtn.textContent = sirenOn ? "🚨 Siren Lights: ON" : "🚨 Siren Lights: OFF";
+    drawScene();
+  });
+
+  // Pause animation when browser tab is inactive
+  document.addEventListener("visibilitychange", function () {
+    if (document.hidden) {
+      stopLoop();
+    } else if (!document.hidden && state === "playing" && rafId === null) {
+      lastTime = performance.now();
+      rafId = requestAnimationFrame(loop);
+    }
+  });
+
+  initCityline();
+  resetGame();
+  drawScene();
+
+})();
+</script>
+
+<script>
+(function () {
+  "use strict";
+  // The status file is <app root>/maintenance/status.txt. This page is returned for the
+  // URL the user asked for (often several folders deep), so the application root is
+  // discovered by walking up the path, then cached for the life of the page.
+  //
+  // RUNNING (or the older spelling "live") -> update finished: reload after two agreeing reads.
+  // Anything else, or a missing file -> still in maintenance, keep waiting.
+  function candidates() {
+    var parts = location.pathname.split("/"), end = parts.length, list = [], i, dir, url;
+    while (end > 1 && parts[end - 1] === "") { end -= 1; }
+    if (end > 1 && parts[end - 1].indexOf(".") !== -1) { end -= 1; }
+    for (i = end; i >= 1; i--) {
+      dir = parts.slice(0, i).join("/");
+      if (dir.charAt(dir.length - 1) === "/") { dir = dir.slice(0, -1); }
+      url = dir + "/maintenance/status.txt";
+      if (list.indexOf(url) === -1) { list.push(url); }
+    }
+    return list;
+  }
+
+  var urls = candidates(), statusUrl = null, good = 0;
+
+  function read(url, cb) {
+    var xhr = new XMLHttpRequest();
+    try {
+      xhr.open("GET", url + "?t=" + (new Date().getTime()), true);
+      xhr.timeout = 4000;
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState !== 4) { return; }
+        cb(xhr.status >= 200 && xhr.status < 300
+          ? String(xhr.responseText || "").replace(/\s+/g, "").toUpperCase() : "");
+      };
+      xhr.ontimeout = function () { cb(""); };
+      xhr.onerror = function () { cb(""); };
+      xhr.send();
+    } catch (e) { cb(""); }
+  }
+
+  function handle(token) {
+    if (token === "RUNNING" || token === "LIVE") {
+      good += 1;
+      if (good >= 2) { leavePage(); }
+    } else {
+      good = 0;
+    }
+  }
+
+  // Leave with a unique URL. The 503 carries "Retry-After", so the browser may still hold the
+  // old maintenance body for this exact address; a new query string makes it fetch the live site.
+  // Inside the watcher's frame, navigate the whole tab, not just the frame.
+  function leavePage() {
+    var stamp = "?mt=" + (new Date().getTime());
+    var root = statusUrl ? statusUrl.replace(/\/maintenance\/status\.txt$/i, "/") : null;
+    var target = (root || location.pathname) + stamp;
+    if (window.top !== window.self) {
+      try { window.top.location.replace(target); return; } catch (ignore) { }
+    }
+    window.location.replace(target);
+  }
+
+  function check() {
+    if (statusUrl) { read(statusUrl, handle); return; }
+    var i = 0;
+    (function next() {
+      if (i >= urls.length) { return; }
+      read(urls[i++], function (token) {
+        if (token === "RUNNING" || token === "LIVE") {
+          statusUrl = urls[i - 1];
+          handle(token);
+        } else {
+          next();
+        }
+      });
+    }());
+  }
+
+  setInterval(check, 1000);
+  check();
+}());
+</script>
+</body>
+</html>

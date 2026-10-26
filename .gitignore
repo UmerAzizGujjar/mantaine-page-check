@@ -379,3 +379,8 @@ GL/web.config.backup
 GL/*- Backup.rdlc
 packages/
 /GL/Modules/Billing/BillPendingApprovals.sql
+
+# Maintenance mode runtime state (created on the server by Jenkins, never committed/packaged)
+GL/app_offline.htm
+GL/maintenance/status.txt
+GL/maintenance/*.tmp

@@ -503,16 +503,13 @@
     <Content Include="Modules\PatientManagement\AnesthesiaView.aspx" />
     <Content Include="Modules\Lab\MammographyHistory.aspx" />
     <Content Include="Modules\Lab\MammographyHistoryView.aspx" />
-    <Content Include="Modules\Lab\Mammography_History.sql" />
     <Content Include="Modules\Lab\MammographyHistoryPrint.aspx" />
     <Content Include="Modules\Lab\CTScanHistory.aspx" />
     <Content Include="Modules\Lab\CTScanHistoryView.aspx" />
     <Content Include="Modules\Lab\CTScanHistoryPrint.aspx" />
-    <Content Include="Modules\Lab\CT_Scan_History.sql" />
     <Content Include="Modules\Lab\XRayHistory.aspx" />
     <Content Include="Modules\Lab\XRayHistoryView.aspx" />
     <Content Include="Modules\Lab\XRayHistoryPrint.aspx" />
-    <Content Include="Modules\Lab\XRay_History.sql" />
     <Content Include="Modules\PatientManagement\AnesthesiaPrint.aspx" />
     <Content Include="Modules\PatientManagement\EmergencyAdmission.aspx" />
     <Content Include="Modules\PatientManagement\EmergencyForm.aspx" />
@@ -563,10 +560,7 @@
     <Content Include="Modules\Billing\BillingView.aspx" />
     <Content Include="bin\PMS.dll" />
     <Content Include="bin\PMS.pdb" />
-    <Content Include="bin\System.Data.SqlServerCe.dll" />
-    <Content Include="bin\System.Net.Http.dll" />
     <Content Include="bin\System.Net.Http.Formatting.dll" />
-    <Content Include="bin\System.Net.Http.WebRequest.dll" />
     <Content Include="bin\System.Web.Http.dll" />
     <Content Include="bin\System.Web.Http.WebHost.dll" />
     <Content Include="Modules\BloodBank\BloodBank.aspx" />
@@ -1213,6 +1207,8 @@
     <Content Include="wwwroot\lib\theme\dark-pages.css" />
     <Content Include="wwwroot\lib\theme\menu-modern.css" />
     <Content Include="wwwroot\lib\theme\menu-modern.js" />
+    <Content Include="wwwroot\lib\theme\maintenance-watch.css" />
+    <Content Include="wwwroot\lib\theme\maintenance-watch.js" />
     <Content Include="wwwroot\lib\theme\pharmacy-form.css" />
     <Content Include="wwwroot\lib\theme\modal-modern.css" />
     <Content Include="wwwroot\lib\theme\modal-modern.js" />
@@ -2976,10 +2972,7 @@
     <Content Include="Views\Shared\_GridPager.cshtml" />
     <Content Include="Views\Shared\_Grid.cshtml" />
     <Content Include="Site.Master" />
-    <Content Include="web.config.backup">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="upload\UploadPurchaseOrder.ashx" />
+<Content Include="upload\UploadPurchaseOrder.ashx" />
     <Content Include="upload\UploadIGP.ashx" />
     <Content Include="upload\UploadPurchaseInvoice.ashx" />
     <Content Include="upload\UploadPaymentInvoice.ashx" />
@@ -6746,4 +6739,15 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <!-- Never publish these with the website: app_offline.htm and maintenance\ are runtime
+       state that Jenkins places deliberately, the rest are local backups, archives and
+       dev scripts that must not be reachable as URLs. -->
+  <ItemGroup>
+    <ExcludeFromPackageFiles Include="app_offline.htm" />
+    <ExcludeFromPackageFiles Include="maintenance\**\*" />
+    <ExcludeFromPackageFiles Include="web.config.backup" />
+    <ExcludeFromPackageFiles Include="*.rar" />
+    <ExcludeFromPackageFiles Include="*.ps1" />
+    <ExcludeFromPackageFiles Include="App_Data\*.txt" />
+  </ItemGroup>
 </Project>

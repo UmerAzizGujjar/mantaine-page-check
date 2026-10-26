@@ -1,0 +1,80 @@
+/* =============================================================================================
+   maintenance-watch.css
+   WARNING banner (small, on top of the live page) and the MAINTENANCE overlay that hosts the
+   real offline page (app_offline.htm) inside a full-screen frame.
+
+   Deliberately dependency-free: no Bootstrap, no jQuery, no SweetAlert. This layer has to work
+   when the rest of the page is half loaded or already broken.
+   ============================================================================================= */
+
+/* ---------- WARNING banner (non-blocking) -------------------------------------------------- */
+.hms-mt-banner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 2147483000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 9px 48px 9px 14px;
+    background: #c11718;
+    border-bottom: 1px solid #8f0f10;
+    box-shadow: 0 2px 14px rgba(0, 0, 0, .28);
+    color: #ffffff;
+    font-family: "Segoe UI", Tahoma, Verdana, Arial, sans-serif;
+    font-size: 14.5px;
+    font-weight: 600;
+    line-height: 1.4;
+    text-align: center;
+}
+
+.hms-mt-banner strong { font-weight: 700; margin-right: 6px; }
+
+.hms-mt-banner-dot {
+    display: inline-block;
+    width: 9px;
+    height: 9px;
+    margin-right: 8px;
+    border-radius: 50%;
+    background: #ffffff;
+    vertical-align: 1px;
+    animation: hms-mt-blink 1.6s ease-in-out infinite;
+}
+
+@keyframes hms-mt-blink {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: .25; }
+}
+
+/* ---------- MAINTENANCE overlay: the real offline page, full screen ------------------------ */
+.hms-mt-overlay {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 2147483001;
+    margin: 0;
+    padding: 0;
+    background: rgba(15, 23, 42, .45);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    overflow: hidden;
+}
+
+.hms-mt-frame {
+    display: block;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+}
+
+.hms-mt-frame:focus { outline: none; }
+
+@media (prefers-reduced-motion: reduce) {
+    .hms-mt-banner-dot { animation: none; }
+}
